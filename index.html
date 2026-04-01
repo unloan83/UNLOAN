@@ -1705,33 +1705,47 @@
     }
 
     async function saveToGoogleSheets() {
-        if (isSubmittingToSheets) return false;
-        isSubmittingToSheets = true;
+    if (isSubmittingToSheets) return false;
+    isSubmittingToSheets = true;
+    
+    console.log('📤 Sending data to Google Sheets...');
+    console.log('URL:', GOOGLE_SHEET_URL);
+    console.log('Data:', userData);
+    
+    try {
+        const response = await fetch(GOOGLE_SHEET_URL, {
+            method: 'POST',
+            // Remove no-cors to see actual errors during testing
+            // mode: 'no-cors', 
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        });
+        
+        // For no-cors, response is opaque but we can still check
+        console.log('📥 Response status:', response.status);
+        console.log('📥 Response OK:', response.ok);
+        
+        // Try to read response (may fail with no-cors)
         try {
-            await fetch(GOOGLE_SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(userData) });
-            localStorage.setItem('unloanLastSync', new Date().toISOString());
-            return true;
-        } catch (error) { return false; } finally { isSubmittingToSheets = false; }
+            const result = await response.json();
+            console.log('✅ Server response:', result);
+        } catch (e) {
+            console.log('⚠️ Could not read response (normal with no-cors)');
+        }
+        
+        localStorage.setItem('unloanLastSync', new Date().toISOString());
+        console.log('✅ Data saved successfully!');
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Error saving to Google Sheets:', error);
+        alert('Error: ' + error.message);
+        return false;
+    } finally {
+        isSubmittingToSheets = false;
     }
-
-    function exportToCSV() {
-        const data = userData;
-        const timestamp = new Date().toISOString().split('T')[0];
-        let csv = "text/csv;charset=utf-8,unloan Financial Data Export," + timestamp + "\n\n";
-        csv += "PERSONAL\nField,Value\nName," + data.name + "\nAge," + data.age + "\nMobile," + data.mobile + "\n\n";
-        csv += "FINANCES\nCategory,Amount\nIncome," + data.income + "\nExpenses," + data.totalExpenses + "\nDisposable," + data.disposable + "\n\n";
-        csv += "MILESTONES\nGoal,Year,Amount,Monthly\n";
-        if (data.milestones) data.milestones.forEach(m => { csv += m.type + "," + m.year + "," + m.amount + "," + m.monthlyRequired.toFixed(2) + "\n"; });
-        csv += "\nAI SCORE," + data.ai.score + "\nSuggested Investment," + data.ai.suggestedInvestment.toFixed(2);
-        const link = document.createElement("a");
-        link.setAttribute("href", encodeURI(csv));
-        link.setAttribute("download", "unloan_" + data.name.replace(/\s+/g, '_') + "_" + timestamp + ".csv");
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        alert('📥 CSV downloaded!');
-    }
-
     async function saveAndFinish() {
         localStorage.setItem('unloanData', JSON.stringify(userData));
         const saveBtn = document.querySelector('button[onclick="saveAndFinish()"]');
