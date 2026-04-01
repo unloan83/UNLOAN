@@ -1705,60 +1705,64 @@
     }
 
     async function saveToGoogleSheets() {
-    if (isSubmittingToSheets) return false;
+    if (isSubmittingToSheets) {
+        console.log('⚠️ Already submitting, skipping...');
+        return false;
+    }
+    
     isSubmittingToSheets = true;
     
-    console.log('📤 Sending data to Google Sheets...');
-    console.log('URL:', GOOGLE_SHEET_URL);
-    console.log('Data:', userData);
+    console.log('=== STARTING GOOGLE SHEETS SUBMISSION ===');
+    console.log('📍 URL:', GOOGLE_SHEET_URL);
+    console.log('📦 Data being sent:', JSON.stringify(userData, null, 2));
+    
+    // Validate URL
+    if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL === 'YOUR_WEB_APP_URL_HERE') {
+        console.error('❌ ERROR: Google Sheets URL not configured!');
+        alert('Error: Google Sheets URL not configured. Please update GOOGLE_SHEET_URL in the code.');
+        isSubmittingToSheets = false;
+        return false;
+    }
+    
+    // Validate URL format
+    if (!GOOGLE_SHEET_URL.includes('/exec')) {
+        console.error('❌ ERROR: URL must end with /exec');
+        alert('Error: URL must end with /exec not /dev');
+        isSubmittingToSheets = false;
+        return false;
+    }
     
     try {
+        console.log('📤 Sending POST request...');
+        
         const response = await fetch(GOOGLE_SHEET_URL, {
             method: 'POST',
-            // Remove no-cors to see actual errors during testing
-            // mode: 'no-cors', 
+            mode: 'no-cors', // Required for Google Apps Script
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(userData),
         });
         
-        // For no-cors, response is opaque but we can still check
-        console.log('📥 Response status:', response.status);
-        console.log('📥 Response OK:', response.ok);
+        console.log('📥 Response received');
+        console.log('Status:', response.status);
+        console.log('OK:', response.ok);
+        console.log('Type:', response.type); // Will be 'opaque' with no-cors
         
-        // Try to read response (may fail with no-cors)
-        try {
-            const result = await response.json();
-            console.log('✅ Server response:', result);
-        } catch (e) {
-            console.log('⚠️ Could not read response (normal with no-cors)');
-        }
-        
+        // With no-cors, we can't read the response, but request still goes through
         localStorage.setItem('unloanLastSync', new Date().toISOString());
-        console.log('✅ Data saved successfully!');
+        
+        console.log('✅ Submission complete! Check Google Sheet for data.');
         return true;
         
     } catch (error) {
-        console.error('❌ Error saving to Google Sheets:', error);
-        alert('Error: ' + error.message);
+        console.error('❌ ERROR:', error);
+        console.error('Stack:', error.stack);
+        alert('Error saving to Google Sheets: ' + error.message);
         return false;
     } finally {
         isSubmittingToSheets = false;
-    }
-    async function saveAndFinish() {
-        localStorage.setItem('unloanData', JSON.stringify(userData));
-        const saveBtn = document.querySelector('button[onclick="saveAndFinish()"]');
-        if (saveBtn) { saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Syncing...'; saveBtn.disabled = true; }
-        const success = await saveToGoogleSheets();
-        alert(success ? '✅ Data saved to cloud!' : '⚠️ Cloud sync failed. Data saved locally.');
-        if (saveBtn) { saveBtn.innerHTML = '<i class="fas fa-save"></i> Save & Finish'; saveBtn.disabled = false; }
-    }
-
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then(reg => console.log('SW Registered', reg)).catch(err => console.log('SW Failed', err));
-        });
+        console.log('=== SUBMISSION FINISHED ===');
     }
 </script>
 
