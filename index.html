@@ -28,28 +28,34 @@
             --radius-sm: 12px; --radius-md: 20px; --radius-lg: 30px; --radius-xl: 40px;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: var(--dark); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; overflow: hidden; }
-        body::before { content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(108, 99, 255, 0.05) 0%, transparent 70%); animation: rotate 20s linear infinite; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: var(--dark); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(108, 99, 255, 0.05) 0%, transparent 70%); animation: rotate 30s linear infinite; z-index: -1; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .app-container { background: var(--white); width: 100%; max-width: 450px; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; position: relative; min-height: 800px; display: flex; flex-direction: column; }
-        header { padding: 25px 30px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(108, 99, 255, 0.1); position: sticky; top: 0; z-index: 100; }
+        .app-container { background: var(--white); width: 100%; max-width: 450px; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; position: relative; min-height: 800px; max-height: 90vh; display: flex; flex-direction: column; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.5); }
+        header { padding: 25px 30px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(108, 99, 255, 0.1); position: sticky; top: 0; z-index: 100; flex-shrink: 0; }
         .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .logo-icon { width: 45px; height: 45px; background: var(--gradient-primary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; font-weight: 700; }
+        .logo-icon { width: 45px; height: 45px; background: var(--gradient-primary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; font-size: 22px; box-shadow: var(--shadow-md); }
         .logo { font-size: 28px; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
         .logo span { color: var(--dark); -webkit-text-fill-color: var(--dark); }
-        .screen { padding: 30px; flex: 1; display: none; flex-direction: column; animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--primary) var(--light); }
+        .screen { padding: 30px; flex: 1; display: none; flex-direction: column; animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: var(--primary) var(--light); }
         .screen.active { display: flex; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        h2 { font-size: 26px; font-weight: 700; margin-bottom: 8px; color: var(--dark); letter-spacing: -0.5px; }
+        h2 { font-size: 26px; font-weight: 700; margin-bottom: 8px; color: var(--dark); letter-spacing: -0.5px; flex-shrink: 0; }
         h3 { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: var(--dark); }
-        p.subtitle { font-size: 14px; color: var(--gray); margin-bottom: 30px; line-height: 1.6; font-weight: 400; }
+        p.subtitle { font-size: 14px; color: var(--gray); margin-bottom: 30px; line-height: 1.6; font-weight: 400; flex-shrink: 0; }
         .form-group { margin-bottom: 20px; position: relative; }
+        .form-row { display: flex; align-items: center; gap: 10px; }
+        .form-row input { flex: 1; }
+        .frequency-tag { background: var(--light); padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; flex-shrink: 0; }
+        .frequency-tag.monthly { background: rgba(108, 99, 255, 0.1); color: var(--primary); }
+        .frequency-tag.yearly { background: rgba(29, 209, 161, 0.1); color: var(--success); }
+        .frequency-tag.one-time { background: rgba(255, 165, 2, 0.1); color: var(--warning); }
         label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select { width: 100%; padding: 16px 20px; border: 2px solid #e1e5eb; border-radius: var(--radius-md); font-size: 16px; background: var(--light); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        input, select { width: 100%; padding: 16px 20px; border: 2px solid #e1e5eb; border-radius: var(--radius-md); font-size: 16px; background: var(--light); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); font-weight: 500; }
         input:focus, select:focus { border-color: var(--primary); outline: none; background: var(--white); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
         input::placeholder { color: #a4b0be; }
-        .btn { width: 100%; padding: 18px 24px; border: none; border-radius: var(--radius-md); background: var(--gradient-primary); color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative; }
-        .btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s ease; }
+        .btn { width: 100%; padding: 18px 24px; border: none; border-radius: var(--radius-md); background: var(--gradient-primary); color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: var(--shadow-md); margin-top: 15px; position: relative; overflow: hidden; letter-spacing: 0.3px; flex-shrink: 0; }
+        .btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: 0.5s; }
         .btn:hover::before { left: 100%; }
         .btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         .btn:active { transform: translateY(-1px) scale(0.98); }
@@ -59,13 +65,13 @@
         .btn-sm { width: auto; padding: 12px 20px; font-size: 13px; margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; }
         .card { background: var(--gradient-card); border-radius: var(--radius-lg); padding: 25px; margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(108, 99, 255, 0.08); transition: all 0.3s ease; }
         .card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
-        .section-header { display: flex; align-items: center; gap: 15px; margin: 30px 0 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(108, 99, 255, 0.1); }
+        .section-header { display: flex; align-items: center; gap: 15px; margin: 30px 0 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(108, 99, 255, 0.1); flex-shrink: 0; }
         .section-header:first-child { margin-top: 10px; }
-        .section-number { width: 40px; height: 40px; border-radius: 12px; background: var(--gradient-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; }
+        .section-number { width: 40px; height: 40px; border-radius: 12px; background: var(--gradient-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; box-shadow: var(--shadow-md); flex-shrink: 0; }
         .section-header h3 { margin: 0; font-size: 18px; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 10px; }
         .score-display { text-align: center; padding: 10px; }
-        .score-circle-large { width: 120px; height: 120px; border-radius: 50%; background: var(--gradient-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 800; position: relative; margin: 0 auto; }
-        .score-circle-large::after { content: ''; position: absolute; top: -8px; left: -8px; right: -8px; bottom: -8px; border-radius: 50%; border: 3px dashed rgba(108, 99, 255, 0.3); animation: rotate 3s linear infinite; }
+        .score-circle-large { width: 120px; height: 120px; border-radius: 50%; background: var(--gradient-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 42px; font-weight: 800; margin: 0 auto 15px; box-shadow: var(--shadow-glow); position: relative; }
+        .score-circle-large::after { content: ''; position: absolute; top: -8px; left: -8px; right: -8px; bottom: -8px; border-radius: 50%; border: 3px dashed rgba(108, 99, 255, 0.3); animation: rotate 15s linear infinite; }
         .score-label { font-size: 14px; font-weight: 600; color: var(--gray); margin-bottom: 20px; }
         .score-range { max-width: 300px; margin: 0 auto; }
         .range-bar { height: 12px; background: linear-gradient(90deg, #FF4757 0%, #FFA502 50%, #1DD1A1 100%); border-radius: 10px; position: relative; overflow: hidden; }
@@ -90,7 +96,7 @@
         .insurance-name { font-weight: 600; font-size: 14px; color: var(--dark); }
         .insurance-status { font-size: 12px; color: var(--gray); margin-top: 3px; }
         .insurance-action { font-size: 12px; font-weight: 600; color: var(--primary); background: rgba(108, 99, 255, 0.1); padding: 8px 12px; border-radius: 8px; }
-        .investment-recommendation-box { background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(0, 210, 211, 0.1) 100%); padding: 20px; border-radius: var(--radius-md); text-align: center; }
+        .investment-recommendation-box { background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(0, 210, 211, 0.1) 100%); padding: 20px; border-radius: var(--radius-md); text-align: center; border: 1px solid rgba(108, 99, 255, 0.2); margin-top: 20px; }
         .rec-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); font-weight: 600; }
         .rec-amount { font-size: 32px; font-weight: 800; color: var(--primary); margin: 8px 0; }
         .rec-detail { font-size: 13px; color: var(--gray); }
@@ -107,7 +113,7 @@
         .investment-card-short { border-top: 4px solid var(--warning); }
         .investment-card-long { border-top: 4px solid var(--success); }
         .investment-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .investment-type-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; padding: 6px 12px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .investment-type-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; padding: 6px 12px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
         .tag-short { background: rgba(255, 165, 2, 0.15); color: var(--warning); }
         .tag-long { background: rgba(29, 209, 161, 0.15); color: var(--success); }
         .tag-urgent { background: rgba(255, 71, 87, 0.15); color: var(--danger); }
@@ -123,7 +129,7 @@
         .progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 2s infinite; }
         @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
         .progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); margin-top: 8px; font-weight: 500; }
-        .investment-action-box { background: rgba(29, 209, 161, 0.1); color: var(--success); padding: 12px 15px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .investment-action-box { background: rgba(29, 209, 161, 0.1); color: var(--success); padding: 12px 15px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 10px; margin-top: 15px; }
         .investment-instruments { margin-top: 15px; }
         .instrument-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; font-weight: 600; }
         .instrument-tags { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -135,33 +141,51 @@
         .summary-item span:last-child { font-weight: 600; }
         .summary-total { display: flex; justify-content: space-between; padding: 15px 0 0; margin-top: 10px; font-size: 18px; font-weight: 800; border-top: 2px solid rgba(255, 255, 255, 0.3); }
         .summary-total span:last-child { color: var(--secondary); font-size: 24px; }
-        .sync-status { text-align: center; font-size: 12px; padding: 10px; border-radius: var(--radius-sm); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .sync-status { text-align: center; font-size: 12px; padding: 10px; border-radius: var(--radius-sm); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(108, 99, 255, 0.05); flex-shrink: 0; }
         .sync-success { color: var(--success); background: rgba(29, 209, 161, 0.1); }
         .sync-pending { color: var(--warning); background: rgba(255, 165, 2, 0.1); }
         .sync-error { color: var(--danger); background: rgba(255, 71, 87, 0.1); }
-        .alert { padding: 15px 20px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 14px; display: flex; align-items: center; gap: 12px; animation: slideIn 0.3s ease; }
+        .alert { padding: 15px 20px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 14px; display: flex; align-items: center; gap: 12px; animation: slideIn 0.3s ease; flex-shrink: 0; }
         .alert-info { background: rgba(108, 99, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
         .alert-success { background: rgba(29, 209, 161, 0.1); color: var(--success); border-left: 4px solid var(--success); }
         .alert-warning { background: rgba(255, 165, 2, 0.1); color: var(--warning); border-left: 4px solid var(--warning); }
         .alert-danger { background: rgba(255, 71, 87, 0.1); color: var(--danger); border-left: 4px solid var(--danger); }
-        .cta-box { background: linear-gradient(135deg, rgba(108, 99, 255, 0.05) 0%, rgba(0, 210, 211, 0.05) 100%); padding: 20px; border-radius: var(--radius-md); margin-top: 20px; display: flex; align-items: flex-start; gap: 15px; }
+        .cta-box { background: linear-gradient(135deg, rgba(108, 99, 255, 0.05) 0%, rgba(0, 210, 211, 0.05) 100%); padding: 20px; border-radius: var(--radius-md); margin-top: 20px; display: flex; align-items: flex-start; gap: 15px; border: 1px solid rgba(108, 99, 255, 0.1); flex-shrink: 0; }
         .cta-box input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--primary); }
         .cta-text { font-size: 14px; font-weight: 500; line-height: 1.5; color: var(--dark); }
         .list-container { margin-top: 15px; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; background: var(--light); padding: 15px 20px; border-radius: var(--radius-md); margin-bottom: 12px; font-size: 14px; }
+        .list-item { display: flex; justify-content: space-between; align-items: center; background: var(--light); padding: 15px 20px; border-radius: var(--radius-md); margin-bottom: 12px; font-size: 14px; transition: all 0.3s ease; border: 1px solid transparent; }
         .list-item:hover { border-color: var(--primary); background: rgba(108, 99, 255, 0.05); }
         .list-item-details { display: flex; flex-direction: column; gap: 4px; }
         .list-item-title { font-weight: 600; color: var(--dark); }
         .list-item-sub { font-size: 12px; color: var(--gray); }
         .list-item-amount { font-weight: 700; color: var(--primary); font-size: 16px; }
-        .btn-remove { background: rgba(255, 71, 87, 0.1); color: var(--danger); border: none; width: 38px; height: 38px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 18px; transition: all 0.3s ease; }
+        .btn-remove { background: rgba(255, 71, 87, 0.1); color: var(--danger); border: none; width: 38px; height: 38px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 18px; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; }
         .btn-remove:hover { background: var(--danger); color: white; transform: rotate(90deg); }
-        .section-divider { display: flex; align-items: center; gap: 15px; margin: 30px 0 20px; }
+        .section-divider { display: flex; align-items: center; gap: 15px; margin: 30px 0 20px; flex-shrink: 0; }
         .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #e1e5eb, transparent); }
         .section-title { font-size: 14px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
         .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        @media (max-width: 400px) { .input-group { grid-template-columns: 1fr; } }
-        @media (max-width: 480px) { .app-container { border-radius: 0; max-height: 100vh; min-height: 100vh; } body { padding: 0; } header { padding: 20px; } .screen { padding: 20px; } }
+        
+        /* Checkbox Grid Styles */
+        .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+        .checkbox-item { display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: var(--light); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .checkbox-item:hover { background: rgba(108, 99, 255, 0.05); }
+        .checkbox-item.selected { border-color: var(--primary); background: rgba(108, 99, 255, 0.08); }
+        .checkbox-item input { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
+        .checkbox-item label { margin: 0; cursor: pointer; flex: 1; font-size: 13px; text-transform: none; color: var(--dark); }
+        .checkbox-item .icon { font-size: 16px; }
+        
+        @media (max-width: 400px) { 
+            .input-group { grid-template-columns: 1fr; }
+            .checkbox-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 480px) { 
+            .app-container { border-radius: 0; max-height: 100vh; min-height: 100vh; } 
+            body { padding: 0; } 
+            header { padding: 20px; } 
+            .screen { padding: 20px; } 
+        }
         .screen::-webkit-scrollbar { width: 6px; }
         .screen::-webkit-scrollbar-track { background: var(--light); border-radius: 10px; }
         .screen::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
@@ -204,46 +228,145 @@
         <p class="subtitle">Be honest. This helps our AI create your perfect plan.</p>
         <form id="financialForm">
             <div class="section-divider"><span class="section-title"><i class="fas fa-wallet"></i> Income</span></div>
-            <div class="form-group"><label>Monthly Income (After Tax)</label><input type="number" id="income" placeholder="₹50,000" required></div>
+            <div class="form-group">
+                <label>Monthly Income (After Tax)</label>
+                <div class="form-row">
+                    <input type="number" id="income" placeholder="₹50,000" required>
+                    <span class="frequency-tag monthly">/month</span>
+                </div>
+            </div>
+            
             <div class="section-divider"><span class="section-title"><i class="fas fa-file-invoice-dollar"></i> Fixed Commitments</span></div>
             <div class="input-group">
-                <div class="form-group"><label>Loan EMIs</label><input type="number" id="loanEmi" placeholder="₹0" value="0"></div>
-                <div class="form-group"><label>Insurance</label><input type="number" id="insuranceTotal" placeholder="₹0" value="0"></div>
+                <div class="form-group">
+                    <label>Loan EMIs</label>
+                    <div class="form-row">
+                        <input type="number" id="loanEmi" placeholder="₹0" value="0">
+                        <span class="frequency-tag monthly">/month</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Insurance Premiums</label>
+                    <div class="form-row">
+                        <input type="number" id="insuranceTotal" placeholder="₹0" value="0">
+                        <span class="frequency-tag monthly">/month</span>
+                    </div>
+                </div>
             </div>
+            
             <div class="section-divider"><span class="section-title"><i class="fas fa-home"></i> Living Expenses</span></div>
             <div class="input-group">
-                <div class="form-group"><label>Rent/Mortgage</label><input type="number" id="rent" placeholder="₹0" value="0"></div>
-                <div class="form-group"><label>Groceries & Food</label><input type="number" id="groceries" placeholder="₹0" value="0"></div>
-            </div>
-            <div class="form-group">
-                <label>Other Expenses</label>
-                <div id="customExpensesList" class="list-container"></div>
-                <button type="button" class="btn btn-outline btn-sm" onclick="addCustomExpense()"><i class="fas fa-plus"></i> Add Expense</button>
-            </div>
-            <div class="section-divider"><span class="section-title"><i class="fas fa-flag"></i> Future Goals</span></div>
-            <div class="input-group">
                 <div class="form-group">
-                    <label>Goal Type</label>
-                    <select id="goalType">
-                        <option value="Car">🚗 Car Purchase</option>
-                        <option value="Home">🏠 Home Down Payment</option>
-                        <option value="Marriage">💍 Marriage</option>
-                        <option value="Education">🎓 Child Education</option>
-                        <option value="Travel">✈️ Dream Travel</option>
-                        <option value="Emergency">🛡️ Emergency Fund</option>
-                        <option value="Business">💼 Business</option>
-                    </select>
+                    <label>Rent/Mortgage</label>
+                    <div class="form-row">
+                        <input type="number" id="rent" placeholder="₹0" value="0">
+                        <span class="frequency-tag monthly">/month</span>
+                    </div>
                 </div>
-                <div class="form-group"><label>Target Year</label><input type="number" id="goalYear" placeholder="2027" min="2024"></div>
+                <div class="form-group">
+                    <label>Groceries & Food</label>
+                    <div class="form-row">
+                        <input type="number" id="groceries" placeholder="₹0" value="0">
+                        <span class="frequency-tag monthly">/month</span>
+                    </div>
+                </div>
             </div>
-            <div class="form-group"><label>Target Amount (₹)</label><input type="number" id="goalAmount" placeholder="2,00,000"></div>
-            <button type="button" class="btn btn-outline btn-sm" style="border-color: var(--secondary); color: var(--secondary);" onclick="addMilestone()"><i class="fas fa-plus"></i> Add Goal</button>
+            
+            <div class="form-group">
+                <label>Other Monthly Expenses (Select all that apply)</label>
+                <div class="checkbox-grid" id="expenseCheckboxes">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                        <input type="checkbox" id="exp_transport" value="transport" data-amount="2000">
+                        <label for="exp_transport"><span class="icon">🚗</span> Transport/Fuel</label>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                        <input type="checkbox" id="exp_utilities" value="utilities" data-amount="3000">
+                        <label for="exp_utilities"><span class="icon">💡</span> Utilities (Electricity/Water)</label>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                        <input type="checkbox" id="exp_internet" value="internet" data-amount="1000">
+                        <label for="exp_internet"><span class="icon">📱</span> Internet/Mobile</label>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                        <input type="checkbox" id="exp_entertainment" value="entertainment" data-amount="2000">
+                        <label for="exp_entertainment"><span class="icon">🎬</span> Entertainment/Streaming</label>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                        <input type="checkbox" id="exp_healthcare" value="healthcare" data-amount="1500">
+                        <label for="exp_healthcare"><span class="icon">🏥</span> Healthcare/Medicine</label>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                        <input type="checkbox" id="exp_education" value="education" data-amount="3000">
+                        <label for="exp_education"><span class="icon">📚</span> Education/Courses</label>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                        <input type="checkbox" id="exp_shopping" value="shopping" data-amount="2500">
+                        <label for="exp_shopping"><span class="icon">🛍️</span> Shopping/Clothing</label>
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                        <input type="checkbox" id="exp_dining" value="dining" data-amount="2000">
+                        <label for="exp_dining"><span class="icon">🍽️</span> Dining Out</label>
+                    </div>
+                </div>
+                <div id="customExpensesList" class="list-container"></div>
+                <button type="button" class="btn btn-outline btn-sm" onclick="addCustomExpense()"><i class="fas fa-plus"></i> Add Custom Expense</button>
+            </div>
+            
+            <div class="section-divider"><span class="section-title"><i class="fas fa-flag"></i> Future Goals</span></div>
+            <p style="font-size: 13px; color: var(--gray); margin-bottom: 15px;">Select your financial goals (Select all that apply)</p>
+            <div class="checkbox-grid" id="milestoneCheckboxes">
+                <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                    <input type="checkbox" id="goal_car" value="Car" data-years="3" data-amount="500000">
+                    <label for="goal_car"><span class="icon">🚗</span> Car Purchase</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                    <input type="checkbox" id="goal_home" value="Home" data-years="5" data-amount="2000000">
+                    <label for="goal_home"><span class="icon">🏠</span> Home Down Payment</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                    <input type="checkbox" id="goal_marriage" value="Marriage" data-years="2" data-amount="1000000">
+                    <label for="goal_marriage"><span class="icon">💍</span> Marriage</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                    <input type="checkbox" id="goal_education" value="Education" data-years="5" data-amount="1500000">
+                    <label for="goal_education"><span class="icon">🎓</span> Child Education</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                    <input type="checkbox" id="goal_travel" value="Travel" data-years="1" data-amount="200000">
+                    <label for="goal_travel"><span class="icon">✈️</span> Dream Travel</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                    <input type="checkbox" id="goal_emergency" value="Emergency" data-years="1" data-amount="300000">
+                    <label for="goal_emergency"><span class="icon">🛡️</span> Emergency Fund</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                    <input type="checkbox" id="goal_business" value="Business" data-years="3" data-amount="1000000">
+                    <label for="goal_business"><span class="icon">💼</span> Business</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleCheckbox(this)">
+                    <input type="checkbox" id="goal_retirement" value="Retirement" data-years="20" data-amount="5000000">
+                    <label for="goal_retirement"><span class="icon">👴</span> Retirement</label>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" style="margin-top: 15px; border-color: var(--secondary); color: var(--secondary);" onclick="addCustomMilestone()"><i class="fas fa-plus"></i> Add Custom Goal</button>
             <div id="milestonesList" class="list-container"></div>
+            
             <div class="section-divider"><span class="section-title"><i class="fas fa-users"></i> Personal</span></div>
             <div class="input-group">
-                <div class="form-group"><label>Marital Status</label><select id="maritalStatus"><option value="Single">Single</option><option value="Married">Married</option><option value="Divorced">Divorced</option><option value="Widowed">Widowed</option></select></div>
-                <div class="form-group"><label>Dependents</label><input type="number" id="dependents" value="0" min="0"></div>
+                <div class="form-group">
+                    <label>Marital Status</label>
+                    <select id="maritalStatus">
+                        <option value="Single">Single</option>
+                        <option value="Married">Married</option>
+                        <option value="Divorced">Divorced</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dependents</label>
+                    <input type="number" id="dependents" value="0" min="0">
+                </div>
             </div>
+            
             <button type="submit" class="btn"><i class="fas fa-magic"></i> Generate My Plan</button>
             <button type="button" class="btn btn-outline" onclick="showScreen('screen-entry')"><i class="fas fa-arrow-left"></i> Back</button>
         </form>
@@ -302,7 +425,7 @@
         <!-- SECTION 3: MILESTONE FOCUS -->
         <div class="section-header"><div class="section-number">03</div><h3><i class="fas fa-bullseye"></i> Milestone Focus</h3></div>
         <div id="milestone-tracker-section">
-            <div class="alert alert-warning" style="margin-bottom: 20px;"><i class="fas fa-lightbulb"></i><span><strong>Pro Tip:</strong> Reduce loan amount with small savings! Even ₹500/month extra helps.</span></div>
+            <div class="alert alert-warning" style="margin-bottom: 20px;"><i class="fas fa-lightbulb"></i><span><strong>Pro Tip:</strong> Reduce loan amount with small savings! Even ₹500/month extra towards loans can save thousands in interest.</span></div>
             <div id="milestone-cards-container"></div>
             <div class="card" style="margin-top: 20px;">
                 <div class="card-title" style="margin-bottom: 15px;"><i class="fas fa-calculator"></i> Total Monthly Savings Required</div>
@@ -387,7 +510,6 @@
 </div>
 
 <script>
-    // ⚠️ GITHUB CONFIGURATION - Replace with your details
     const GITHUB_CONFIG = {
         username: 'YOUR_GITHUB_USERNAME',
         repo: 'unloan-data',
@@ -398,6 +520,7 @@
     let isSubmittingToSheets = false;
     let userData = {};
     let milestones = [];
+    let selectedExpenses = [];
 
     const benchmarks = {
         '20-29': { savingsMultiple: 1, insuranceCoverage: 10, idealSavingsRate: 0.20 },
@@ -447,38 +570,47 @@
         }
     }
 
+    // Toggle checkbox styling
+    function toggleCheckbox(element) {
+        const checkbox = element.querySelector('input[type="checkbox"]');
+        checkbox.checked = !checkbox.checked;
+        element.classList.toggle('selected', checkbox.checked);
+    }
+
     function addCustomExpense() {
         const list = document.getElementById('customExpensesList');
         const id = Date.now();
         const div = document.createElement('div');
         div.className = 'list-item';
         div.id = `exp-${id}`;
-        div.innerHTML = `<div class="list-item-details" style="flex:1; display:flex; gap:10px;"><input type="text" placeholder="Name" class="custom-name" value="Misc" style="flex:1; padding:10px; border: none; background: transparent;"><input type="number" placeholder="Amount" class="custom-amount" value="0" style="flex:0 0 100px; padding:10px; border: none; background: transparent;"></div><button type="button" class="btn-remove" onclick="this.parentElement.remove()">✕</button>`;
+        div.innerHTML = `<div class="list-item-details" style="flex:1; display:flex; gap:10px;"><input type="text" placeholder="Expense Name" class="custom-name" value="Misc" style="flex:1; padding:10px;"><input type="number" placeholder="₹" class="custom-amount" value="0" style="flex:1; padding:10px;"></div><button type="button" class="btn-remove" onclick="document.getElementById('exp-${id}').remove()"><i class="fas fa-times"></i></button>`;
         list.appendChild(div);
     }
 
-    function addMilestone() {
-        const type = document.getElementById('goalType').value;
-        const year = parseInt(document.getElementById('goalYear').value);
-        const amount = parseFloat(document.getElementById('goalAmount').value);
-        if (!year || !amount) { alert("⚠️ Please enter both Target Year and Amount"); return; }
-        const currentYear = new Date().getFullYear();
-        const yearsLeft = year - currentYear;
+    function addCustomMilestone() {
+        const type = prompt('Enter goal name:');
+        if (!type) return;
+        const year = prompt('Target year (e.g., 2027):');
+        if (!year) return;
+        const amount = prompt('Target amount (₹):');
+        if (!amount) return;
+        
+        const yearsLeft = parseInt(year) - new Date().getFullYear();
         if (yearsLeft <= 0) { alert("⚠️ Target year must be in the future"); return; }
-        const monthlyRequired = amount / (yearsLeft * 12);
-        milestones.push({ id: Date.now(), type, year, amount, monthlyRequired, yearsLeft });
+        const monthlyRequired = parseFloat(amount) / (yearsLeft * 12);
+        
+        milestones.push({ id: Date.now(), type, year: parseInt(year), amount: parseFloat(amount), monthlyRequired, yearsLeft });
         renderMilestonesList();
-        document.getElementById('goalAmount').value = '';
     }
 
     function renderMilestonesList() {
         const list = document.getElementById('milestonesList');
         list.innerHTML = '';
         milestones.forEach(m => {
-            const icons = { 'Car': '🚗', 'Home': '🏠', 'Marriage': '💍', 'Education': '🎓', 'Travel': '✈️', 'Emergency': '🛡️', 'Business': '💼' };
+            const icons = { 'Car': '🚗', 'Home': '🏠', 'Marriage': '💍', 'Education': '🎓', 'Travel': '✈️', 'Emergency': '🛡️', 'Business': '💼', 'Retirement': '👴' };
             const div = document.createElement('div');
             div.className = 'list-item';
-            div.innerHTML = `<div class="list-item-details"><span class="list-item-title">${icons[m.type] || '🎯'} ${m.type}</span><span class="list-item-sub">Target: ₹${m.amount.toLocaleString('en-IN')} by ${m.year}</span></div><div class="list-item-amount">₹${m.monthlyRequired.toFixed(0)}/mo</div><button type="button" class="btn-remove" onclick="removeMilestone(${m.id})">✕</button>`;
+            div.innerHTML = `<div class="list-item-details"><span class="list-item-title">${icons[m.type] || '🎯'} ${m.type}</span><span class="list-item-sub">Target: ₹${m.amount.toLocaleString('en-IN')} by ${m.year}</span></div><div style="text-align:right"><div class="list-item-amount">₹${m.monthlyRequired.toFixed(0)}/mo</div><button type="button" class="btn-remove" style="width:30px; height:30px; font-size:14px; margin-top:5px;" onclick="removeMilestone(${m.id})"><i class="fas fa-times"></i></button></div>`;
             list.appendChild(div);
         });
     }
@@ -495,7 +627,7 @@
             if (!name || !age || !mobile) { alert('Please fill in all fields'); return; }
             if (age < 18 || age > 100) { alert('Please enter a valid age (18-100)'); return; }
             userData.name = name; userData.age = age; userData.mobile = mobile;
-            console.log('✅ User data:', userData);
+            console.log('✅ User ', userData);
             const savedData = localStorage.getItem('unloanData');
             if(savedData) {
                 const parsed = JSON.parse(savedData);
@@ -517,19 +649,45 @@
     document.getElementById('financialForm').addEventListener('submit', (e) => {
         e.preventDefault();
         console.log('✅ Financial form submitted');
+        
+        // Get selected expenses
+        const expenseCheckboxes = document.querySelectorAll('#expenseCheckboxes input[type="checkbox"]:checked');
+        let totalSelectedExpenses = 0;
+        expenseCheckboxes.forEach(cb => {
+            totalSelectedExpenses += parseFloat(cb.dataset.amount) || 0;
+        });
+        
         const customItems = document.querySelectorAll('#customExpensesList .list-item');
         let totalCustom = 0;
         customItems.forEach(item => { totalCustom += parseFloat(item.querySelector('.custom-amount').value) || 0; });
+        
+        // Get selected milestones from checkboxes
+        const milestoneCheckboxes = document.querySelectorAll('#milestoneCheckboxes input[type="checkbox"]:checked');
+        milestoneCheckboxes.forEach(cb => {
+            const yearsLeft = parseInt(cb.dataset.years);
+            const amount = parseFloat(cb.dataset.amount);
+            const currentYear = new Date().getFullYear();
+            milestones.push({
+                id: Date.now() + Math.random(),
+                type: cb.value,
+                year: currentYear + yearsLeft,
+                amount: amount,
+                monthlyRequired: amount / (yearsLeft * 12),
+                yearsLeft: yearsLeft
+            });
+        });
+        
         userData.income = parseFloat(document.getElementById('income').value);
         userData.loanEmi = parseFloat(document.getElementById('loanEmi').value) || 0;
         userData.insuranceTotal = parseFloat(document.getElementById('insuranceTotal').value) || 0;
         userData.rent = parseFloat(document.getElementById('rent').value) || 0;
         userData.groceries = parseFloat(document.getElementById('groceries').value) || 0;
+        userData.selectedExpenses = totalSelectedExpenses;
         userData.customExpenses = totalCustom;
         userData.maritalStatus = document.getElementById('maritalStatus').value;
         userData.dependents = parseInt(document.getElementById('dependents').value);
         userData.milestones = milestones;
-        userData.totalExpenses = userData.loanEmi + userData.insuranceTotal + userData.rent + userData.groceries + userData.customExpenses;
+        userData.totalExpenses = userData.loanEmi + userData.insuranceTotal + userData.rent + userData.groceries + userData.selectedExpenses + userData.customExpenses;
         userData.disposable = userData.income - userData.totalExpenses;
         userData.annualIncome = userData.income * 12;
         localStorage.setItem('unloanData', JSON.stringify(userData));
@@ -563,8 +721,8 @@
         const longTermProgress = Math.min(100, (estimatedCurrentSavings / longTermGoal) * 100);
         userData.ai = {
             score, summary: summaryText, suggestedInvestment, milestoneInvestmentNeeded,
-            short: { rec: shortTermProgress < 50 ? "Emergency fund is low. Risk of loan dependence is high." : "Liquidity is healthy.", action: shortTermProgress < 50 ? "Priority: Allocate 50% of surplus to emergency fund." : "Maintain current savings rate.", progress: shortTermProgress },
-            long: { rec: longTermProgress < 30 ? `Behind peers (need ${bench.savingsMultiple}x income saved).` : "On track with wealth milestones.", action: longTermProgress < 30 ? "Start SIP in Index Funds now." : "Continue current investment plan.", progress: longTermProgress }
+            short: { rec: shortTermProgress < 50 ? "Emergency fund is low. Risk of loan dependence is high." : "Liquidity is healthy.", action: shortTermProgress < 50 ? "Priority: Allocate 50% of surplus to Liquid Fund" : "Shift excess to Short-term Debt Funds", progress: shortTermProgress },
+            long: { rec: longTermProgress < 30 ? `Behind peers (need ${bench.savingsMultiple}x income saved).` : "On track with wealth milestones.", action: longTermProgress < 30 ? "Start SIP in Index Funds immediately" : "Review asset allocation", progress: longTermProgress }
         };
     }
 
@@ -617,10 +775,10 @@
             milestones.forEach(m => {
                 totalMilestoneAmount += m.monthlyRequired;
                 const canAfford = userData.disposable >= m.monthlyRequired;
-                const icons = { 'Car': '🚗', 'Home': '🏠', 'Marriage': '💍', 'Education': '🎓', 'Travel': '✈️', 'Emergency': '🛡️', 'Business': '💼' };
+                const icons = { 'Car': '🚗', 'Home': '🏠', 'Marriage': '💍', 'Education': '🎓', 'Travel': '✈️', 'Emergency': '🛡️', 'Business': '💼', 'Retirement': '👴' };
                 const card = document.createElement('div');
                 card.className = `milestone-card ${canAfford ? 'success' : 'danger'}`;
-                card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;"><div style="font-weight: 700; font-size: 16px;">${icons[m.type]} ${m.type}</div><div style="text-align: right;"><div style="font-size: 12px; color: var(--gray);">${m.yearsLeft} years</div><div style="font-size: 20px; font-weight: 800; color: var(--primary);">₹${m.monthlyRequired.toFixed(0)}/mo</div></div></div><div style="font-size: 13px; color: var(--gray);">Target: ₹${m.amount.toLocaleString('en-IN')} by ${m.year}</div>`;
+                card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;"><div style="font-weight: 700; font-size: 16px;">${icons[m.type] || '🎯'} ${m.type}</div><span class="tag ${canAfford ? 'tag-long' : 'tag-urgent'}">${canAfford ? '✅' : '⚠️'} ${canAfford ? 'On Track' : 'Needs Adjustment'}</span></div><div style="font-size: 13px; color: var(--gray); margin-bottom: 10px;">Target: ₹${m.amount.toLocaleString('en-IN')} by ${m.year} (${m.yearsLeft} years)</div><div style="background: var(--light); padding: 12px; border-radius: 12px; text-align: center;">Required: <strong style="color: var(--primary); font-size: 16px;">₹${m.monthlyRequired.toFixed(0)}/mo</strong></div>`;
                 milestoneContainer.appendChild(card);
                 const breakdownItem = document.createElement('div');
                 breakdownItem.className = 'milestone-breakdown-item';
@@ -650,7 +808,7 @@
     async function saveToGitHub() {
         if (isSubmittingToSheets) return false;
         isSubmittingToSheets = true;
-        console.log('📤 Saving to GitHub...');
+        console.log('📤 Sending to GitHub...');
         if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_PERSONAL_ACCESS_TOKEN') {
             console.warn('⚠️ GitHub token not configured - saving locally only');
             localStorage.setItem('unloanLastSync', new Date().toISOString());
@@ -660,35 +818,22 @@
         try {
             let existingData = [];
             try {
-                const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json`, {
-                    headers: {
-                        'Authorization': `token ${GITHUB_CONFIG.token}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
+                const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json?ref=${GITHUB_CONFIG.branch}`, {
+                    headers: { 'Authorization': `token ${GITHUB_CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json' }
                 });
                 if (getResponse.ok) {
                     const getData = await getResponse.json();
                     const content = atob(getData.content);
                     existingData = JSON.parse(content);
                 }
-            } catch (e) {
-                console.log('No existing file, creating new one');
-            }
+            } catch (e) { console.log('No existing file, creating new one'); }
             userData.timestamp = new Date().toISOString();
             existingData.push(userData);
             const content = btoa(JSON.stringify(existingData, null, 2));
-            const putResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json`, {
+            await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json`, {
                 method: 'PUT',
-                headers: {
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: `New submission from ${userData.name}`,
-                    content: content,
-                    branch: GITHUB_CONFIG.branch
-                })
+                headers: { 'Authorization': `token ${GITHUB_CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: `New submission from ${userData.name}`, content: content, branch: GITHUB_CONFIG.branch })
             });
             console.log('✅ GitHub save complete');
             localStorage.setItem('unloanLastSync', new Date().toISOString());
@@ -697,9 +842,7 @@
             console.warn('⚠️ GitHub save failed:', error.message);
             localStorage.setItem('unloanLastSync', new Date().toISOString());
             return false;
-        } finally {
-            isSubmittingToSheets = false;
-        }
+        } finally { isSubmittingToSheets = false; }
     }
 
     function exportToCSV() {
