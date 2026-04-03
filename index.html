@@ -192,7 +192,7 @@
             </div>
             <div class="form-group">
                 <label><i class="fas fa-mobile-alt"></i> Mobile Number</label>
-                <input type="tel" id="mobile" placeholder="+1 234 567 890" required>
+                <input type="tel" id="mobile" placeholder="+91 98765 43210" required>
             </div>
             <button type="submit" class="btn"><i class="fas fa-arrow-right"></i> Start Your Journey</button>
         </form>
@@ -204,16 +204,16 @@
         <p class="subtitle">Be honest. This helps our AI create your perfect plan.</p>
         <form id="financialForm">
             <div class="section-divider"><span class="section-title"><i class="fas fa-wallet"></i> Income</span></div>
-            <div class="form-group"><label>Monthly Income (After Tax)</label><input type="number" id="income" placeholder="$5,000" required></div>
+            <div class="form-group"><label>Monthly Income (After Tax)</label><input type="number" id="income" placeholder="₹50,000" required></div>
             <div class="section-divider"><span class="section-title"><i class="fas fa-file-invoice-dollar"></i> Fixed Commitments</span></div>
             <div class="input-group">
-                <div class="form-group"><label>Loan EMIs</label><input type="number" id="loanEmi" placeholder="$0" value="0"></div>
-                <div class="form-group"><label>Insurance</label><input type="number" id="insuranceTotal" placeholder="$0" value="0"></div>
+                <div class="form-group"><label>Loan EMIs</label><input type="number" id="loanEmi" placeholder="₹0" value="0"></div>
+                <div class="form-group"><label>Insurance</label><input type="number" id="insuranceTotal" placeholder="₹0" value="0"></div>
             </div>
             <div class="section-divider"><span class="section-title"><i class="fas fa-home"></i> Living Expenses</span></div>
             <div class="input-group">
-                <div class="form-group"><label>Rent/Mortgage</label><input type="number" id="rent" placeholder="$0" value="0"></div>
-                <div class="form-group"><label>Groceries & Food</label><input type="number" id="groceries" placeholder="$0" value="0"></div>
+                <div class="form-group"><label>Rent/Mortgage</label><input type="number" id="rent" placeholder="₹0" value="0"></div>
+                <div class="form-group"><label>Groceries & Food</label><input type="number" id="groceries" placeholder="₹0" value="0"></div>
             </div>
             <div class="form-group">
                 <label>Other Expenses</label>
@@ -236,7 +236,7 @@
                 </div>
                 <div class="form-group"><label>Target Year</label><input type="number" id="goalYear" placeholder="2027" min="2024"></div>
             </div>
-            <div class="form-group"><label>Target Amount ($)</label><input type="number" id="goalAmount" placeholder="20,000"></div>
+            <div class="form-group"><label>Target Amount (₹)</label><input type="number" id="goalAmount" placeholder="2,00,000"></div>
             <button type="button" class="btn btn-outline btn-sm" style="border-color: var(--secondary); color: var(--secondary);" onclick="addMilestone()"><i class="fas fa-plus"></i> Add Goal</button>
             <div id="milestonesList" class="list-container"></div>
             <div class="section-divider"><span class="section-title"><i class="fas fa-users"></i> Personal</span></div>
@@ -266,7 +266,7 @@
             </div>
             <div class="alert alert-info" style="margin-top: 20px; margin-bottom: 0;"><i class="fas fa-robot"></i><span id="ai-summary-text">Analyzing your data...</span></div>
             <div class="health-metrics">
-                <div class="metric-box"><div class="metric-label">Monthly Surplus</div><div class="metric-value" id="metric-surplus">$0</div></div>
+                <div class="metric-box"><div class="metric-label">Monthly Surplus</div><div class="metric-value" id="metric-surplus">₹0</div></div>
                 <div class="metric-box"><div class="metric-label">Savings Rate</div><div class="metric-value" id="metric-savings">0%</div></div>
                 <div class="metric-box"><div class="metric-label">EMI Burden</div><div class="metric-value" id="metric-emi">0%</div></div>
                 <div class="metric-box"><div class="metric-label">Active Goals</div><div class="metric-value" id="metric-goals">0</div></div>
@@ -294,7 +294,7 @@
             </div>
             <div class="investment-recommendation-box">
                 <div class="rec-label"><i class="fas fa-coins"></i> Recommended Monthly Investment</div>
-                <div class="rec-amount" id="insurance-investment-amount">$0</div>
+                <div class="rec-amount" id="insurance-investment-amount">₹0</div>
                 <div class="rec-detail" id="insurance-investment-detail">For insurance premiums</div>
             </div>
         </div>
@@ -302,11 +302,11 @@
         <!-- SECTION 3: MILESTONE FOCUS -->
         <div class="section-header"><div class="section-number">03</div><h3><i class="fas fa-bullseye"></i> Milestone Focus</h3></div>
         <div id="milestone-tracker-section">
-            <div class="alert alert-warning" style="margin-bottom: 20px;"><i class="fas fa-lightbulb"></i><span><strong>Pro Tip:</strong> Reduce loan amount with small savings! Even $50/month extra towards loans can save thousands in interest.</span></div>
+            <div class="alert alert-warning" style="margin-bottom: 20px;"><i class="fas fa-lightbulb"></i><span><strong>Pro Tip:</strong> Reduce loan amount with small savings! Even ₹500/month extra towards loans can save thousands in interest.</span></div>
             <div id="milestone-cards-container"></div>
             <div class="card" style="margin-top: 20px;">
                 <div class="card-title" style="margin-bottom: 15px;"><i class="fas fa-calculator"></i> Total Monthly Savings Required</div>
-                <div class="milestone-total-box"><div class="milestone-total-label">For All Goals</div><div class="milestone-total-amount" id="milestone-total-amount">$0/mo</div></div>
+                <div class="milestone-total-box"><div class="milestone-total-label">For All Goals</div><div class="milestone-total-amount" id="milestone-total-amount">₹0/mo</div></div>
                 <div class="milestone-breakdown" id="milestone-breakdown"></div>
             </div>
         </div>
@@ -322,7 +322,7 @@
         <div class="card investment-card-short">
             <div class="investment-card-header">
                 <div><div class="investment-type-tag tag-short"><i class="fas fa-shield-alt"></i> Short Term</div><div class="investment-timeframe">0-2 Years</div></div>
-                <div class="investment-amount-box"><div class="investment-amount-label">Suggested</div><div class="investment-amount-value" id="short-term-amount">$0/mo</div></div>
+                <div class="investment-amount-box"><div class="investment-amount-label">Suggested</div><div class="investment-amount-value" id="short-term-amount">₹0/mo</div></div>
             </div>
             <div class="investment-content">
                 <div class="investment-detail" id="short-term-rec">Loading...</div>
@@ -344,7 +344,7 @@
         <div class="card investment-card-long">
             <div class="investment-card-header">
                 <div><div class="investment-type-tag tag-long"><i class="fas fa-rocket"></i> Long Term</div><div class="investment-timeframe">5+ Years</div></div>
-                <div class="investment-amount-box"><div class="investment-amount-label">Suggested</div><div class="investment-amount-value" id="long-term-amount">$0/mo</div></div>
+                <div class="investment-amount-box"><div class="investment-amount-label">Suggested</div><div class="investment-amount-value" id="long-term-amount">₹0/mo</div></div>
             </div>
             <div class="investment-content">
                 <div class="investment-detail" id="long-term-rec">Loading...</div>
@@ -366,11 +366,11 @@
         <div class="card total-investment-summary">
             <div class="summary-title"><i class="fas fa-wallet"></i> Total Monthly Investment Plan</div>
             <div class="summary-breakdown">
-                <div class="summary-item"><span>Insurance</span><span id="summary-insurance">$0</span></div>
-                <div class="summary-item"><span>Milestones</span><span id="summary-milestones">$0</span></div>
-                <div class="summary-item"><span>Short Term</span><span id="summary-short">$0</span></div>
-                <div class="summary-item"><span>Long Term</span><span id="summary-long">$0</span></div>
-                <div class="summary-total"><span>TOTAL</span><span id="summary-total">$0/mo</span></div>
+                <div class="summary-item"><span>Insurance</span><span id="summary-insurance">₹0</span></div>
+                <div class="summary-item"><span>Milestones</span><span id="summary-milestones">₹0</span></div>
+                <div class="summary-item"><span>Short Term</span><span id="summary-short">₹0</span></div>
+                <div class="summary-item"><span>Long Term</span><span id="summary-long">₹0</span></div>
+                <div class="summary-total"><span>TOTAL</span><span id="summary-total">₹0/mo</span></div>
             </div>
         </div>
 
@@ -387,8 +387,14 @@
 </div>
 
 <script>
-    // ⚠️ REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT URL
-    const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbywalatdWh1UcN7UPsBBztBQF5AvFPhiQDr49QFkqL02Jms64yeV-mxtlPyaxpHHDOg/exec';
+    // ⚠️ GITHUB CONFIGURATION - Replace with your details
+    const GITHUB_CONFIG = {
+        username: 'YOUR_GITHUB_USERNAME',
+        repo: 'unloan-data',
+        token: 'YOUR_PERSONAL_ACCESS_TOKEN',
+        branch: 'main'
+    };
+    
     let isSubmittingToSheets = false;
     let userData = {};
     let milestones = [];
@@ -447,7 +453,7 @@
         const div = document.createElement('div');
         div.className = 'list-item';
         div.id = `exp-${id}`;
-        div.innerHTML = `<div class="list-item-details" style="flex:1; display:flex; gap:10px;"><input type="text" placeholder="Name" class="custom-name" value="Misc" style="flex:1; padding:10px;"><input type="number" placeholder="$" class="custom-amount" value="0" style="flex:1; padding:10px;"></div><button type="button" class="btn-remove" onclick="document.getElementById('exp-${id}').remove()"><i class="fas fa-times"></i></button>`;
+        div.innerHTML = `<div class="list-item-details" style="flex:1; display:flex; gap:10px;"><input type="text" placeholder="Name" class="custom-name" value="Misc" style="flex:1; padding:10px;"><input type="number" placeholder="₹" class="custom-amount" value="0" style="flex:1; padding:10px;"></div><button type="button" class="btn-remove" onclick="document.getElementById('exp-${id}').remove()"><i class="fas fa-times"></i></button>`;
         list.appendChild(div);
     }
 
@@ -472,16 +478,15 @@
             const icons = { 'Car': '🚗', 'Home': '🏠', 'Marriage': '💍', 'Education': '🎓', 'Travel': '✈️', 'Emergency': '🛡️', 'Business': '💼' };
             const div = document.createElement('div');
             div.className = 'list-item';
-            div.innerHTML = `<div class="list-item-details"><span class="list-item-title">${icons[m.type] || '🎯'} ${m.type}</span><span class="list-item-sub">Target: $${m.amount.toLocaleString()} by ${m.year}</span></div><div style="text-align:right"><div class="list-item-amount">$${m.monthlyRequired.toFixed(0)}/mo</div><button type="button" class="btn-remove" style="width:30px; height:30px; font-size:14px; margin-top:5px;" onclick="removeMilestone(${m.id})"><i class="fas fa-times"></i></button></div>`;
+            div.innerHTML = `<div class="list-item-details"><span class="list-item-title">${icons[m.type] || '🎯'} ${m.type}</span><span class="list-item-sub">Target: ₹${m.amount.toLocaleString('en-IN')} by ${m.year}</span></div><div style="text-align:right"><div class="list-item-amount">₹${m.monthlyRequired.toFixed(0)}/mo</div><button type="button" class="btn-remove" style="width:30px; height:30px; font-size:14px; margin-top:5px;" onclick="removeMilestone(${m.id})"><i class="fas fa-times"></i></button></div>`;
             list.appendChild(div);
         });
     }
 
     function removeMilestone(id) { milestones = milestones.filter(m => m.id !== id); renderMilestonesList(); }
 
-    // Entry Form Handler - FIXED with preventDefault
     document.getElementById('entryForm').addEventListener('submit', (e) => {
-        e.preventDefault(); // ⚠️ CRITICAL: Prevents page reload
+        e.preventDefault();
         console.log('✅ Entry form submitted');
         try {
             const name = document.getElementById('name').value.trim();
@@ -509,7 +514,6 @@
         } catch (error) { console.error('❌ Entry form error:', error); alert('Error: ' + error.message); }
     });
 
-    // Financial Form Handler
     document.getElementById('financialForm').addEventListener('submit', (e) => {
         e.preventDefault();
         console.log('✅ Financial form submitted');
@@ -540,7 +544,7 @@
         const ageGroup = getAgeGroup(userData.age);
         const bench = benchmarks[ageGroup];
         let score = 50, summaryText = "", suggestedInvestment = 0, milestoneInvestmentNeeded = 0;
-        if (milestones.length > 0) { milestones.forEach(m => { milestoneInvestmentNeeded += m.monthlyRequired; }); summaryText += `You have ${milestones.length} active goals requiring $${milestoneInvestmentNeeded.toFixed(0)}/mo. `; }
+        if (milestones.length > 0) { milestones.forEach(m => { milestoneInvestmentNeeded += m.monthlyRequired; }); summaryText += `You have ${milestones.length} active goals requiring ₹${milestoneInvestmentNeeded.toFixed(0)}/mo. `; }
         const savingsRate = userData.disposable / userData.income;
         if (userData.disposable <= 0) { score = 10; summaryText = "⚠️ Critical: Expenses exceed income. Reduce loans immediately."; suggestedInvestment = 0; }
         else {
@@ -567,7 +571,7 @@
     function calculateInsuranceScore() {
         let score = 50, healthAdequate = false, termAdequate = false, healthRecommended = 0, termRecommended = 0;
         const healthPremium = userData.insuranceTotal * 0.5;
-        if (healthPremium >= 200) { healthAdequate = true; score += 25; } else { healthRecommended = 200 - healthPremium; }
+        if (healthPremium >= 10000) { healthAdequate = true; score += 25; } else { healthRecommended = 10000 - healthPremium; }
         const termNeeded = (userData.annualIncome * 0.01) / 12;
         const termPremium = userData.insuranceTotal * 0.5;
         if (termPremium >= termNeeded) { termAdequate = true; score += 25; } else { termRecommended = termNeeded - termPremium; }
@@ -587,7 +591,7 @@
         document.getElementById('ai-summary-text').innerText = userData.ai.summary;
         const savingsRate = ((userData.disposable / userData.income) * 100).toFixed(1);
         const emiRatio = ((userData.loanEmi / userData.income) * 100).toFixed(1);
-        document.getElementById('metric-surplus').innerText = "$" + userData.disposable.toFixed(0);
+        document.getElementById('metric-surplus').innerText = "₹" + userData.disposable.toFixed(0);
         document.getElementById('metric-surplus').style.color = userData.disposable > 0 ? 'var(--success)' : 'var(--danger)';
         document.getElementById('metric-savings').innerText = savingsRate + "%";
         document.getElementById('metric-emi').innerText = emiRatio + "%";
@@ -597,11 +601,11 @@
         insScoreEl.innerText = insuranceScore.score + "/100";
         insScoreEl.className = 'insurance-score-badge' + (insuranceScore.score > 70 ? ' good' : insuranceScore.score > 40 ? ' medium' : '');
         document.getElementById('health-ins-status').innerText = insuranceScore.healthAdequate ? "✅ Adequate" : "⚠️ Needs Review";
-        document.getElementById('health-ins-action').innerText = insuranceScore.healthAdequate ? "Maintain" : "$" + insuranceScore.healthRecommended.toFixed(0) + "/mo";
+        document.getElementById('health-ins-action').innerText = insuranceScore.healthAdequate ? "Maintain" : "₹" + insuranceScore.healthRecommended.toFixed(0) + "/mo";
         document.getElementById('term-ins-status').innerText = insuranceScore.termAdequate ? "✅ Adequate" : "⚠️ Needs Review";
-        document.getElementById('term-ins-action').innerText = insuranceScore.termAdequate ? "Maintain" : "$" + insuranceScore.termRecommended.toFixed(0) + "/mo";
+        document.getElementById('term-ins-action').innerText = insuranceScore.termAdequate ? "Maintain" : "₹" + insuranceScore.termRecommended.toFixed(0) + "/mo";
         const totalInsuranceNeeded = insuranceScore.healthRecommended + insuranceScore.termRecommended;
-        document.getElementById('insurance-investment-amount').innerText = "$" + totalInsuranceNeeded.toFixed(0) + "/mo";
+        document.getElementById('insurance-investment-amount').innerText = "₹" + totalInsuranceNeeded.toFixed(0) + "/mo";
         const milestoneSection = document.getElementById('milestone-tracker-section');
         const noMilestonesMsg = document.getElementById('no-milestones-message');
         const milestoneContainer = document.getElementById('milestone-cards-container');
@@ -616,53 +620,101 @@
                 const icons = { 'Car': '🚗', 'Home': '🏠', 'Marriage': '💍', 'Education': '🎓', 'Travel': '✈️', 'Emergency': '🛡️', 'Business': '💼' };
                 const card = document.createElement('div');
                 card.className = `milestone-card ${canAfford ? 'success' : 'danger'}`;
-                card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;"><div style="font-weight: 700; font-size: 16px;">${icons[m.type] || '🎯'} ${m.type}</div><span class="tag ${canAfford ? 'tag-long' : 'tag-urgent'}">${canAfford ? '✅' : '⚠️'} ${canAfford ? 'On Track' : 'Needs Adjustment'}</span></div><div style="font-size: 13px; color: var(--gray); margin-bottom: 10px;">Target: $${m.amount.toLocaleString()} by ${m.year} (${m.yearsLeft} years)</div><div style="background: var(--light); padding: 12px; border-radius: 12px; text-align: center;">Required: <strong style="color: var(--primary); font-size: 16px;">$${m.monthlyRequired.toFixed(0)}/mo</strong></div>`;
+                card.innerHTML = `<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;"><div style="font-weight: 700; font-size: 16px;">${icons[m.type] || '🎯'} ${m.type}</div><span class="tag ${canAfford ? 'tag-long' : 'tag-urgent'}">${canAfford ? '✅' : '⚠️'} ${canAfford ? 'On Track' : 'Needs Adjustment'}</span></div><div style="font-size: 13px; color: var(--gray); margin-bottom: 10px;">Target: ₹${m.amount.toLocaleString('en-IN')} by ${m.year} (${m.yearsLeft} years)</div><div style="background: var(--light); padding: 12px; border-radius: 12px; text-align: center;">Required: <strong style="color: var(--primary); font-size: 16px;">₹${m.monthlyRequired.toFixed(0)}/mo</strong></div>`;
                 milestoneContainer.appendChild(card);
                 const breakdownItem = document.createElement('div');
                 breakdownItem.className = 'milestone-breakdown-item';
-                breakdownItem.innerHTML = `<span>${icons[m.type]} ${m.type}</span><strong>$${m.monthlyRequired.toFixed(0)}/mo</strong>`;
+                breakdownItem.innerHTML = `<span>${icons[m.type]} ${m.type}</span><strong>₹${m.monthlyRequired.toFixed(0)}/mo</strong>`;
                 milestoneBreakdown.appendChild(breakdownItem);
             });
-            document.getElementById('milestone-total-amount').innerText = "$" + totalMilestoneAmount.toFixed(0) + "/mo";
-        } else { milestoneSection.style.display = 'none'; noMilestonesMsg.style.display = 'block'; document.getElementById('milestone-total-amount').innerText = "$0/mo"; }
+            document.getElementById('milestone-total-amount').innerText = "₹" + totalMilestoneAmount.toFixed(0) + "/mo";
+        } else { milestoneSection.style.display = 'none'; noMilestonesMsg.style.display = 'block'; document.getElementById('milestone-total-amount').innerText = "₹0/mo"; }
         const shortTermAmount = userData.disposable > 0 ? (userData.disposable * 0.3).toFixed(0) : 0;
         const longTermAmount = userData.disposable > 0 ? (userData.disposable * 0.4).toFixed(0) : 0;
-        document.getElementById('short-term-amount').innerText = "$" + shortTermAmount + "/mo";
-        document.getElementById('long-term-amount').innerText = "$" + longTermAmount + "/mo";
+        document.getElementById('short-term-amount').innerText = "₹" + shortTermAmount + "/mo";
+        document.getElementById('long-term-amount').innerText = "₹" + longTermAmount + "/mo";
         document.getElementById('short-term-rec').innerText = userData.ai.short.rec;
         document.getElementById('short-action').innerText = userData.ai.short.action;
         setTimeout(() => { document.getElementById('short-bar').style.width = userData.ai.short.progress + "%"; }, 500);
         document.getElementById('long-term-rec').innerText = userData.ai.long.rec;
         document.getElementById('long-action').innerText = userData.ai.long.action;
         setTimeout(() => { document.getElementById('long-bar').style.width = userData.ai.long.progress + "%"; }, 500);
-        document.getElementById('summary-insurance').innerText = "$" + totalInsuranceNeeded.toFixed(0);
-        document.getElementById('summary-milestones').innerText = "$" + totalMilestoneAmount.toFixed(0);
-        document.getElementById('summary-short').innerText = "$" + shortTermAmount;
-        document.getElementById('summary-long').innerText = "$" + longTermAmount;
+        document.getElementById('summary-insurance').innerText = "₹" + totalInsuranceNeeded.toFixed(0);
+        document.getElementById('summary-milestones').innerText = "₹" + totalMilestoneAmount.toFixed(0);
+        document.getElementById('summary-short').innerText = "₹" + shortTermAmount;
+        document.getElementById('summary-long').innerText = "₹" + longTermAmount;
         const grandTotal = totalInsuranceNeeded + totalMilestoneAmount + parseFloat(shortTermAmount) + parseFloat(longTermAmount);
-        document.getElementById('summary-total').innerText = "$" + grandTotal.toFixed(0) + "/mo";
+        document.getElementById('summary-total').innerText = "₹" + grandTotal.toFixed(0) + "/mo";
     }
 
-    async function saveToGoogleSheets() {
+    // GitHub API - Save data to repository
+    async function saveToGitHub() {
         if (isSubmittingToSheets) return false;
         isSubmittingToSheets = true;
-        console.log('📤 Sending to Google Sheets...');
-        if (!GOOGLE_SHEET_URL || GOOGLE_SHEET_URL.includes('YOUR_WEB_APP')) {
-            console.warn('⚠️ Google Sheets URL not configured - saving locally only');
+        
+        console.log('📤 Saving to GitHub...');
+        
+        if (!GITHUB_CONFIG.token || GITHUB_CONFIG.token === 'YOUR_PERSONAL_ACCESS_TOKEN') {
+            console.warn('⚠️ GitHub token not configured - saving locally only');
             localStorage.setItem('unloanLastSync', new Date().toISOString());
             isSubmittingToSheets = false;
             return false;
         }
+        
         try {
-            await fetch(GOOGLE_SHEET_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(userData) });
-            console.log('✅ Request sent (check Network tab)');
+            // Get existing data file
+            let existingData = [];
+            try {
+                const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json`, {
+                    headers: {
+                        'Authorization': `token ${GITHUB_CONFIG.token}`,
+                        'Accept': 'application/vnd.github.v3+json'
+                    }
+                });
+                
+                if (getResponse.ok) {
+                    const getData = await getResponse.json();
+                    const content = atob(getData.content);
+                    existingData = JSON.parse(content);
+                }
+            } catch (e) {
+                console.log('No existing file, creating new one');
+            }
+            
+            // Add new submission
+            userData.timestamp = new Date().toISOString();
+            existingData.push(userData);
+            
+            // Update file
+            const content = btoa(JSON.stringify(existingData, null, 2));
+            const putResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json`, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${GITHUB_CONFIG.token}`,
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: `New submission from ${userData.name}`,
+                    content: content,
+                    branch: GITHUB_CONFIG.branch,
+                    sha: existingData.length > 1 ? (await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json`, {
+                        headers: { 'Authorization': `token ${GITHUB_CONFIG.token}` }
+                    }).then(r => r.json())).sha : undefined
+                })
+            });
+            
+            console.log('✅ GitHub save complete');
             localStorage.setItem('unloanLastSync', new Date().toISOString());
             return true;
+            
         } catch (error) {
-            console.warn('⚠️ Cloud save failed:', error.message);
+            console.warn('⚠️ GitHub save failed:', error.message);
             localStorage.setItem('unloanLastSync', new Date().toISOString());
             return false;
-        } finally { isSubmittingToSheets = false; }
+        } finally {
+            isSubmittingToSheets = false;
+        }
     }
 
     function exportToCSV() {
@@ -670,7 +722,7 @@
         const timestamp = new Date().toISOString().split('T')[0];
         let csv = "text/csv;charset=utf-8,unloan Financial Data Export," + timestamp + "\n\n";
         csv += "PERSONAL\nField,Value\nName," + data.name + "\nAge," + data.age + "\nMobile," + data.mobile + "\n\n";
-        csv += "FINANCES\nCategory,Amount\nIncome," + data.income + "\nExpenses," + data.totalExpenses + "\nDisposable," + data.disposable + "\n\n";
+        csv += "FINANCES\nCategory,Amount (₹)\nIncome," + data.income + "\nExpenses," + data.totalExpenses + "\nDisposable," + data.disposable + "\n\n";
         csv += "MILESTONES\nGoal,Year,Amount,Monthly\n";
         if (data.milestones) data.milestones.forEach(m => { csv += m.type + "," + m.year + "," + m.amount + "," + m.monthlyRequired.toFixed(2) + "\n"; });
         csv += "\nAI SCORE," + data.ai.score + "\nSuggested Investment," + data.ai.suggestedInvestment.toFixed(2);
@@ -686,17 +738,15 @@
         const saveBtn = document.querySelector('button[onclick="saveAndFinish()"]');
         const originalText = saveBtn ? saveBtn.innerHTML : '';
         if (saveBtn) { saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...'; saveBtn.disabled = true; }
-        const cloudSuccess = await saveToGoogleSheets();
-        if (cloudSuccess) { alert('✅ Data saved to cloud!\n\nYour financial plan is securely stored in Google Sheets.'); }
-        else { alert('⚠️ Cloud sync blocked (ad blocker or network issue)\n\n✅ Data saved LOCALLY on this device.\n\nTo enable cloud sync:\n1. Disable ad blocker for this site\n2. Try in incognito mode\n3. Check network connection'); }
+        const cloudSuccess = await saveToGitHub();
+        if (cloudSuccess) { alert('✅ Data saved to GitHub!\n\nView at: https://github.com/' + GITHUB_CONFIG.username + '/' + GITHUB_CONFIG.repo); }
+        else { alert('⚠️ Cloud sync failed\n\n✅ Data saved LOCALLY on this device.'); }
         if (saveBtn) { saveBtn.innerHTML = originalText; saveBtn.disabled = false; }
     }
 
-    // Global error handler for debugging
     window.addEventListener('error', (e) => { console.error('💥 GLOBAL ERROR:', e.message); });
     window.addEventListener('unhandledrejection', (e) => { console.error('💥 UNHANDLED PROMISE:', e.reason); });
 
-    // Service Worker Registration
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js').then(reg => console.log('✅ SW Registered', reg)).catch(err => console.log('❌ SW Failed', err));
