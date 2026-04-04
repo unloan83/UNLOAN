@@ -828,7 +828,7 @@
                 localStorage.setItem('unloanLastSync', new Date().toISOString());
                 return true;
             } else {
-                console.error("❌ Backend error:", result);
+                console.error("❌ Backend error FULL:", JSON.stringify(result));
                 throw new Error(result.message || "Backend failed");
             }
         } catch (error) {
