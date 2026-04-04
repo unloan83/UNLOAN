@@ -821,19 +821,21 @@
                 const getResponse = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json?ref=${GITHUB_CONFIG.branch}`, {
                     headers: { 'Authorization': `token ${GITHUB_CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json' }
                 });
+                let fileSha = null; //added
                 if (getResponse.ok) {
                     const getData = await getResponse.json();
-                    const content = atob(getData.content);
+                    fileSha = getData.sha;   // added
+                    const content = decodeURIComponent(escape(atob(getData.content))); //changed
                     existingData = JSON.parse(content);
                 }
             } catch (e) { console.log('No existing file, creating new one'); }
             userData.timestamp = new Date().toISOString();
             existingData.push(userData);
-            const content = btoa(JSON.stringify(existingData, null, 2));
+            const content = btoa(unescape(encodeURIComponent(JSON.stringify(existingData, null, 2))));  //changed
             await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.username}/${GITHUB_CONFIG.repo}/contents/submissions.json`, {
                 method: 'PUT',
                 headers: { 'Authorization': `token ${GITHUB_CONFIG.token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: `New submission from ${userData.name}`, content: content, branch: GITHUB_CONFIG.branch })
+                body: JSON.stringify({ message: `New submission from ${userData.name}`, content: content, sha: fileSha, branch: GITHUB_CONFIG.branch }) //changed
             });
             console.log('✅ GitHub save complete');
             localStorage.setItem('unloanLastSync', new Date().toISOString());
