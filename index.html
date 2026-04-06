@@ -2,951 +2,345 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#6C63FF">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="unloan - Your AI-powered financial freedom planner">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="https://img.icons8.com/color/96/000000/money-bag.png">
     <title>unloan | Plan. Invest. Live Free.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6C63FF; --primary-dark: #5a52d5; --secondary: #00D2D3;
-            --success: #1DD1A1; --warning: #FFA502; --danger: #FF4757;
-            --dark: #1e272e; --gray: #57606f; --light: #f1f2f6; --white: #ffffff;
-            --gradient-primary: linear-gradient(135deg, #6C63FF 0%, #00D2D3 100%);
-            --gradient-dark: linear-gradient(135deg, #1e272e 0%, #485460 100%);
-            --gradient-success: linear-gradient(135deg, #1DD1A1 0%, #10ac84 100%);
-            --gradient-card: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
-            --shadow-sm: 0 2px 8px rgba(108, 99, 255, 0.1);
-            --shadow-md: 0 8px 24px rgba(108, 99, 255, 0.15);
-            --shadow-lg: 0 15px 40px rgba(108, 99, 255, 0.2);
-            --shadow-glow: 0 0 20px rgba(108, 99, 255, 0.4);
-            --radius-sm: 12px; --radius-md: 20px; --radius-lg: 30px; --radius-xl: 40px;
+            --primary: #6C63FF; --secondary: #00D2D3; --success: #1DD1A1;
+            --warning: #FFA502; --danger: #FF4757; --dark: #1e272e;
+            --light: #f1f2f6; --white: #ffffff;
+            --gradient: linear-gradient(135deg, #6C63FF 0%, #00D2D3 100%);
         }
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); color: var(--dark); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 15px; overflow: hidden; }
-        body::before { content: ''; position: fixed; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(108, 99, 255, 0.05) 0%, transparent 70%); animation: rotate 20s linear infinite; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .app-container { background: var(--white); width: 100%; max-width: 450px; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; position: relative; min-height: 800px; display: flex; flex-direction: column; }
-        header { padding: 25px 30px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(108, 99, 255, 0.1); position: sticky; top: 0; z-index: 100; }
-        .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        .logo-icon { width: 45px; height: 45px; background: var(--gradient-primary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; }
-        .logo { font-size: 28px; font-weight: 800; background: var(--gradient-primary); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: -0.5px; }
-        .logo span { color: var(--dark); -webkit-text-fill-color: var(--dark); }
-        .screen { padding: 30px; flex: 1; display: none; flex-direction: column; animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
-        .screen.active { display: flex; }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-        h2 { font-size: 26px; font-weight: 700; margin-bottom: 8px; color: var(--dark); letter-spacing: -0.5px; }
-        h3 { font-size: 18px; font-weight: 600; margin-bottom: 15px; color: var(--dark); }
-        p.subtitle { font-size: 14px; color: var(--gray); margin-bottom: 30px; line-height: 1.6; font-weight: 400; }
-        .form-group { margin-bottom: 20px; position: relative; }
-        .form-row { display: flex; align-items: center; gap: 10px; }
-        .form-row input { flex: 1; }
-        .frequency-tag { background: var(--light); padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
-        .frequency-tag.monthly { background: rgba(108, 99, 255, 0.1); color: var(--primary); }
-        .frequency-tag.yearly { background: rgba(29, 209, 161, 0.1); color: var(--success); }
-        .frequency-tag.one-time { background: rgba(255, 165, 2, 0.1); color: var(--warning); }
-        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 10px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select { width: 100%; padding: 16px 20px; border: 2px solid #e1e5eb; border-radius: var(--radius-md); font-size: 16px; background: var(--light); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        input:focus, select:focus { border-color: var(--primary); outline: none; background: var(--white); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
-        input::placeholder { color: #a4b0be; }
-        .btn { width: 100%; padding: 18px 24px; border: none; border-radius: var(--radius-md); background: var(--gradient-primary); color: white; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
-        .btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); transition: left 0.5s; }
-        .btn:hover::before { left: 100%; }
-        .btn:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-        .btn:active { transform: translateY(-1px) scale(0.98); }
-        .btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
-        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); box-shadow: none; margin-top: 12px; }
-        .btn-outline:hover { background: rgba(108, 99, 255, 0.05); }
-        .btn-sm { width: auto; padding: 12px 20px; font-size: 13px; margin-top: 8px; display: inline-flex; align-items: center; gap: 8px; }
-        .card { background: var(--gradient-card); border-radius: var(--radius-lg); padding: 25px; margin-bottom: 20px; box-shadow: var(--shadow-sm); border: 1px solid rgba(108, 99, 255, 0.08); transition: all 0.3s ease; }
-        .card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
-        .section-header { display: flex; align-items: center; gap: 15px; margin: 30px 0 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(108, 99, 255, 0.1); }
-        .section-header:first-child { margin-top: 10px; }
-        .section-number { width: 40px; height: 40px; border-radius: 12px; background: var(--gradient-primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; }
-        .section-header h3 { margin: 0; font-size: 18px; font-weight: 700; color: var(--dark); display: flex; align-items: center; gap: 10px; }
-        .score-display { text-align: center; padding: 10px; }
-        .score-circle-large { width: 120px; height: 120px; border-radius: 50%; background: var(--gradient-primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: 800; margin: 0 auto 15px; position: relative; }
-        .score-circle-large::after { content: ''; position: absolute; top: -8px; left: -8px; right: -8px; bottom: -8px; border-radius: 50%; border: 3px dashed rgba(108, 99, 255, 0.3); animation: rotate 3s linear infinite; }
-        .score-label { font-size: 14px; font-weight: 600; color: var(--gray); margin-bottom: 20px; }
-        .score-range { max-width: 300px; margin: 0 auto; }
-        .range-bar { height: 12px; background: linear-gradient(90deg, #FF4757 0%, #FFA502 50%, #1DD1A1 100%); border-radius: 10px; position: relative; overflow: hidden; }
-        .range-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: rgba(255, 255, 255, 0.3); border-radius: 10px; transition: width 1s ease; }
-        .range-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--gray); margin-top: 8px; font-weight: 500; }
-        .health-metrics { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .metric-box { background: var(--light); padding: 15px; border-radius: var(--radius-md); text-align: center; }
-        .metric-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-        .metric-value { font-size: 20px; font-weight: 700; color: var(--primary); }
-        .card-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .card-title { font-size: 16px; font-weight: 700; color: var(--dark); }
-        .card-subtitle { font-size: 12px; color: var(--gray); margin-top: 4px; }
-        .insurance-score-badge { padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; background: rgba(255, 71, 87, 0.15); color: var(--danger); }
-        .insurance-score-badge.good { background: rgba(29, 209, 161, 0.15); color: var(--success); }
-        .insurance-score-badge.medium { background: rgba(255, 165, 2, 0.15); color: var(--warning); }
-        .insurance-breakdown { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .insurance-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: var(--light); border-radius: var(--radius-md); }
-        .insurance-icon { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; color: white; }
-        .insurance-icon.health { background: linear-gradient(135deg, #1DD1A1 0%, #10ac84 100%); }
-        .insurance-icon.term { background: linear-gradient(135deg, #6C63FF 0%, #5a52d5 100%); }
-        .insurance-details { flex: 1; }
-        .insurance-name { font-weight: 600; font-size: 14px; color: var(--dark); }
-        .insurance-status { font-size: 12px; color: var(--gray); margin-top: 3px; }
-        .insurance-action { font-size: 12px; font-weight: 600; color: var(--primary); background: rgba(108, 99, 255, 0.1); padding: 8px 12px; border-radius: 8px; }
-        .investment-recommendation-box { background: linear-gradient(135deg, rgba(108, 99, 255, 0.1) 0%, rgba(0, 210, 211, 0.1) 100%); padding: 20px; border-radius: var(--radius-md); text-align: center; margin-top: 20px; }
-        .rec-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); font-weight: 600; }
-        .rec-amount { font-size: 32px; font-weight: 800; color: var(--primary); margin: 8px 0; }
-        .rec-detail { font-size: 13px; color: var(--gray); }
-        .milestone-card { background: var(--white); border-left: 4px solid var(--primary); border-radius: var(--radius-md); padding: 20px; margin-bottom: 15px; box-shadow: var(--shadow-sm); transition: all 0.3s ease; }
-        .milestone-card:hover { box-shadow: var(--shadow-md); transform: translateX(5px); }
-        .milestone-card.success { border-left-color: var(--success); }
-        .milestone-card.warning { border-left-color: var(--warning); }
-        .milestone-card.danger { border-left-color: var(--danger); }
-        .milestone-total-box { background: var(--gradient-primary); padding: 25px; border-radius: var(--radius-md); text-align: center; color: white; margin-bottom: 15px; }
-        .milestone-total-label { font-size: 12px; opacity: 0.9; text-transform: uppercase; letter-spacing: 1px; }
-        .milestone-total-amount { font-size: 36px; font-weight: 800; margin-top: 5px; }
-        .milestone-breakdown { display: flex; flex-direction: column; gap: 10px; }
-        .milestone-breakdown-item { display: flex; justify-content: space-between; padding: 12px 15px; background: var(--light); border-radius: var(--radius-sm); font-size: 13px; }
-        .investment-card-short { border-top: 4px solid var(--warning); }
-        .investment-card-long { border-top: 4px solid var(--success); }
-        .investment-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
-        .investment-type-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; padding: 6px 12px; border-radius: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .tag-short { background: rgba(255, 165, 2, 0.15); color: var(--warning); }
-        .tag-long { background: rgba(29, 209, 161, 0.15); color: var(--success); }
-        .tag-urgent { background: rgba(255, 71, 87, 0.15); color: var(--danger); }
-        .investment-timeframe { font-size: 12px; color: var(--gray); }
-        .investment-amount-box { text-align: right; }
-        .investment-amount-label { font-size: 10px; color: var(--gray); text-transform: uppercase; }
-        .investment-amount-value { font-size: 24px; font-weight: 800; color: var(--primary); }
-        .investment-content { padding-top: 15px; border-top: 1px solid #eee; }
-        .investment-detail { font-size: 14px; color: var(--gray); line-height: 1.6; }
-        .progress-container { margin: 15px 0; }
-        .progress-bar { height: 10px; background: #e1e5eb; border-radius: 10px; overflow: hidden; position: relative; }
-        .progress-fill { height: 100%; background: var(--gradient-primary); width: 0%; transition: width 1s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 10px; position: relative; }
-        .progress-fill::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); animation: shimmer 2s infinite; }
-        @keyframes shimmer { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
-        .progress-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--gray); margin-top: 8px; font-weight: 500; }
-        .investment-action-box { background: rgba(29, 209, 161, 0.1); color: var(--success); padding: 12px 15px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
-        .investment-instruments { margin-top: 15px; }
-        .instrument-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; font-weight: 600; }
-        .instrument-tags { display: flex; flex-wrap: wrap; gap: 8px; }
-        .instrument-tag { background: var(--light); padding: 6px 12px; border-radius: 20px; font-size: 12px; color: var(--dark); font-weight: 500; }
-        .total-investment-summary { background: var(--gradient-dark); color: white; border: none; }
-        .summary-title { font-size: 16px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .summary-breakdown { display: flex; flex-direction: column; gap: 12px; }
-        .summary-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-size: 14px; }
-        .summary-item span:last-child { font-weight: 600; }
-        .summary-total { display: flex; justify-content: space-between; padding: 15px 0 0; margin-top: 10px; font-size: 18px; font-weight: 800; border-top: 2px solid rgba(255, 255, 255, 0.3); }
-        .summary-total span:last-child { color: var(--secondary); font-size: 24px; }
-        .sync-status { text-align: center; font-size: 12px; padding: 10px; border-radius: var(--radius-sm); margin-bottom: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .sync-success { color: var(--success); background: rgba(29, 209, 161, 0.1); }
-        .sync-pending { color: var(--warning); background: rgba(255, 165, 2, 0.1); }
-        .sync-error { color: var(--danger); background: rgba(255, 71, 87, 0.1); }
-        .alert { padding: 15px 20px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 14px; display: flex; align-items: center; gap: 12px; animation: slideIn 0.3s ease; }
-        .alert-info { background: rgba(108, 99, 255, 0.1); color: var(--primary); border-left: 4px solid var(--primary); }
-        .alert-success { background: rgba(29, 209, 161, 0.1); color: var(--success); border-left: 4px solid var(--success); }
-        .alert-warning { background: rgba(255, 165, 2, 0.1); color: var(--warning); border-left: 4px solid var(--warning); }
-        .alert-danger { background: rgba(255, 71, 87, 0.1); color: var(--danger); border-left: 4px solid var(--danger); }
-        .cta-box { background: linear-gradient(135deg, rgba(108, 99, 255, 0.05) 0%, rgba(0, 210, 211, 0.05) 100%); padding: 20px; border-radius: var(--radius-md); margin-top: 20px; display: flex; align-items: flex-start; gap: 12px; }
-        .cta-box input { width: 22px; height: 22px; margin-top: 2px; accent-color: var(--primary); }
-        .cta-text { font-size: 14px; font-weight: 500; line-height: 1.5; color: var(--dark); }
-        .list-container { margin-top: 15px; }
-        .list-item { display: flex; justify-content: space-between; align-items: center; background: var(--light); padding: 15px 20px; border-radius: var(--radius-md); margin-bottom: 12px; font-size: 14px; }
-        .list-item:hover { border-color: var(--primary); background: rgba(108, 99, 255, 0.05); }
-        .list-item-details { display: flex; flex-direction: column; gap: 4px; }
-        .list-item-title { font-weight: 600; color: var(--dark); }
-        .list-item-sub { font-size: 12px; color: var(--gray); }
-        .list-item-amount { font-weight: 700; color: var(--primary); font-size: 16px; }
-        .btn-remove { background: rgba(255, 71, 87, 0.1); color: var(--danger); border: none; width: 38px; height: 38px; border-radius: var(--radius-sm); cursor: pointer; font-weight: 700; font-size: 20px; transition: all 0.3s ease; }
-        .btn-remove:hover { background: var(--danger); color: white; transform: rotate(90deg); }
-        .section-divider { display: flex; align-items: center; gap: 15px; margin: 30px 0 20px; }
-        .section-divider::before, .section-divider::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #e1e5eb, transparent); }
-        .section-title { font-size: 14px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
-        .input-group { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        /* Checkbox Grid Styles */
-        .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
-        .checkbox-item { display: flex; align-items: center; gap: 10px; padding: 12px 15px; background: var(--light); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
-        .checkbox-item:hover { background: rgba(108, 99, 255, 0.05); }
-        .checkbox-item.selected { border-color: var(--primary); background: rgba(108, 99, 255, 0.08); }
-        .checkbox-item input { width: 20px; height: 20px; accent-color: var(--primary); cursor: pointer; }
-        .checkbox-item label { margin: 0; cursor: pointer; flex: 1; font-size: 13px; text-transform: none; color: var(--dark); }
-        .checkbox-item .icon { font-size: 16px; }
-        
-        @media (max-width: 400px) { 
-            .input-group { grid-template-columns: 1fr; }
-            .checkbox-grid { grid-template-columns: 1fr; }
-        }
-        @media (max-width: 480px) { 
-            .app-container { border-radius: 0; max-height: 100vh; min-height: 100vh; } 
-            body { padding: 0; } 
-            header { padding: 20px; } 
-            .screen { padding: 20px; } 
-        }
-        .screen::-webkit-scrollbar { width: 6px; }
-        .screen::-webkit-scrollbar-track { background: var(--light); border-radius: 10px; }
-        .screen::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .app-container { background: var(--white); width: 100%; max-width: 450px; border-radius: 30px; box-shadow: 0 15px 40px rgba(108, 99, 255, 0.2); overflow: hidden; min-height: 800px; }
+        header { padding: 25px; text-align: center; background: var(--white); border-bottom: 1px solid #eee; }
+        .logo { font-size: 28px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .screen { padding: 30px; display: none; }
+        .screen.active { display: block; }
+        h2 { font-size: 24px; margin-bottom: 10px; color: var(--dark); }
+        p.subtitle { font-size: 14px; color: #888; margin-bottom: 25px; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #555; }
+        input, select { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 15px; }
+        input:focus { border-color: var(--primary); outline: none; }
+        .btn { width: 100%; padding: 18px; border: none; border-radius: 12px; background: var(--gradient); color: white; font-size: 16px; font-weight: 600; cursor: pointer; margin-top: 15px; }
+        .btn:disabled { opacity: 0.7; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .card { background: var(--light); border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .alert { padding: 15px; border-radius: 12px; margin-bottom: 20px; font-size: 14px; }
+        .alert-info { background: rgba(108, 99, 255, 0.1); color: var(--primary); }
+        .alert-success { background: rgba(29, 209, 161, 0.1); color: var(--success); }
+        .alert-warning { background: rgba(255, 165, 2, 0.1); color: var(--warning); }
+        .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; padding: 12px; background: var(--light); border-radius: 10px; cursor: pointer; }
+        .checkbox-item input { width: 20px; height: 20px; }
+        .score-circle { width: 100px; height: 100px; border-radius: 50%; background: var(--gradient); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800; margin: 0 auto 15px; }
+        .section-header { display: flex; align-items: center; gap: 10px; margin: 25px 0 15px; padding-bottom: 10px; border-bottom: 2px solid rgba(108, 99, 255, 0.1); }
+        .section-number { width: 35px; height: 35px; border-radius: 10px; background: var(--gradient); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; }
+        .summary-box { background: var(--dark); color: white; padding: 25px; border-radius: 15px; text-align: center; margin-bottom: 20px; }
+        .summary-amount { font-size: 36px; font-weight: 800; color: var(--secondary); margin: 10px 0; }
+        @media (max-width: 480px) { .checkbox-grid { grid-template-columns: 1fr; } .app-container { border-radius: 0; min-height: 100vh; } }
     </style>
 </head>
 <body>
 <div class="app-container">
     <header>
-        <div class="logo-container">
-            <div class="logo-icon"><i class="fas fa-shield-heart"></i></div>
-            <div class="logo">unloan<span>.</span></div>
-        </div>
+        <div class="logo">unloan<span style="-webkit-text-fill-color: var(--dark);">.</span></div>
     </header>
 
     <!-- Screen 1: Entry -->
     <div id="screen-entry" class="screen active">
-        <div class="alert alert-info"><i class="fas fa-info-circle"></i><span>Join 10,000+ users achieving financial freedom</span></div>
+        <div class="alert alert-info">📊 Smart financial planning based on industry best practices</div>
         <h2>Welcome! 👋</h2>
-        <p class="subtitle">Let's build your personalized path to a loan-free life. Takes just 2 minutes.</p>
+        <p class="subtitle">Build your personalized path to a loan-free life. Takes just 2 minutes.</p>
         <form id="entryForm">
             <div class="form-group">
-                <label><i class="fas fa-user"></i> Full Name</label>
+                <label>👤 Full Name</label>
                 <input type="text" id="name" placeholder="Enter your name" required>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-birthday-cake"></i> Age</label>
+                <label>🎂 Age</label>
                 <input type="number" id="age" placeholder="25" required>
             </div>
             <div class="form-group">
-                <label><i class="fas fa-mobile-alt"></i> Mobile Number</label>
+                <label>📱 Mobile Number</label>
                 <input type="tel" id="mobile" placeholder="+91 98765 43210" required>
             </div>
-            <button type="submit" class="btn"><i class="fas fa-arrow-right"></i> Start Your Journey</button>
+            <button type="submit" class="btn">➡️ Start Your Journey</button>
         </form>
     </div>
 
-    <!-- Screen 2: Financials & Milestones -->
+    <!-- Screen 2: Financials -->
     <div id="screen-financials" class="screen">
         <h2>Financial Snapshot 📊</h2>
-        <p class="subtitle">Be honest. This helps our AI create your perfect plan.</p>
+        <p class="subtitle">Your inputs help create your personalized plan.</p>
         <form id="financialForm">
-            <div class="section-divider"><span class="section-title"><i class="fas fa-wallet"></i> Income</span></div>
+            <div class="section-header"><div class="section-number">01</div><h3>💰 Income</h3></div>
             <div class="form-group">
                 <label>Monthly Income (After Tax)</label>
-                <div class="form-row">
-                    <input type="number" id="income" placeholder="₹50,000" required>
-                    <span class="frequency-tag monthly">/month</span>
-                </div>
+                <input type="number" id="income" placeholder="₹50,000" required>
             </div>
-            
-            <div class="section-divider"><span class="section-title"><i class="fas fa-file-invoice-dollar"></i> Fixed Commitments</span></div>
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Loan EMIs</label>
-                    <div class="form-row">
-                        <input type="number" id="loanEmi" placeholder="₹0" value="0">
-                        <span class="frequency-tag monthly">/month</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Insurance Premiums</label>
-                    <div class="form-row">
-                        <input type="number" id="insuranceTotal" placeholder="₹0" value="0">
-                        <span class="frequency-tag monthly">/month</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="section-divider"><span class="section-title"><i class="fas fa-home"></i> Living Expenses</span></div>
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Rent/Mortgage</label>
-                    <div class="form-row">
-                        <input type="number" id="rent" placeholder="₹0" value="0">
-                        <span class="frequency-tag monthly">/month</span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Groceries & Food</label>
-                    <div class="form-row">
-                        <input type="number" id="groceries" placeholder="₹0" value="0">
-                        <span class="frequency-tag monthly">/month</span>
-                    </div>
-                </div>
-            </div>
-            
+
+            <div class="section-header"><div class="section-number">02</div><h3>🧾 Expenses</h3></div>
             <div class="form-group">
-                <label>Other Monthly Expenses (Select all that apply)</label>
-                <div class="checkbox-grid" id="expenseCheckboxes">
-                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                        <input type="checkbox" id="exp_transport" value="transport" data-amount="2000">
-                        <label for="exp_transport"><span class="icon">🚗</span> Transport/Fuel</label>
-                    </div>
-                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                        <input type="checkbox" id="exp_utilities" value="utilities" data-amount="3000">
-                        <label for="exp_utilities"><span class="icon">💡</span> Utilities</label>
-                    </div>
-                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                        <input type="checkbox" id="exp_internet" value="internet" data-amount="1000">
-                        <label for="exp_internet"><span class="icon">📱</span> Internet/Mobile</label>
-                    </div>
-                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                        <input type="checkbox" id="exp_entertainment" value="entertainment" data-amount="2000">
-                        <label for="exp_entertainment"><span class="icon">🎬</span> Entertainment</label>
-                    </div>
-                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                        <input type="checkbox" id="exp_healthcare" value="healthcare" data-amount="1500">
-                        <label for="exp_healthcare"><span class="icon">🏥</span> Healthcare</label>
-                    </div>
-                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                        <input type="checkbox" id="exp_education" value="education" data-amount="3000">
-                        <label for="exp_education"><span class="icon">📚</span> Education</label>
-                    </div>
-                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                        <input type="checkbox" id="exp_shopping" value="shopping" data-amount="2500">
-                        <label for="exp_shopping"><span class="icon">🛍️</span> Shopping</label>
-                    </div>
-                    <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                        <input type="checkbox" id="exp_dining" value="dining" data-amount="2000">
-                        <label for="exp_dining"><span class="icon">🍽️</span> Dining Out</label>
-                    </div>
-                </div>
-                <div id="customExpensesList" class="list-container"></div>
-                <button type="button" class="btn btn-outline btn-sm" onclick="addCustomExpense()"><i class="fas fa-plus"></i> Add Custom Expense</button>
+                <label>Loan EMIs (₹/month)</label>
+                <input type="number" id="loanEmi" placeholder="0" value="0">
             </div>
-            
-            <div class="section-divider"><span class="section-title"><i class="fas fa-flag"></i> Future Goals</span></div>
-            <p style="font-size: 13px; color: var(--gray); margin-bottom: 15px;">Select your financial goals (Select all that apply)</p>
+            <div class="form-group">
+                <label>Insurance Premiums (₹/month)</label>
+                <input type="number" id="insuranceTotal" placeholder="0" value="0">
+            </div>
+            <div class="form-group">
+                <label>Rent/Mortgage (₹/month)</label>
+                <input type="number" id="rent" placeholder="0" value="0">
+            </div>
+            <div class="form-group">
+                <label>Groceries & Food (₹/month)</label>
+                <input type="number" id="groceries" placeholder="0" value="0">
+            </div>
+
+            <div class="section-header"><div class="section-number">03</div><h3>🎯 Goals</h3></div>
             <div class="checkbox-grid" id="milestoneCheckboxes">
-                <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                    <input type="checkbox" id="goal_car" value="Car" data-years="3" data-amount="500000">
-                    <label for="goal_car"><span class="icon">🚗</span> Car Purchase</label>
-                </div>
-                <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                    <input type="checkbox" id="goal_home" value="Home" data-years="5" data-amount="2000000">
-                    <label for="goal_home"><span class="icon">🏠</span> Home Down Payment</label>
-                </div>
-                <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                    <input type="checkbox" id="goal_marriage" value="Marriage" data-years="2" data-amount="1000000">
-                    <label for="goal_marriage"><span class="icon">💍</span> Marriage</label>
-                </div>
-                <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                    <input type="checkbox" id="goal_education" value="Education" data-years="5" data-amount="1500000">
-                    <label for="goal_education"><span class="icon">🎓</span> Child Education</label>
-                </div>
-                <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                    <input type="checkbox" id="goal_travel" value="Travel" data-years="1" data-amount="200000">
-                    <label for="goal_travel"><span class="icon">✈️</span> Dream Travel</label>
-                </div>
-                <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                    <input type="checkbox" id="goal_emergency" value="Emergency" data-years="1" data-amount="300000">
-                    <label for="goal_emergency"><span class="icon">🛡️</span> Emergency Fund</label>
-                </div>
-                <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                    <input type="checkbox" id="goal_business" value="Business" data-years="3" data-amount="1000000">
-                    <label for="goal_business"><span class="icon">💼</span> Business</label>
-                </div>
-                <div class="checkbox-item" onclick="toggleCheckbox(this)">
-                    <input type="checkbox" id="goal_retirement" value="Retirement" data-years="20" data-amount="5000000">
-                    <label for="goal_retirement"><span class="icon">👴</span> Retirement</label>
-                </div>
+                <div class="checkbox-item"><input type="checkbox" value="Car" data-years="3" data-amount="500000"><label>🚗 Car</label></div>
+                <div class="checkbox-item"><input type="checkbox" value="Home" data-years="5" data-amount="2000000"><label>🏠 Home</label></div>
+                <div class="checkbox-item"><input type="checkbox" value="Marriage" data-years="2" data-amount="1000000"><label>💍 Marriage</label></div>
+                <div class="checkbox-item"><input type="checkbox" value="Education" data-years="5" data-amount="1500000"><label>🎓 Education</label></div>
+                <div class="checkbox-item"><input type="checkbox" value="Emergency" data-years="1" data-amount="300000"><label>🛡️ Emergency Fund</label></div>
+                <div class="checkbox-item"><input type="checkbox" value="Retirement" data-years="20" data-amount="5000000"><label>👴 Retirement</label></div>
             </div>
-            <button type="button" class="btn btn-outline btn-sm" style="margin-top: 15px; border-color: var(--secondary); color: var(--secondary);" onclick="addCustomMilestone()"><i class="fas fa-plus"></i> Add Custom Goal</button>
-            <div id="milestonesList" class="list-container"></div>
-            
-            <div class="section-divider"><span class="section-title"><i class="fas fa-users"></i> Personal</span></div>
-            <div class="input-group">
-                <div class="form-group">
-                    <label>Marital Status</label>
-                    <select id="maritalStatus">
-                        <option value="Single">Single</option>
-                        <option value="Married">Married</option>
-                        <option value="Divorced">Divorced</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Dependents</label>
-                    <input type="number" id="dependents" value="0" min="0">
-                </div>
+
+            <div class="section-header"><div class="section-number">04</div><h3>👥 Personal</h3></div>
+            <div class="form-group">
+                <label>Marital Status</label>
+                <select id="maritalStatus">
+                    <option value="Single">Single</option>
+                    <option value="Married">Married</option>
+                </select>
             </div>
-            
-            <button type="submit" class="btn"><i class="fas fa-magic"></i> Generate My Plan</button>
-            <button type="button" class="btn btn-outline" onclick="showScreen('screen-entry')"><i class="fas fa-arrow-left"></i> Back</button>
+            <div class="form-group">
+                <label>Dependents</label>
+                <input type="number" id="dependents" value="0" min="0">
+            </div>
+
+            <button type="submit" class="btn">✨ Generate My Plan</button>
+            <button type="button" class="btn btn-outline" onclick="showScreen('screen-entry')">⬅️ Back</button>
         </form>
     </div>
 
     <!-- Screen 3: Dashboard -->
     <div id="screen-dashboard" class="screen">
-        <div id="sync-status" class="sync-status sync-pending"><i class="fas fa-cloud" id="sync-icon"></i><span id="sync-text">Ready to sync</span></div>
-
-        <!-- SECTION 1: OVERALL FINANCIAL HEALTH -->
-        <div class="section-header"><div class="section-number">01</div><h3><i class="fas fa-heartbeat"></i> Overall Financial Health</h3></div>
-        <div class="card health-score-card">
-            <div class="score-display">
-                <div class="score-circle-large" id="ai-score">--</div>
-                <div class="score-label">Financial Health Score</div>
-                <div class="score-range">
-                    <div class="range-bar"><div class="range-fill" id="score-range-fill"></div></div>
-                    <div class="range-labels"><span>Poor</span><span>Fair</span><span>Good</span><span>Excellent</span></div>
-                </div>
-            </div>
-            <div class="alert alert-info" style="margin-top: 20px; margin-bottom: 0;"><i class="fas fa-robot"></i><span id="ai-summary-text">Analyzing your data...</span></div>
-            <div class="health-metrics">
-                <div class="metric-box"><div class="metric-label">Monthly Surplus</div><div class="metric-value" id="metric-surplus">₹0</div></div>
-                <div class="metric-box"><div class="metric-label">Savings Rate</div><div class="metric-value" id="metric-savings">0%</div></div>
-                <div class="metric-box"><div class="metric-label">EMI Burden</div><div class="metric-value" id="metric-emi">0%</div></div>
-                <div class="metric-box"><div class="metric-label">Active Goals</div><div class="metric-value" id="metric-goals">0</div></div>
-            </div>
+        <div class="summary-box">
+            <div>💰 Recommended Monthly Investment</div>
+            <div class="summary-amount" id="summary-investment">₹0</div>
+            <div id="investment-reason">To stay loan-free</div>
         </div>
 
-        <!-- SECTION 2: URGENT / IMPORTANT (INSURANCE) -->
-        <div class="section-header"><div class="section-number">02</div><h3><i class="fas fa-shield-alt"></i> Urgent & Important</h3></div>
-        <div class="card insurance-card">
-            <div class="card-header-row">
-                <div><div class="card-title">Insurance Protection Score</div><div class="card-subtitle">Health & Term Life Coverage</div></div>
-                <div class="insurance-score-badge" id="insurance-score">--</div>
-            </div>
-            <div class="insurance-breakdown">
-                <div class="insurance-item">
-                    <div class="insurance-icon health"><i class="fas fa-hospital"></i></div>
-                    <div class="insurance-details"><div class="insurance-name">Health Insurance</div><div class="insurance-status" id="health-ins-status">Not assessed</div></div>
-                    <div class="insurance-action" id="health-ins-action">-</div>
-                </div>
-                <div class="insurance-item">
-                    <div class="insurance-icon term"><i class="fas fa-user-shield"></i></div>
-                    <div class="insurance-details"><div class="insurance-name">Term Life Insurance</div><div class="insurance-status" id="term-ins-status">Not assessed</div></div>
-                    <div class="insurance-action" id="term-ins-action">-</div>
-                </div>
-            </div>
-            <div class="investment-recommendation-box">
-                <div class="rec-label"><i class="fas fa-coins"></i> Recommended Monthly Investment</div>
-                <div class="rec-amount" id="insurance-investment-amount">₹0</div>
-                <div class="rec-detail" id="insurance-investment-detail">For insurance premiums</div>
-            </div>
+        <div class="section-header"><div class="section-number">01</div><h3>💓 Financial Health Score</h3></div>
+        <div class="card" style="text-align: center;">
+            <div class="score-circle" id="health-score">--</div>
+            <div id="health-summary" style="color: #666; font-size: 14px;">Analyzing...</div>
         </div>
 
-        <!-- SECTION 3: MILESTONE FOCUS -->
-        <div class="section-header"><div class="section-number">03</div><h3><i class="fas fa-bullseye"></i> Milestone Focus</h3></div>
-        <div id="milestone-tracker-section">
-            <div class="alert alert-warning" style="margin-bottom: 20px;"><i class="fas fa-lightbulb"></i><span><strong>Pro Tip:</strong> Reduce loan amount with small savings! Even ₹500/month extra helps.</span></div>
-            <div id="milestone-cards-container"></div>
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-title" style="margin-bottom: 15px;"><i class="fas fa-calculator"></i> Total Monthly Savings Required</div>
-                <div class="milestone-total-box"><div class="milestone-total-label">For All Goals</div><div class="milestone-total-amount" id="milestone-total-amount">₹0/mo</div></div>
-                <div class="milestone-breakdown" id="milestone-breakdown"></div>
-            </div>
+        <div class="section-header"><div class="section-number">02</div><h3>🎯 Your Goals</h3></div>
+        <div id="goals-container"></div>
+
+        <div class="section-header"><div class="section-number">03</div><h3>📈 Investment Plan</h3></div>
+        <div class="card">
+            <strong>Short Term (0-2 years):</strong>
+            <p id="short-term-plan" style="color: #666; font-size: 14px; margin-top: 5px;">Loading...</p>
         </div>
-        <div id="no-milestones-message" class="card" style="display: none; text-align: center; padding: 40px;">
-            <i class="fas fa-flag" style="font-size: 48px; color: var(--primary); margin-bottom: 15px;"></i>
-            <h4 style="margin-bottom: 10px;">No Milestones Added Yet</h4>
-            <p style="color: var(--gray); margin-bottom: 20px;">Add your financial goals to get personalized savings recommendations.</p>
-            <button class="btn btn-outline btn-sm" onclick="showScreen('screen-financials')"><i class="fas fa-plus"></i> Add Your First Goal</button>
+        <div class="card">
+            <strong>Long Term (5+ years):</strong>
+            <p id="long-term-plan" style="color: #666; font-size: 14px; margin-top: 5px;">Loading...</p>
         </div>
 
-        <!-- SECTION 4: INVESTMENT RECOMMENDATIONS -->
-        <div class="section-header"><div class="section-number">04</div><h3><i class="fas fa-chart-line"></i> Investment Recommendations</h3></div>
-        <div class="card investment-card-short">
-            <div class="investment-card-header">
-                <div><div class="investment-type-tag tag-short"><i class="fas fa-shield-alt"></i> Short Term</div><div class="investment-timeframe">0-2 Years</div></div>
-                <div class="investment-amount-box"><div class="investment-amount-label">Suggested</div><div class="investment-amount-value" id="short-term-amount">₹0/mo</div></div>
-            </div>
-            <div class="investment-content">
-                <div class="investment-detail" id="short-term-rec">Loading...</div>
-                <div class="progress-container" style="margin-top: 15px;">
-                    <div class="progress-bar"><div class="progress-fill" id="short-bar"></div></div>
-                    <div class="progress-labels"><span>Current</span><span>Emergency Fund Goal</span></div>
-                </div>
-                <div class="investment-action-box"><i class="fas fa-check-circle"></i><span id="short-action">Calculating...</span></div>
-                <div class="investment-instruments" style="margin-top: 15px;">
-                    <div class="instrument-label">Recommended Instruments:</div>
-                    <div class="instrument-tags">
-                        <span class="instrument-tag">💰 Liquid Funds</span>
-                        <span class="instrument-tag">🏦 Savings Account</span>
-                        <span class="instrument-tag">📊 Short-term Debt Funds</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card investment-card-long">
-            <div class="investment-card-header">
-                <div><div class="investment-type-tag tag-long"><i class="fas fa-rocket"></i> Long Term</div><div class="investment-timeframe">5+ Years</div></div>
-                <div class="investment-amount-box"><div class="investment-amount-label">Suggested</div><div class="investment-amount-value" id="long-term-amount">₹0/mo</div></div>
-            </div>
-            <div class="investment-content">
-                <div class="investment-detail" id="long-term-rec">Loading...</div>
-                <div class="progress-container" style="margin-top: 15px;">
-                    <div class="progress-bar"><div class="progress-fill" id="long-bar"></div></div>
-                    <div class="progress-labels"><span>Current Savings</span><span>Age Benchmark</span></div>
-                </div>
-                <div class="investment-action-box"><i class="fas fa-check-circle"></i><span id="long-action">Calculating...</span></div>
-                <div class="investment-instruments" style="margin-top: 15px;">
-                    <div class="instrument-label">Recommended Instruments:</div>
-                    <div class="instrument-tags">
-                        <span class="instrument-tag">📈 Index Funds</span>
-                        <span class="instrument-tag">🏢 Equity Mutual Funds</span>
-                        <span class="instrument-tag">📋 Retirement Accounts</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card total-investment-summary">
-            <div class="summary-title"><i class="fas fa-wallet"></i> Total Monthly Investment Plan</div>
-            <div class="summary-breakdown">
-                <div class="summary-item"><span>Insurance</span><span id="summary-insurance">₹0</span></div>
-                <div class="summary-item"><span>Milestones</span><span id="summary-milestones">₹0</span></div>
-                <div class="summary-item"><span>Short Term</span><span id="summary-short">₹0</span></div>
-                <div class="summary-item"><span>Long Term</span><span id="summary-long">₹0</span></div>
-                <div class="summary-total"><span>TOTAL</span><span id="summary-total">₹0/mo</span></div>
-            </div>
+        <div class="alert alert-warning" style="margin-top: 20px;">
+            💡 <strong>Pro Tip:</strong> Even ₹500/month extra towards loans can save thousands in interest!
         </div>
 
-        <div class="cta-box">
-            <input type="checkbox" id="discussCheck">
-            <label for="discussCheck" class="cta-text"><i class="fas fa-user-tie"></i> I want to discuss with an expert for next steps and reduce loan dependence</label>
-        </div>
-        <div style="display: flex; gap: 12px; margin-top: 20px;">
-            <button class="btn" style="flex:1; background: var(--gradient-dark);" onclick="exportToCSV()"><i class="fas fa-download"></i> Export</button>
-            <button class="btn" style="flex:1;" onclick="saveAndFinish()"><i class="fas fa-save"></i> Save & Finish</button>
-        </div>
-        <button type="button" class="btn btn-outline" onclick="showScreen('screen-financials')"><i class="fas fa-edit"></i> Edit Details</button>
+        <button class="btn" onclick="saveAndFinish()">💾 Save & Finish</button>
+        <button class="btn btn-outline" onclick="exportToCSV()">📥 Export CSV</button>
+        <button class="btn btn-outline" onclick="showScreen('screen-financials')">✏️ Edit</button>
     </div>
 </div>
 
 <script type="module">
-    // ✅ Import Firebase
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-    // ⚠️ FIREBASE CONFIG
+    // ✅ FIREBASE CONFIG - PASTE YOUR CONFIG HERE
     const firebaseConfig = {
-      "apiKey": "AIzaSyB2X_QYodQDt-huUpHDxuDg7K2ADPuNnSk",
-      "authDomain": "unloan-6ee77.firebaseapp.com",
-      "projectId": "unloan-6ee77",
-      "storageBucket": "unloan-6ee77.firebasestorage.app",
-      "messagingSenderId": "1094363896252",
-      "appId": "1:1094363896252:web:f8c5cf52b3f270bfdcf3b9"
+        apiKey: "AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        authDomain: "unloan-app.firebaseapp.com",
+        projectId: "unloan-app",
+        storageBucket: "unloan-app.appspot.com",
+        messagingSenderId: "123456789012",
+        appId: "1:123456789012:web:abcdef123456"
     };
 
     // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-    // Global state
-    let isSubmitting = false;
+    let db;
+    try {
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        console.log('✅ Firebase initialized');
+    } catch (e) {
+        console.error('❌ Firebase init failed:', e.message);
+        console.error('⚠️ Make sure to replace firebaseConfig with your actual config from Firebase Console');
+    }
+
     let userData = {};
-    let customExpenses = [];
-    let customMilestones = [];
+    let milestones = [];
 
-    // ===== FORM HANDLERS =====
-    
+    // Screen Navigation
+    window.showScreen = (id) => {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    };
+
+    // Entry Form
     document.getElementById('entryForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        console.log('✅ Entry form submitted');
-        
-        userData.name = document.getElementById('name').value;
+        userData.name = document.getElementById('name').value.trim();
         userData.age = parseInt(document.getElementById('age').value);
-        userData.mobile = document.getElementById('mobile').value;
-        
-        console.log('📋 Entry data:', userData);
+        userData.mobile = document.getElementById('mobile').value.trim();
+        if (!userData.name || !userData.age || !userData.mobile) { alert('Fill all fields'); return; }
         showScreen('screen-financials');
     });
 
+    // Financial Form
     document.getElementById('financialForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        console.log('✅ Financial form submitted');
         
-        // Basic info
-        userData.income = parseInt(document.getElementById('income').value) || 0;
-        userData.loanEmi = parseInt(document.getElementById('loanEmi').value) || 0;
-        userData.insuranceTotal = parseInt(document.getElementById('insuranceTotal').value) || 0;
-        userData.rent = parseInt(document.getElementById('rent').value) || 0;
-        userData.groceries = parseInt(document.getElementById('groceries').value) || 0;
+        userData.income = parseFloat(document.getElementById('income').value);
+        userData.loanEmi = parseFloat(document.getElementById('loanEmi').value) || 0;
+        userData.insuranceTotal = parseFloat(document.getElementById('insuranceTotal').value) || 0;
+        userData.rent = parseFloat(document.getElementById('rent').value) || 0;
+        userData.groceries = parseFloat(document.getElementById('groceries').value) || 0;
         userData.maritalStatus = document.getElementById('maritalStatus').value;
         userData.dependents = parseInt(document.getElementById('dependents').value) || 0;
-        
-        // Collect checked expenses
-        const checkedExpenses = {};
-        let totalExpenseAmount = userData.loanEmi + userData.insuranceTotal + userData.rent + userData.groceries;
-        
-        document.querySelectorAll('#expenseCheckboxes input[type="checkbox"]:checked').forEach(cb => {
-            const amount = parseInt(cb.dataset.amount) || 0;
-            checkedExpenses[cb.value] = amount;
-            totalExpenseAmount += amount;
-        });
-        
-        // Add custom expenses
-        customExpenses.forEach(exp => {
-            totalExpenseAmount += exp.amount;
-        });
-        
-        userData.expenses = checkedExpenses;
-        userData.customExpenses = customExpenses;
-        userData.totalExpenses = totalExpenseAmount;
-        
-        // Collect milestones
-        const milestones = [];
-        document.querySelectorAll('#milestoneCheckboxes input[type="checkbox"]:checked').forEach(cb => {
+
+        // Get selected goals
+        milestones = [];
+        document.querySelectorAll('#milestoneCheckboxes input:checked').forEach(cb => {
             milestones.push({
-                name: cb.value,
-                amount: parseInt(cb.dataset.amount),
-                years: parseInt(cb.dataset.years)
+                type: cb.value,
+                years: parseInt(cb.dataset.years),
+                amount: parseFloat(cb.dataset.amount),
+                monthly: parseFloat(cb.dataset.amount) / (parseInt(cb.dataset.years) * 12)
             });
         });
-        
-        // Add custom milestones
-        customMilestones.forEach(m => milestones.push(m));
-        
+
+        // Calculate
+        userData.totalExpenses = userData.loanEmi + userData.insuranceTotal + userData.rent + userData.groceries;
+        userData.disposable = userData.income - userData.totalExpenses;
+        userData.annualIncome = userData.income * 12;
         userData.milestones = milestones;
-        userData.disposable = userData.income - totalExpenseAmount;
-        userData.discussWithExpert = document.getElementById('discussCheck').checked;
-        userData.timestamp = new Date().toISOString();
-        
-        console.log('📋 Financial data:', userData);
+
+        // Generate Plan
+        generatePlan();
+        updateDashboard();
         showScreen('screen-dashboard');
-        generateDashboard();
     });
 
-    // ===== SCREEN NAVIGATION =====
-    window.showScreen = function(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-        console.log('📱 Switched to:', screenId);
-    };
-
-    // ===== CHECKBOX HANDLING =====
-    window.toggleCheckbox = function(element) {
-        const checkbox = element.querySelector('input[type="checkbox"]');
-        checkbox.checked = !checkbox.checked;
-        element.classList.toggle('selected', checkbox.checked);
-    };
-
-    // ===== CUSTOM EXPENSE HANDLING =====
-    window.addCustomExpense = function() {
-        const name = prompt('Expense name:');
-        if (!name) return;
-        
-        const amount = parseInt(prompt('Monthly amount (₹):')) || 0;
-        if (amount <= 0) {
-            alert('Please enter a valid amount');
-            return;
-        }
-        
-        customExpenses.push({ name, amount });
-        renderCustomExpenses();
-    };
-
-    function renderCustomExpenses() {
-        const list = document.getElementById('customExpensesList');
-        list.innerHTML = '';
-        
-        customExpenses.forEach((exp, idx) => {
-            const item = document.createElement('div');
-            item.className = 'list-item';
-            item.innerHTML = `
-                <div class="list-item-details">
-                    <div class="list-item-title">${exp.name}</div>
-                    <div class="list-item-sub">Custom expense</div>
-                </div>
-                <div class="list-item-amount">₹${exp.amount.toLocaleString('en-IN')}</div>
-                <button class="btn-remove" type="button" onclick="removeCustomExpense(${idx})">×</button>
-            `;
-            list.appendChild(item);
-        });
-    }
-
-    window.removeCustomExpense = function(idx) {
-        customExpenses.splice(idx, 1);
-        renderCustomExpenses();
-    };
-
-    // ===== CUSTOM MILESTONE HANDLING =====
-    window.addCustomMilestone = function() {
-        const name = prompt('Goal name:');
-        if (!name) return;
-        
-        const amount = parseInt(prompt('Target amount (₹):')) || 0;
-        if (amount <= 0) {
-            alert('Please enter a valid amount');
-            return;
-        }
-        
-        const years = parseInt(prompt('Timeline (years):')) || 1;
-        if (years <= 0) {
-            alert('Please enter valid years');
-            return;
-        }
-        
-        customMilestones.push({ name, amount, years });
-        renderCustomMilestones();
-    };
-
-    function renderCustomMilestones() {
-        const list = document.getElementById('milestonesList');
-        list.innerHTML = '';
-        
-        customMilestones.forEach((m, idx) => {
-            const item = document.createElement('div');
-            item.className = 'list-item';
-            item.innerHTML = `
-                <div class="list-item-details">
-                    <div class="list-item-title">${m.name}</div>
-                    <div class="list-item-sub">${m.years} years</div>
-                </div>
-                <div class="list-item-amount">₹${m.amount.toLocaleString('en-IN')}</div>
-                <button class="btn-remove" type="button" onclick="removeCustomMilestone(${idx})">×</button>
-            `;
-            list.appendChild(item);
-        });
-    }
-
-    window.removeCustomMilestone = function(idx) {
-        customMilestones.splice(idx, 1);
-        renderCustomMilestones();
-    };
-
-    // ===== DASHBOARD GENERATION =====
-    window.generateDashboard = function() {
-        if (!userData.income || userData.income <= 0) {
-            console.warn('⚠️ No income data');
-            return;
-        }
-        
-        // Calculate Health Score
-        const savingsRate = userData.disposable > 0 ? Math.round((userData.disposable / userData.income) * 100) : 0;
-        const emiBurden = userData.loanEmi > 0 ? Math.round((userData.loanEmi / userData.income) * 100) : 0;
-        const healthScore = Math.max(20, Math.min(100, 50 + savingsRate - emiBurden));
-        
-        // Update health section
-        document.getElementById('ai-score').textContent = healthScore;
-        document.getElementById('score-range-fill').style.width = (healthScore / 100 * 100) + '%';
-        document.getElementById('metric-surplus').textContent = '₹' + Math.max(0, userData.disposable).toLocaleString('en-IN');
-        document.getElementById('metric-savings').textContent = savingsRate + '%';
-        document.getElementById('metric-emi').textContent = emiBurden + '%';
-        document.getElementById('metric-goals').textContent = (userData.milestones?.length || 0);
-        
-        // AI Summary
+    function generatePlan() {
+        const savingsRate = userData.disposable / userData.income;
+        let score = 50;
         let summary = '';
-        if (healthScore >= 80) summary = '🎉 Excellent! You\'re in great financial health!';
-        else if (healthScore >= 60) summary = '👍 Good progress! Keep it up!';
-        else if (healthScore >= 40) summary = '⚠️ Moderate - Focus on reducing expenses.';
-        else summary = '🆘 Urgent - Consider cutting costs.';
-        
-        document.getElementById('ai-summary-text').textContent = summary;
-        
-        // Insurance recommendations
-        const dependents = userData.dependents || 0;
-        const recommendedHealthPremium = dependents > 0 ? 500 : 300;
-        const recommendedTermPremium = userData.income > 0 ? Math.round(userData.income * 0.005) : 200;
-        const insuranceTotal = recommendedHealthPremium + recommendedTermPremium;
-        
-        document.getElementById('insurance-investment-amount').textContent = '₹' + insuranceTotal.toLocaleString('en-IN');
-        document.getElementById('health-ins-status').textContent = `Recommended: ₹${recommendedHealthPremium.toLocaleString('en-IN')}/mo`;
-        document.getElementById('term-ins-status').textContent = `Recommended: ₹${recommendedTermPremium.toLocaleString('en-IN')}/mo`;
-        
-        // Milestones
-        renderMilestones();
-        
-        // Investment recommendations
-        renderInvestmentRecommendations();
-    };
 
-    function renderMilestones() {
-        const container = document.getElementById('milestone-cards-container');
-        container.innerHTML = '';
-        
-        if (!userData.milestones || userData.milestones.length === 0) {
-            document.getElementById('no-milestones-message').style.display = 'block';
-            document.getElementById('milestone-tracker-section').style.display = 'none';
-            return;
-        }
-        
-        document.getElementById('no-milestones-message').style.display = 'none';
-        document.getElementById('milestone-tracker-section').style.display = 'block';
-        
-        let totalMonthly = 0;
-        
-        userData.milestones.forEach((m, idx) => {
-            const monthlyNeeded = Math.round(m.amount / (m.years * 12));
-            totalMonthly += monthlyNeeded;
-            
-            const futureDate = new Date();
-            futureDate.setFullYear(futureDate.getFullYear() + m.years);
-            
-            const card = document.createElement('div');
-            card.className = 'milestone-card success';
-            card.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <div class="card-title">${m.name}</div>
-                        <div class="card-subtitle">Save by: ${futureDate.toLocaleDateString('en-IN', { year: 'numeric', month: 'short' })}</div>
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-size: 20px; font-weight: 700; color: var(--primary);">₹${m.amount.toLocaleString('en-IN')}</div>
-                        <div style="font-size: 12px; color: var(--gray);">₹${monthlyNeeded.toLocaleString('en-IN')}/mo</div>
+        if (savingsRate >= 0.20) { score += 30; summary = '✅ Great savings rate!'; }
+        else if (savingsRate > 0.10) { score += 15; summary = '👍 Decent buffer.'; }
+        else { summary = '⚠️ Low buffer. Increase savings.'; }
+
+        if (userData.loanEmi / userData.income > 0.40) { score -= 20; summary += ' High EMI burden.'; }
+        if (userData.dependents > 0 && userData.insuranceTotal < 5000) { score -= 10; summary += ' Need more insurance.'; }
+
+        userData.ai = {
+            score: Math.min(100, Math.max(0, score)),
+            summary: summary,
+            suggestedInvestment: Math.max(0, userData.disposable * 0.5),
+            shortTerm: 'Build emergency fund (6 months expenses). Use Liquid Funds.',
+            longTerm: 'Start SIP in Index Funds for wealth creation.'
+        };
+    }
+
+    function updateDashboard() {
+        document.getElementById('health-score').innerText = userData.ai.score;
+        document.getElementById('health-summary').innerText = userData.ai.summary;
+        document.getElementById('summary-investment').innerText = '₹' + Math.round(userData.ai.suggestedInvestment);
+        document.getElementById('short-term-plan').innerText = userData.ai.shortTerm;
+        document.getElementById('long-term-plan').innerText = userData.ai.longTerm;
+
+        const goalsContainer = document.getElementById('goals-container');
+        if (milestones.length > 0) {
+            goalsContainer.innerHTML = milestones.map(m => `
+                <div class="card" style="padding: 15px;">
+                    <strong>${getIcon(m.type)} ${m.type}</strong>
+                    <div style="font-size: 13px; color: #666; margin-top: 5px;">
+                        Target: ₹${m.amount.toLocaleString()} | Required: ₹${Math.round(m.monthly)}/month
                     </div>
                 </div>
-            `;
-            container.appendChild(card);
-        });
-        
-        document.getElementById('milestone-total-amount').textContent = '₹' + totalMonthly.toLocaleString('en-IN') + '/mo';
-        document.getElementById('summary-milestones').textContent = '₹' + totalMonthly.toLocaleString('en-IN');
-        
-        // Breakdown
-        const breakdown = document.getElementById('milestone-breakdown');
-        breakdown.innerHTML = '';
-        userData.milestones.forEach(m => {
-            const monthlyNeeded = Math.round(m.amount / (m.years * 12));
-            const item = document.createElement('div');
-            item.className = 'milestone-breakdown-item';
-            item.innerHTML = `
-                <span>${m.name}</span>
-                <span>₹${monthlyNeeded.toLocaleString('en-IN')}</span>
-            `;
-            breakdown.appendChild(item);
-        });
-    }
-
-    function renderInvestmentRecommendations() {
-        const shortTermMonthly = Math.max(5000, Math.round(userData.disposable * 0.3));
-        const longTermMonthly = Math.max(2000, Math.round(userData.disposable * 0.2));
-        const insuranceMonthly = 800; // default
-        
-        document.getElementById('short-term-amount').textContent = '₹' + shortTermMonthly.toLocaleString('en-IN') + '/mo';
-        document.getElementById('long-term-amount').textContent = '₹' + longTermMonthly.toLocaleString('en-IN') + '/mo';
-        
-        document.getElementById('short-term-rec').textContent = `Build an emergency fund of 6 months expenses. Current target: ₹${(userData.totalExpenses * 6).toLocaleString('en-IN')}`;
-        document.getElementById('long-term-rec').textContent = `Invest for wealth creation and retirement. At age ${userData.age}, target ₹${(userData.income * 100).toLocaleString('en-IN')} by age 50.`;
-        
-        document.getElementById('short-bar').style.width = '30%';
-        document.getElementById('long-bar').style.width = '45%';
-        
-        document.getElementById('short-action').textContent = '✓ Build emergency fund first';
-        document.getElementById('long-action').textContent = '✓ Start investing in index funds';
-        
-        // Summary
-        document.getElementById('summary-insurance').textContent = '₹' + insuranceMonthly.toLocaleString('en-IN');
-        document.getElementById('summary-short').textContent = '₹' + shortTermMonthly.toLocaleString('en-IN');
-        document.getElementById('summary-long').textContent = '₹' + longTermMonthly.toLocaleString('en-IN');
-        
-        const totalMonthly = insuranceMonthly + shortTermMonthly + longTermMonthly + (userData.milestones?.reduce((sum, m) => sum + Math.round(m.amount / (m.years * 12)), 0) || 0);
-        document.getElementById('summary-total').textContent = '₹' + totalMonthly.toLocaleString('en-IN') + '/mo';
-    }
-
-    // ===== FIREBASE OPERATIONS =====
-    
-    async function saveToFirebase() {
-        if (isSubmitting) {
-            console.log('⚠️ Already submitting, skipping...');
-            return false;
+            `).join('');
+        } else {
+            goalsContainer.innerHTML = '<div class="alert alert-info">No goals selected. Add goals for better planning!</div>';
         }
-        isSubmitting = true;
+    }
+
+    function getIcon(type) {
+        const icons = { Car: '🚗', Home: '🏠', Marriage: '💍', Education: '🎓', Emergency: '🛡️', Retirement: '👴' };
+        return icons[type] || '🎯';
+    }
+
+    // Save to Firebase
+    window.saveAndFinish = async () => {
+        const btn = event.target;
+        btn.innerHTML = '🔄 Saving...';
+        btn.disabled = true;
+
+        localStorage.setItem('unloanData', JSON.stringify(userData));
+
+        if (!db) {
+            alert('⚠️ Cloud sync not configured.\n\n✅ Data saved LOCALLY.');
+            btn.innerHTML = '💾 Save & Finish';
+            btn.disabled = false;
+            return;
+        }
 
         try {
-            console.log('📤 Saving to Firestore...');
-            
-            const docRef = await addDoc(collection(db, 'submissions'), {
+            await addDoc(collection(db, 'submissions'), {
                 ...userData,
                 timestamp: serverTimestamp(),
                 createdAt: new Date().toISOString()
             });
-
-            console.log('✅ Save successful! Document ID:', docRef.id);
-
-            // Local backup
-            localStorage.setItem('unloanLastSync', new Date().toISOString());
-            localStorage.setItem('unloanData', JSON.stringify(userData));
-
-            return true;
-
+            alert('✅ Data saved to cloud!\n\nView in admin dashboard.');
         } catch (error) {
-            console.error('❌ Firebase save failed:', error.code, error.message);
-
-            let userMessage = 'Cloud sync failed';
-            if (error.code === 'permission-denied') {
-                userMessage = 'Permission denied. Check Firestore rules.';
-            } else if (error.code === 'unavailable') {
-                userMessage = 'Cannot connect to Firebase. Check internet connection.';
-            }
-
-            alert(`⚠️ ${userMessage}\n\n✅ Data saved locally on this device.`);
-
-            // Still save locally
-            localStorage.setItem('unloanLastSync', new Date().toISOString());
-            localStorage.setItem('unloanData', JSON.stringify(userData));
-
-            return false;
-
-        } finally {
-            isSubmitting = false;
-        }
-    }
-
-    window.saveAndFinish = async function() {
-        console.log('💾 Save & Finish clicked');
-        localStorage.setItem('unloanData', JSON.stringify(userData));
-
-        const saveBtn = document.querySelector('button[onclick="saveAndFinish()"]');
-        const originalText = saveBtn ? saveBtn.innerHTML : '💾 Save & Finish';
-
-        if (saveBtn) {
-            saveBtn.innerHTML = '🔄 Saving...';
-            saveBtn.disabled = true;
+            console.error('Save error:', error);
+            alert('⚠️ Cloud sync failed: ' + error.message + '\n\n✅ Data saved LOCALLY.');
         }
 
-        const cloudSuccess = await saveToFirebase();
-
-        if (cloudSuccess) {
-            alert('✅ Data saved to cloud!\n\nThank you for using UNLOAN!');
-        } else {
-            alert('⚠️ Cloud sync failed\n\n✅ Data saved locally on this device.');
-        }
-
-        if (saveBtn) {
-            saveBtn.innerHTML = originalText;
-            saveBtn.disabled = false;
-        }
+        btn.innerHTML = '💾 Save & Finish';
+        btn.disabled = false;
     };
 
-    // ===== CSV EXPORT =====
-    window.exportToCSV = function() {
-        const csvContent = [
-            ['UNLOAN - Financial Plan Export'],
-            ['Generated on:', new Date().toLocaleDateString()],
-            [''],
-            ['PERSONAL INFORMATION'],
-            ['Name', userData.name],
-            ['Age', userData.age],
-            ['Mobile', userData.mobile],
-            ['Marital Status', userData.maritalStatus],
-            ['Dependents', userData.dependents],
-            [''],
-            ['FINANCIAL SUMMARY'],
-            ['Monthly Income', '₹' + userData.income.toLocaleString('en-IN')],
-            ['Total Expenses', '₹' + userData.totalExpenses.toLocaleString('en-IN')],
-            ['Monthly Surplus', '₹' + Math.max(0, userData.disposable).toLocaleString('en-IN')],
-            [''],
-            ['EXPENSE BREAKDOWN'],
-            ['Loan EMIs', '₹' + userData.loanEmi.toLocaleString('en-IN')],
-            ['Insurance', '₹' + userData.insuranceTotal.toLocaleString('en-IN')],
-            ['Rent/Mortgage', '₹' + userData.rent.toLocaleString('en-IN')],
-            ['Groceries & Food', '₹' + userData.groceries.toLocaleString('en-IN')],
-            [''],
-            ['FINANCIAL GOALS'],
-            ...(userData.milestones?.map(m => [m.name, '₹' + m.amount.toLocaleString('en-IN'), m.years + ' years']) || [['No goals added']])
-        ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
-        
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    // Export CSV
+    window.exportToCSV = () => {
+        let csv = 'Field,Value\n';
+        Object.keys(userData).forEach(key => {
+            csv += `${key},${JSON.stringify(userData[key])}\n`;
+        });
         const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', `unloan-plan-${new Date().getTime()}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
+        link.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        link.download = `unloan_${userData.name}_${new Date().toISOString().split('T')[0]}.csv`;
         link.click();
-        document.body.removeChild(link);
-        console.log('📥 CSV exported');
+        alert('📥 CSV downloaded!');
     };
 
-    // ===== INITIALIZATION =====
-    console.log('✅ UNLOAN App Initialized');
+    console.log('🚀 unloan app loaded!');
 </script>
 </body>
 </html>
