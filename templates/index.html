@@ -3,90 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>unloan | Secure Planner</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="description" content="A private, practical money planner for building emergency savings, funding milestones and growing long-term wealth." />
+  <title>Unloan Moneyview — Your money, mapped forward</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
-<body class="bg-slate-50">
-  <header class="bg-white border-b">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-      <h1 class="text-2xl font-bold text-indigo-700">₹ unloan</h1>
-      <div class="space-x-4">
-        <button class="text-sm text-indigo-700" onclick="showPage('entry')">Home</button>
-        <button class="text-sm text-indigo-700" onclick="showPage('admin-login')">Admin</button>
-      </div>
-    </div>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Unloan Moneyview home">
+      <span class="brand-mark">U</span>
+      <span>unloan <b>moneyview</b></span>
+    </a>
+    <span class="privacy-pill"><span></span> Your data is not stored</span>
   </header>
 
-  <main class="max-w-6xl mx-auto p-4 space-y-6">
-    <section id="entry" class="card">
-      <h2 class="text-xl font-bold mb-3">Entry Profile</h2>
-      <div class="grid md:grid-cols-3 gap-3">
-        <input id="name" placeholder="Name" class="input" />
-        <input id="age" type="number" placeholder="Age" class="input" />
-        <input id="mobile" placeholder="Mobile" class="input" />
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">A clearer relationship with money</p>
+        <h1>See what your income can <em>actually</em> build.</h1>
+        <p class="hero-text">Turn today’s cash flow into a practical plan for safety, life milestones and long-term wealth—built around your age, location and priorities.</p>
+        <div class="hero-points">
+          <span>✓ No signup</span><span>✓ India-aware</span><span>✓ Takes 3 minutes</span>
+        </div>
       </div>
-      <div class="grid md:grid-cols-3 gap-3 mt-3">
-        <input id="dependents" type="number" placeholder="Dependents" class="input" value="0" />
-        <select id="maritalStatus" class="input"><option value="single">Single</option><option value="married">Married</option></select>
-        <select id="inputMode" class="input"><option value="monthly">Monthly</option><option value="yearly">Yearly</option></select>
+      <div class="hero-card" aria-hidden="true">
+        <div class="mini-label">A balanced monthly plan</div>
+        <div class="mini-amount">₹42,000 <small>available</small></div>
+        <div class="stacked-bar"><i></i><i></i><i></i><i></i></div>
+        <div class="mini-legend">
+          <span><b class="mint"></b>Safety first</span>
+          <span><b class="blue"></b>Milestones</span>
+          <span><b class="gold"></b>Retirement</span>
+        </div>
+        <p>Small decisions, compounding in the right direction.</p>
       </div>
-      <div class="grid md:grid-cols-2 gap-3 mt-3">
-        <label class="input flex items-center gap-2"><input id="hasHealthInsurance" type="checkbox" /> Health insurance available</label>
-        <label class="input flex items-center gap-2"><input id="hasTermInsurance" type="checkbox" /> Term insurance available</label>
-      </div>
-      <button class="btn mt-4" onclick="showPage('financial')">Next</button>
     </section>
 
-    <section id="financial" class="card hidden">
-      <h2 class="text-xl font-bold mb-3">Financial Inputs</h2>
-      <div class="grid md:grid-cols-4 gap-3">
-        <input id="income" type="number" class="input" placeholder="Income" />
-        <input id="rent" type="number" class="input" placeholder="Rent / EMI" />
-        <input id="food" type="number" class="input" placeholder="Food + Utilities" />
-        <input id="misc" type="number" class="input" placeholder="Lifestyle + Misc" />
+    <section class="planner-shell" id="planner">
+      <div class="planner-heading">
+        <div>
+          <p class="eyebrow">Build your view</p>
+          <h2>Your money snapshot</h2>
+        </div>
+        <div class="step-indicator"><span class="active">1</span><i></i><span>2</span><i></i><span>3</span></div>
       </div>
-      <h3 class="font-semibold mt-4 mb-2">Milestones</h3>
-      <div id="milestonesBox" class="grid md:grid-cols-2 gap-3"></div>
-      <button class="btn mt-4" onclick="generatePlan()">Generate Plan</button>
-    </section>
 
-    <section id="summary" class="hidden">
-      <div class="grid lg:grid-cols-3 gap-4">
-        <div class="card lg:col-span-2">
-          <h2 class="text-xl font-bold">Health Score: <span id="healthScore">0</span>/100</h2>
-          <p id="healthNote" class="text-sm text-gray-600 mt-1"></p>
-          <ul id="insights" class="list-disc pl-5 mt-3 text-sm"></ul>
-          <div class="mt-4">
-            <label><input id="consult" type="checkbox" /> Discuss next steps with us</label>
+      <form id="plannerForm" novalidate>
+        <section class="form-step" data-step="1">
+          <div class="section-intro">
+            <span class="section-number">01</span>
+            <div><h3>Start with you</h3><p>This helps us set realistic safety buffers and time horizons.</p></div>
           </div>
-          <button class="btn mt-4" onclick="savePlan()">Save Plan</button>
-        </div>
-        <div class="card">
-          <h3 class="font-semibold mb-2">Wealth Spread</h3>
-          <div class="h-40"><canvas id="chart"></canvas></div>
-          <p class="text-xs text-gray-500 mt-2">Compact view</p>
-        </div>
+          <div class="form-grid three">
+            <label>Name <span>optional</span><input id="name" autocomplete="name" placeholder="What should we call you?" /></label>
+            <label>Age<input id="age" type="number" min="18" max="80" inputmode="numeric" placeholder="32" required /></label>
+            <label>Retirement age<input id="retirementAge" type="number" min="40" max="85" inputmode="numeric" value="60" required /></label>
+            <label>Where do you live?
+              <select id="location" required>
+                <option value="metro">Metro — Mumbai, Delhi, Bengaluru…</option>
+                <option value="tier1">Large city</option>
+                <option value="tier2" selected>Tier 2 city</option>
+                <option value="tier3">Small town / rural</option>
+                <option value="outside_india">Outside India</option>
+              </select>
+            </label>
+            <label>Family status
+              <select id="maritalStatus"><option value="single">Single</option><option value="married">Married</option></select>
+            </label>
+            <label>Financial dependents<input id="dependents" type="number" min="0" max="20" inputmode="numeric" value="0" /></label>
+          </div>
+          <div class="choice-row">
+            <label class="check-card"><input id="hasHealthInsurance" type="checkbox" /><span><b>Health insurance</b><small>I have personal/family health cover</small></span></label>
+            <label class="check-card"><input id="hasTermInsurance" type="checkbox" /><span><b>Term life insurance</b><small>I have pure life cover</small></span></label>
+          </div>
+          <div class="step-actions"><button class="primary-btn next-btn" type="button">Continue to cash flow <span>→</span></button></div>
+        </section>
+
+        <section class="form-step hidden" data-step="2">
+          <div class="section-intro">
+            <span class="section-number">02</span>
+            <div><h3>Your monthly picture</h3><p>Approximate numbers are perfectly fine. You can refine them later.</p></div>
+          </div>
+          <div class="mode-toggle" role="group" aria-label="Input frequency">
+            <button type="button" class="active" data-mode="monthly">Monthly</button>
+            <button type="button" data-mode="yearly">Yearly</button>
+          </div>
+          <input id="inputMode" type="hidden" value="monthly" />
+          <div class="form-grid three money-grid">
+            <label>Take-home income<div class="money-input"><span>₹</span><input id="income" type="number" min="1" inputmode="decimal" placeholder="1,00,000" required /></div></label>
+            <label>Rent / home EMI<div class="money-input"><span>₹</span><input id="rent" type="number" min="0" inputmode="decimal" placeholder="25,000" required /></div></label>
+            <label>Food + essentials<div class="money-input"><span>₹</span><input id="food" type="number" min="0" inputmode="decimal" placeholder="18,000" required /></div></label>
+            <label>Lifestyle + other spends<div class="money-input"><span>₹</span><input id="misc" type="number" min="0" inputmode="decimal" placeholder="12,000" required /></div></label>
+            <label>Other loan EMIs<div class="money-input"><span>₹</span><input id="debtEmi" type="number" min="0" inputmode="decimal" value="0" required /></div></label>
+            <label>Emergency savings today<div class="money-input"><span>₹</span><input id="currentSavings" type="number" min="0" inputmode="decimal" value="0" required /></div></label>
+            <label>Investments today<div class="money-input"><span>₹</span><input id="currentInvestments" type="number" min="0" inputmode="decimal" value="0" required /></div></label>
+            <label>Investment style
+              <select id="riskProfile">
+                <option value="conservative">Conservative — steadier, lower growth</option>
+                <option value="balanced" selected>Balanced — growth with moderation</option>
+                <option value="growth">Growth — more volatility accepted</option>
+              </select>
+            </label>
+          </div>
+          <div class="step-actions split"><button class="text-btn back-btn" type="button">← Back</button><button class="primary-btn next-btn" type="button">Choose milestones <span>→</span></button></div>
+        </section>
+
+        <section class="form-step hidden" data-step="3">
+          <div class="section-intro">
+            <span class="section-number">03</span>
+            <div><h3>What are you building toward?</h3><p>Select any goals and edit the cost or timeline to fit your life.</p></div>
+          </div>
+          <div id="milestonesBox" class="milestone-grid"></div>
+          <p class="form-error" id="formError" role="alert"></p>
+          <div class="step-actions split"><button class="text-btn back-btn" type="button">← Back</button><button class="primary-btn generate-btn" type="submit">Build my money view <span>↗</span></button></div>
+        </section>
+      </form>
+    </section>
+
+    <section id="results" class="results hidden" aria-live="polite">
+      <div class="results-head">
+        <div><p class="eyebrow">Your personal money view</p><h2 id="resultTitle">Here’s your path forward.</h2><p id="healthNote"></p></div>
+        <div class="score-ring"><strong id="healthScore">0</strong><span>/ 100<br />foundation</span></div>
       </div>
-    </section>
 
-    <section id="admin-login" class="card hidden max-w-md">
-      <h2 class="text-xl font-bold mb-3">Admin Login</h2>
-      <input id="adminUser" class="input mb-2" placeholder="Username" />
-      <input id="adminPass" type="password" class="input" placeholder="Password" />
-      <button class="btn mt-3" onclick="adminLogin()">Login</button>
-    </section>
+      <div class="metric-grid">
+        <article><span>Monthly surplus</span><strong id="surplus">₹0</strong><small id="savingsRatio">0% savings rate</small></article>
+        <article><span>Emergency target</span><strong id="emergencyTarget">₹0</strong><small id="emergencyGap">₹0 remaining</small></article>
+        <article><span>Suggested life cover</span><strong id="insuranceTarget">₹0</strong><small>Indicative income replacement</small></article>
+        <article><span>Debt load</span><strong id="debtRatio">0%</strong><small>of take-home income</small></article>
+      </div>
 
-    <section id="admin" class="card hidden">
-      <h2 class="text-xl font-bold mb-3">Admin Records</h2>
-      <table class="w-full text-sm border">
-        <thead><tr class="bg-gray-100"><th>Name</th><th>Age</th><th>Mobile</th><th>Score</th><th>Date</th></tr></thead>
-        <tbody id="adminBody"></tbody>
-      </table>
+      <div class="result-grid">
+        <article class="result-card allocation-card">
+          <div class="card-heading"><div><p class="eyebrow">Monthly roadmap</p><h3>Give every rupee a role</h3></div></div>
+          <div id="allocationBars" class="allocation-bars"></div>
+        </article>
+        <article class="result-card next-card">
+          <p class="eyebrow">In the right order</p><h3>Your next moves</h3>
+          <ol id="nextSteps"></ol>
+        </article>
+      </div>
+
+      <article class="result-card goals-card">
+        <div class="card-heading"><div><p class="eyebrow">Milestone reality check</p><h3>What is achievable from here</h3></div><span>Inflation adjusted</span></div>
+        <div id="goalResults" class="goal-results"></div>
+      </article>
+
+      <article class="result-card projection-card">
+        <div class="card-heading"><div><p class="eyebrow">The long view</p><h3>Your wealth could grow to</h3></div><span id="returnLabel">Illustrative projection</span></div>
+        <div id="projections" class="projection-grid"></div>
+      </article>
+
+      <div class="assumption-box"><b>Keep the forecast honest.</b><ul id="assumptions"></ul><p>Educational estimate only—not investment, tax, insurance or legal advice.</p></div>
+      <div class="result-actions"><button id="editPlan" class="text-btn" type="button">← Edit my inputs</button><button id="printPlan" class="primary-btn" type="button">Save as PDF / print</button></div>
     </section>
   </main>
 
+  <footer><span>unloan moneyview</span><p>Clarity before complexity. Built for better money decisions.</p></footer>
   <script src="/static/js/app.js"></script>
 </body>
 </html>

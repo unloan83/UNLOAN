@@ -1,29 +1,41 @@
-# unloan (Secure OOP Python Structure)
+# Unloan Moneyview
 
-## Structure
-- `app/config.py` - configuration module (env-driven).
-- `app/models/planner.py` - domain models (dataclasses).
-- `app/services/planner_service.py` - planning engine and health score logic.
-- `app/services/auth_service.py` - secure admin auth token service.
-- `app/services/storage_service.py` - storage abstraction (local JSON).
-- `app/routes/api.py` - backend API routes.
-- `templates/index.html` - frontend page.
-- `static/js/app.js` - frontend logic.
-- `static/css/style.css` - frontend styling.
-- `run.py` - app entrypoint.
+A privacy-first money planner that turns an individual's age, location, income, expenses, debt, protection and milestones into a practical wealth roadmap.
 
-## Run
+## What it provides
+
+- A financial foundation score based on savings, debt, emergency readiness and insurance.
+- A location- and dependent-aware emergency fund target.
+- A suggested monthly split across emergency savings, protection, milestones and retirement.
+- Inflation-adjusted milestone costs, required monthly investments and funding-gap guidance.
+- Age- and risk-aware 5, 10, 20 and retirement-horizon wealth projections.
+- A printable plan that does not require signup or persist personal inputs on the server.
+
+All figures are educational estimates, not regulated financial advice. Returns are illustrative and are not guaranteed.
+
+## Run locally
+
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 python run.py
 ```
 
-## Security notes
-- Do not hardcode admin password. Set env var `UNLOAN_ADMIN_PASSWORD_HASH`.
-- Generate password hash with Werkzeug in Python shell:
-```python
-from werkzeug.security import generate_password_hash
-print(generate_password_hash("your-strong-password"))
+Open `http://localhost:8000`.
+
+## Test
+
+```bash
+python -m unittest discover -s tests -v
 ```
+
+## Deploy to Vercel
+
+The Flask application is exposed through `api/index.py`, with routing configured in `vercel.json`.
+
+```bash
+vercel --prod
+```
+
+No environment variables are required. Personal inputs are processed only to generate the response and are not persisted by the application.

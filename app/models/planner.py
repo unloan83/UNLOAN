@@ -1,16 +1,18 @@
-from dataclasses import dataclass, field, asdict
-from typing import List, Dict, Any
+from dataclasses import asdict, dataclass, field
+from typing import Any, Dict, List
 
 
 @dataclass
 class UserProfile:
     name: str
     age: int
-    mobile: str
+    location: str
     dependents: int
     marital_status: str
     has_health_insurance: bool
     has_term_insurance: bool
+    risk_profile: str
+    retirement_age: int
 
 
 @dataclass
@@ -20,6 +22,9 @@ class FinancialInput:
     rent: float
     food: float
     misc: float
+    debt_emi: float
+    current_savings: float
+    current_investments: float
 
 
 @dataclass
@@ -31,20 +36,48 @@ class Milestone:
 
 
 @dataclass
+class GoalRecommendation:
+    key: str
+    name: str
+    years: float
+    future_cost: float
+    monthly_required: float
+    monthly_allocated: float
+    funding_ratio: int
+    status: str
+    recommendation: str
+
+
+@dataclass
 class PlanAllocation:
-    insurance: float
-    short_term: float
-    long_term: float
+    emergency: float
+    protection: float
+    milestones: float
+    retirement: float
+
+
+@dataclass
+class Projection:
+    years: int
+    invested: float
+    projected_value: float
 
 
 @dataclass
 class PlanSummary:
     surplus: float
+    savings_ratio: float
+    debt_ratio: float
     health_score: int
     health_note: str
+    emergency_target: float
+    emergency_gap: float
     insurance_target: float
     allocation: PlanAllocation
-    notes: List[str] = field(default_factory=list)
+    goals: List[GoalRecommendation]
+    projections: List[Projection]
+    next_steps: List[str] = field(default_factory=list)
+    assumptions: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -53,7 +86,6 @@ class PlannerRecord:
     financial: FinancialInput
     milestones: List[Milestone]
     summary: PlanSummary
-    consult: bool
     created_at: str
 
     def to_dict(self) -> Dict[str, Any]:

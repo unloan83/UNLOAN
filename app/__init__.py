@@ -1,10 +1,9 @@
-from flask import Flask, render_template
+def create_app():
+    from flask import Flask, render_template
 
-from app.config import Config
-from app.routes.api import api_bp
+    from app.config import Config
+    from app.routes.api import api_bp
 
-
-def create_app() -> Flask:
     app = Flask(__name__, template_folder="../templates", static_folder="../static")
     app.config.from_object(Config)
 
