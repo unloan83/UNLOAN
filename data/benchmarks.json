@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "version": "2026.1",
+    "label": "Estimated planning benchmark",
+    "methodology": "Heuristic planning ranges for educational comparison. These are configurable guideposts, not population statistics or verified averages.",
+    "currency": "INR"
+  },
+  "base": {
+    "savings_rate_percent": [15, 25],
+    "rent_share_percent": [20, 30],
+    "healthy_emi_max_percent": 30,
+    "emergency_months": [3, 6]
+  },
+  "age_groups": [
+    {"min": 18, "max": 25, "savings_rate_adjustment": -3, "emergency_months_adjustment": 0},
+    {"min": 26, "max": 35, "savings_rate_adjustment": 0, "emergency_months_adjustment": 0},
+    {"min": 36, "max": 45, "savings_rate_adjustment": 3, "emergency_months_adjustment": 1},
+    {"min": 46, "max": 60, "savings_rate_adjustment": 5, "emergency_months_adjustment": 1},
+    {"min": 61, "max": 80, "savings_rate_adjustment": 0, "emergency_months_adjustment": 2}
+  ],
+  "regions": {
+    "metro": {"rent_share_adjustment": 5},
+    "urban": {"rent_share_adjustment": 2},
+    "semi_urban": {"rent_share_adjustment": -2},
+    "rural": {"rent_share_adjustment": -5},
+    "global": {"rent_share_adjustment": 5}
+  },
+  "income_bands": [
+    {"max_monthly_income": 30000, "savings_rate_adjustment": -5},
+    {"max_monthly_income": 75000, "savings_rate_adjustment": 0},
+    {"max_monthly_income": 150000, "savings_rate_adjustment": 3},
+    {"max_monthly_income": 999999999, "savings_rate_adjustment": 5}
+  ],
+  "family_status": {
+    "no_dependents": {"emergency_months_adjustment": 0},
+    "with_dependents": {"emergency_months_adjustment": 2, "savings_rate_adjustment": -2}
+  },
+  "employment_types": {
+    "salaried": {"emergency_months_adjustment": 0},
+    "self_employed": {"emergency_months_adjustment": 3},
+    "business": {"emergency_months_adjustment": 3},
+    "freelance": {"emergency_months_adjustment": 3},
+    "student": {"emergency_months_adjustment": 0},
+    "retired": {"emergency_months_adjustment": 3},
+    "other": {"emergency_months_adjustment": 1}
+  }
+}

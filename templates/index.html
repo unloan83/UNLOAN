@@ -1,168 +1,168 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A private, practical money planner for building emergency savings, funding milestones and growing long-term wealth." />
-  <title>Unloan Moneyview — Your money, mapped forward</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#6757f5" />
+  <meta name="description" content="A friendly, private wealth coach for goals, savings, investments and debt." />
+  <title>Unloan Moneyview — Your AI wealth coach</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
-  <header class="site-header">
-    <a class="brand" href="#top" aria-label="Unloan Moneyview home">
-      <span class="brand-mark">U</span>
-      <span>unloan <b>moneyview</b></span>
-    </a>
-    <span class="privacy-pill"><span></span> Your data is not stored</span>
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="brand-gem">U</span><span>unloan <b>moneyview</b></span></a>
+    <div class="top-actions"><span class="private-badge">● Private by design</span><a href="#planner" class="header-cta">Build my plan</a></div>
   </header>
 
   <main id="top">
     <section class="hero">
+      <div class="hero-orb orb-one"></div><div class="hero-orb orb-two"></div>
       <div class="hero-copy">
-        <p class="eyebrow">A clearer relationship with money</p>
-        <h1>See what your income can <em>actually</em> build.</h1>
-        <p class="hero-text">Turn today’s cash flow into a practical plan for safety, life milestones and long-term wealth—built around your age, location and priorities.</p>
-        <div class="hero-points">
-          <span>✓ No signup</span><span>✓ India-aware</span><span>✓ Takes 3 minutes</span>
-        </div>
+        <span class="ai-pill"><i>✦</i> Your personal wealth copilot</span>
+        <h1>Money clarity today.<br /><em>More freedom tomorrow.</em></h1>
+        <p>Understand where you stand, what to fix first, and how your income can turn into milestones and long-term wealth.</p>
+        <div class="hero-actions"><a href="#planner" class="hero-button">Create my free roadmap <span>→</span></a><span>No signup · No judgement · 5 minutes</span></div>
       </div>
-      <div class="hero-card" aria-hidden="true">
-        <div class="mini-label">A balanced monthly plan</div>
-        <div class="mini-amount">₹42,000 <small>available</small></div>
-        <div class="stacked-bar"><i></i><i></i><i></i><i></i></div>
-        <div class="mini-legend">
-          <span><b class="mint"></b>Safety first</span>
-          <span><b class="blue"></b>Milestones</span>
-          <span><b class="gold"></b>Retirement</span>
-        </div>
-        <p>Small decisions, compounding in the right direction.</p>
+      <div class="coach-preview" aria-hidden="true">
+        <div class="preview-top"><span class="avatar">✦</span><div><b>Your wealth pulse</b><small>Personalized for your life</small></div><span class="live-dot">LIVE</span></div>
+        <div class="preview-score"><div class="preview-ring"><strong>74</strong><small>Good</small></div><div><span>Next best move</span><b>Complete your safety fund</b><p>You’re closer than you think.</p></div></div>
+        <div class="preview-bars"><span><i style="width:68%"></i></span><span><i style="width:46%"></i></span><span><i style="width:82%"></i></span></div>
+        <div class="preview-labels"><span>Safety</span><span>Goals</span><span>Growth</span></div>
       </div>
     </section>
 
-    <section class="planner-shell" id="planner">
-      <div class="planner-heading">
-        <div>
-          <p class="eyebrow">Build your view</p>
-          <h2>Your money snapshot</h2>
-        </div>
-        <div class="step-indicator"><span class="active">1</span><i></i><span>2</span><i></i><span>3</span></div>
+    <section class="trust-strip"><span>✦ Personalized roadmap</span><span>◉ Beginner friendly</span><span>⌁ Inflation-aware goals</span><span>▣ Private, no storage</span></section>
+
+    <section id="planner" class="planner-shell">
+      <aside class="step-sidebar">
+        <div class="sidebar-head"><span>YOUR JOURNEY</span><b id="sidebarProgress">1 of 6</b></div>
+        <nav id="stepNav">
+          <button class="active" data-go="1"><i>1</i><span><b>About you</b><small>Life context</small></span></button>
+          <button data-go="2"><i>2</i><span><b>Income</b><small>Earning picture</small></span></button>
+          <button data-go="3"><i>3</i><span><b>Expenses</b><small>Monthly lifestyle</small></span></button>
+          <button data-go="4"><i>4</i><span><b>Savings</b><small>What you own</small></span></button>
+          <button data-go="5"><i>5</i><span><b>Debts</b><small>What you owe</small></span></button>
+          <button data-go="6"><i>6</i><span><b>Goals</b><small>What matters</small></span></button>
+        </nav>
+        <div class="sidebar-coach"><span>💡</span><p><b>Coach tip</b>Estimates are enough. You can refine your plan anytime.</p></div>
+      </aside>
+
+      <div class="planner-main">
+        <div class="mobile-progress"><div><span id="mobileStep">STEP 1 OF 6</span><b id="mobileTitle">About you</b></div><strong id="progressPercent">17%</strong><i><em id="progressBar"></em></i></div>
+        <form id="plannerForm" novalidate>
+          <section class="form-step" data-step="1">
+            <div class="step-heading"><span class="step-icon purple">👋</span><div><p>LET’S GET ACQUAINTED</p><h2>Tell us a little about you</h2><span>Your life stage shapes the right financial priorities.</span></div></div>
+            <div class="field-grid two">
+              <label>Your name <small>optional</small><input id="name" autocomplete="name" placeholder="What should your coach call you?" /></label>
+              <label>Your age<input id="age" type="number" min="18" max="80" inputmode="numeric" placeholder="e.g. 32" required /></label>
+              <label>City / region<input id="city" placeholder="e.g. Pune" required /></label>
+              <label>Cost-of-living region<select id="region"><option value="metro">Metro city</option><option value="urban" selected>Urban / tier 1</option><option value="semi_urban">Tier 2 / semi-urban</option><option value="rural">Small town / rural</option><option value="global">Outside India</option></select></label>
+              <label>Employment status<select id="employmentStatus"><option value="salaried">Salaried</option><option value="self_employed">Self-employed</option><option value="business">Business owner</option><option value="freelance">Freelancer / gig worker</option><option value="student">Student</option><option value="retired">Retired</option><option value="other">Other</option></select></label>
+              <label>Marital status<select id="maritalStatus"><option value="single">Single</option><option value="married">Married / partnered</option><option value="separated">Separated / divorced</option><option value="widowed">Widowed</option></select></label>
+              <label>Financial dependents<input id="dependents" type="number" min="0" max="20" value="0" /></label>
+              <label>Primary money focus<select id="financialGoalCategory"><option value="stability">Financial stability</option><option value="debt">Become debt-free</option><option value="milestones">Fund life milestones</option><option value="wealth" selected>Build long-term wealth</option><option value="retirement">Plan retirement</option></select></label>
+            </div>
+          </section>
+
+          <section class="form-step hidden" data-step="2">
+            <div class="step-heading"><span class="step-icon blue">₹</span><div><p>YOUR EARNING POWER</p><h2>Let’s map your income</h2><span>This helps us create a plan you can sustain in real life.</span></div></div>
+            <div class="field-grid two">
+              <label>Monthly take-home income<div class="money-field"><span>₹</span><input id="monthlyIncome" type="number" min="0" inputmode="decimal" placeholder="80,000" required /></div></label>
+              <label>Other monthly income <small>optional</small><div class="money-field"><span>₹</span><input id="otherIncome" type="number" min="0" inputmode="decimal" placeholder="10,000" /></div></label>
+            </div>
+            <div class="question-block"><b>How predictable is your income?</b><div class="choice-cards three" data-choice="stability"><button type="button" data-value="stable" class="selected"><span>🛡️</span><b>Very stable</b><small>Similar each month</small></button><button type="button" data-value="moderate"><span>〽️</span><b>Some variation</b><small>Mostly predictable</small></button><button type="button" data-value="variable"><span>🌊</span><b>Highly variable</b><small>Changes often</small></button></div></div>
+            <div class="growth-card"><div><span>↗</span><p><b>Expected annual income growth</b><small>What feels realistic for the next few years?</small></p></div><strong><output id="growthOutput">5%</output></strong><input id="annualGrowth" type="range" min="0" max="20" value="5" /></div>
+            <div class="question-block"><b>Your comfort with investment ups and downs</b><div class="choice-cards three" data-choice="riskProfile"><button type="button" data-value="conservative"><span>🌱</span><b>Steady</b><small>Lower ups and downs</small></button><button type="button" data-value="balanced" class="selected"><span>⚖️</span><b>Balanced</b><small>Growth with control</small></button><button type="button" data-value="growth"><span>🚀</span><b>Growth</b><small>Long-term volatility is okay</small></button></div></div>
+            <div class="benchmark-box" data-benchmark="income"><span class="benchmark-icon">◎</span><div><b>Estimated benchmark for your profile</b><p id="incomeBenchmark">Add your income to see a gentle savings guide.</p><small>Planning estimate · not a population average</small></div></div>
+          </section>
+
+          <section class="form-step hidden" data-step="3">
+            <div class="step-heading"><span class="step-icon coral">◔</span><div><p>WHERE MONEY GOES</p><h2>Which expenses apply to you?</h2><span>Tap only what you spend on. Amount fields appear after selection.</span></div></div>
+            <div id="expenseOptions" class="option-grid"></div>
+            <button class="add-custom" type="button" data-custom="expenses"><span>＋</span> Add custom expense</button>
+            <div id="expenseDetails" class="selected-details"></div>
+            <div class="benchmark-box" data-benchmark="expenses"><span class="benchmark-icon">⌂</span><div><b>Regional housing guide</b><p id="expenseBenchmark">Select rent to compare its share of income with an estimated range.</p><small>Editable planning benchmark · never a judgement</small></div></div>
+          </section>
+
+          <section class="form-step hidden" data-step="4">
+            <div class="step-heading"><span class="step-icon green">◆</span><div><p>WHAT YOU’VE BUILT</p><h2>Your savings & investments</h2><span>Select what you currently own and add its present value.</span></div></div>
+            <div id="investmentOptions" class="option-grid"></div>
+            <button class="add-custom" type="button" data-custom="investments"><span>＋</span> Add custom investment</button>
+            <div id="investmentDetails" class="selected-details"></div>
+            <div class="skip-note">Nothing saved yet? That’s okay—skip this step. Your roadmap will show where to begin.</div>
+            <div class="benchmark-box" data-benchmark="savings"><span class="benchmark-icon">☂</span><div><b>Safety buffer guide</b><p id="savingsBenchmark">Add liquid savings to see how many months of expenses they may cover.</p><small>Estimated from age, family and employment profile</small></div></div>
+          </section>
+
+          <section class="form-step hidden" data-step="5">
+            <div class="step-heading"><span class="step-icon gold">↘</span><div><p>WHAT YOU OWE</p><h2>Do any of these debts apply?</h2><span>We’ll identify what to repay first and how to free your cash flow.</span></div></div>
+            <div id="debtOptions" class="option-grid"></div>
+            <button class="add-custom" type="button" data-custom="debts"><span>＋</span> Add custom debt</button>
+            <div id="debtDetails" class="selected-details debt-details"></div>
+            <div class="skip-note positive">🎉 Debt-free? Beautiful. Skip ahead to your goals.</div>
+            <div class="benchmark-box" data-benchmark="debt"><span class="benchmark-icon">↘</span><div><b>Healthy EMI guide</b><p id="debtBenchmark">Add EMIs to compare your repayment load with a planning threshold.</p><small>Guidepost only · loan circumstances vary</small></div></div>
+          </section>
+
+          <section class="form-step hidden" data-step="6">
+            <div class="step-heading"><span class="step-icon pink">★</span><div><p>YOUR FUTURE, YOUR WAY</p><h2>What are you building toward?</h2><span>Choose what matters. We’ll test what’s achievable and map the path.</span></div></div>
+            <div id="goalOptions" class="option-grid goals"></div>
+            <button class="add-custom" type="button" data-custom="goals"><span>＋</span> Add custom goal</button>
+            <div id="goalDetails" class="selected-details goal-details"></div>
+            <p id="formError" class="form-error" role="alert"></p>
+          </section>
+
+          <div class="form-navigation"><button id="backButton" class="back-button hidden" type="button">← Back</button><button id="skipButton" class="skip-button hidden" type="button">Skip for now</button><button id="nextButton" class="next-button" type="button">Continue <span>→</span></button></div>
+        </form>
       </div>
-
-      <form id="plannerForm" novalidate>
-        <section class="form-step" data-step="1">
-          <div class="section-intro">
-            <span class="section-number">01</span>
-            <div><h3>Start with you</h3><p>This helps us set realistic safety buffers and time horizons.</p></div>
-          </div>
-          <div class="form-grid three">
-            <label>Name <span>optional</span><input id="name" autocomplete="name" placeholder="What should we call you?" /></label>
-            <label>Age<input id="age" type="number" min="18" max="80" inputmode="numeric" placeholder="32" required /></label>
-            <label>Retirement age<input id="retirementAge" type="number" min="40" max="85" inputmode="numeric" value="60" required /></label>
-            <label>Where do you live?
-              <select id="location" required>
-                <option value="metro">Metro — Mumbai, Delhi, Bengaluru…</option>
-                <option value="tier1">Large city</option>
-                <option value="tier2" selected>Tier 2 city</option>
-                <option value="tier3">Small town / rural</option>
-                <option value="outside_india">Outside India</option>
-              </select>
-            </label>
-            <label>Family status
-              <select id="maritalStatus"><option value="single">Single</option><option value="married">Married</option></select>
-            </label>
-            <label>Financial dependents<input id="dependents" type="number" min="0" max="20" inputmode="numeric" value="0" /></label>
-          </div>
-          <div class="choice-row">
-            <label class="check-card"><input id="hasHealthInsurance" type="checkbox" /><span><b>Health insurance</b><small>I have personal/family health cover</small></span></label>
-            <label class="check-card"><input id="hasTermInsurance" type="checkbox" /><span><b>Term life insurance</b><small>I have pure life cover</small></span></label>
-          </div>
-          <div class="step-actions"><button class="primary-btn next-btn" type="button">Continue to cash flow <span>→</span></button></div>
-        </section>
-
-        <section class="form-step hidden" data-step="2">
-          <div class="section-intro">
-            <span class="section-number">02</span>
-            <div><h3>Your monthly picture</h3><p>Approximate numbers are perfectly fine. You can refine them later.</p></div>
-          </div>
-          <div class="mode-toggle" role="group" aria-label="Input frequency">
-            <button type="button" class="active" data-mode="monthly">Monthly</button>
-            <button type="button" data-mode="yearly">Yearly</button>
-          </div>
-          <input id="inputMode" type="hidden" value="monthly" />
-          <div class="form-grid three money-grid">
-            <label>Take-home income<div class="money-input"><span>₹</span><input id="income" type="number" min="1" inputmode="decimal" placeholder="1,00,000" required /></div></label>
-            <label>Rent / home EMI<div class="money-input"><span>₹</span><input id="rent" type="number" min="0" inputmode="decimal" placeholder="25,000" required /></div></label>
-            <label>Food + essentials<div class="money-input"><span>₹</span><input id="food" type="number" min="0" inputmode="decimal" placeholder="18,000" required /></div></label>
-            <label>Lifestyle + other spends<div class="money-input"><span>₹</span><input id="misc" type="number" min="0" inputmode="decimal" placeholder="12,000" required /></div></label>
-            <label>Other loan EMIs<div class="money-input"><span>₹</span><input id="debtEmi" type="number" min="0" inputmode="decimal" value="0" required /></div></label>
-            <label>Emergency savings today<div class="money-input"><span>₹</span><input id="currentSavings" type="number" min="0" inputmode="decimal" value="0" required /></div></label>
-            <label>Investments today<div class="money-input"><span>₹</span><input id="currentInvestments" type="number" min="0" inputmode="decimal" value="0" required /></div></label>
-            <label>Investment style
-              <select id="riskProfile">
-                <option value="conservative">Conservative — steadier, lower growth</option>
-                <option value="balanced" selected>Balanced — growth with moderation</option>
-                <option value="growth">Growth — more volatility accepted</option>
-              </select>
-            </label>
-          </div>
-          <div class="step-actions split"><button class="text-btn back-btn" type="button">← Back</button><button class="primary-btn next-btn" type="button">Choose milestones <span>→</span></button></div>
-        </section>
-
-        <section class="form-step hidden" data-step="3">
-          <div class="section-intro">
-            <span class="section-number">03</span>
-            <div><h3>What are you building toward?</h3><p>Select any goals and edit the cost or timeline to fit your life.</p></div>
-          </div>
-          <div id="milestonesBox" class="milestone-grid"></div>
-          <p class="form-error" id="formError" role="alert"></p>
-          <div class="step-actions split"><button class="text-btn back-btn" type="button">← Back</button><button class="primary-btn generate-btn" type="submit">Build my money view <span>↗</span></button></div>
-        </section>
-      </form>
     </section>
 
     <section id="results" class="results hidden" aria-live="polite">
-      <div class="results-head">
-        <div><p class="eyebrow">Your personal money view</p><h2 id="resultTitle">Here’s your path forward.</h2><p id="healthNote"></p></div>
-        <div class="score-ring"><strong id="healthScore">0</strong><span>/ 100<br />foundation</span></div>
+      <div class="result-hero">
+        <div class="result-copy"><span class="ai-pill light"><i>✦</i> YOUR PERSONAL WEALTH ROADMAP</span><h2 id="resultTitle">Your path is ready.</h2><p id="coachMessage"></p><div class="stage-badge">🏅 <span id="wealthStage">Foundation builder</span></div></div>
+        <div class="health-orbit"><div><strong id="healthScore">0</strong><span>/100</span><small id="healthLabel">Building</small></div></div>
       </div>
 
-      <div class="metric-grid">
-        <article><span>Monthly surplus</span><strong id="surplus">₹0</strong><small id="savingsRatio">0% savings rate</small></article>
-        <article><span>Emergency target</span><strong id="emergencyTarget">₹0</strong><small id="emergencyGap">₹0 remaining</small></article>
-        <article><span>Suggested life cover</span><strong id="insuranceTarget">₹0</strong><small>Indicative income replacement</small></article>
-        <article><span>Debt load</span><strong id="debtRatio">0%</strong><small>of take-home income</small></article>
+      <div class="snapshot-grid">
+        <article class="snapshot purple-card"><span>NET WORTH</span><strong id="netWorth">₹0</strong><small id="assetDebtText">Assets minus debts</small><i>◆</i></article>
+        <article class="snapshot green-card"><span>MONTHLY SURPLUS</span><strong id="monthlySurplus">₹0</strong><small id="savingsText">Available to direct</small><i>↗</i></article>
+        <article class="snapshot blue-card"><span>SAFETY FUND</span><strong id="emergencyProgress">0%</strong><small id="emergencyText">of target ready</small><i>🛡</i></article>
+        <article class="snapshot gold-card"><span>DEBT LOAD</span><strong id="debtRatio">0%</strong><small>of monthly income</small><i>↘</i></article>
       </div>
 
-      <div class="result-grid">
-        <article class="result-card allocation-card">
-          <div class="card-heading"><div><p class="eyebrow">Monthly roadmap</p><h3>Give every rupee a role</h3></div></div>
-          <div id="allocationBars" class="allocation-bars"></div>
-        </article>
-        <article class="result-card next-card">
-          <p class="eyebrow">In the right order</p><h3>Your next moves</h3>
-          <ol id="nextSteps"></ol>
-        </article>
+      <div class="dashboard-grid score-roadmap-grid">
+        <article class="dash-card score-card"><div class="card-title"><div><span>WHY THIS SCORE</span><h3>Your financial health, explained</h3></div><span id="scoreStatusBadge" class="badge gradient">Good</span></div><ul id="scoreReasons" class="score-reasons"></ul></article>
+        <article class="dash-card roadmap-card"><div class="card-title"><div><span>WEALTH ROADMAP</span><h3>Your path from now to year 5+</h3></div></div><div id="roadmapTimeline" class="roadmap-timeline"></div></article>
       </div>
 
-      <article class="result-card goals-card">
-        <div class="card-heading"><div><p class="eyebrow">Milestone reality check</p><h3>What is achievable from here</h3></div><span>Inflation adjusted</span></div>
-        <div id="goalResults" class="goal-results"></div>
-      </article>
+      <div class="dashboard-grid">
+        <article class="dash-card cashflow-card"><div class="card-title"><div><span>MONTHLY CASH FLOW</span><h3>Where your income goes</h3></div><span class="badge neutral">Live picture</span></div><div class="cashflow-content"><div id="cashflowDonut" class="donut"><div><strong id="donutIncome">₹0</strong><span>income</span></div></div><div id="cashflowLegend" class="legend"></div></div></article>
+        <article class="dash-card allocation-card"><div class="card-title"><div><span>YOUR ACTION PLAN</span><h3>Give every surplus rupee a job</h3></div></div><div id="allocationPlan" class="allocation-plan"></div></article>
+      </div>
 
-      <article class="result-card projection-card">
-        <div class="card-heading"><div><p class="eyebrow">The long view</p><h3>Your wealth could grow to</h3></div><span id="returnLabel">Illustrative projection</span></div>
-        <div id="projections" class="projection-grid"></div>
-      </article>
+      <article class="coach-card"><div class="coach-heading"><span class="coach-avatar">✦</span><div><span>PERSONALIZED RECOMMENDATIONS</span><h3>Moves chosen from your actual inputs</h3></div></div><div id="recommendations" class="recommendation-grid"></div></article>
 
-      <div class="assumption-box"><b>Keep the forecast honest.</b><ul id="assumptions"></ul><p>Educational estimate only—not investment, tax, insurance or legal advice.</p></div>
-      <div class="result-actions"><button id="editPlan" class="text-btn" type="button">← Edit my inputs</button><button id="printPlan" class="primary-btn" type="button">Save as PDF / print</button></div>
+      <div class="dashboard-grid action-milestone-grid">
+        <article class="dash-card action-card"><div class="card-title"><div><span>MONTHLY ACTION PLAN</span><h3>Exactly what to do next</h3></div></div><div id="actionPlan" class="action-list"></div></article>
+        <article class="dash-card projected-card"><div class="card-title"><div><span>PROJECTED DATES</span><h3>Your milestone tracker</h3></div><span class="badge neutral">Illustrative</span></div><div id="milestoneProjections" class="milestone-projections"></div></article>
+      </div>
+
+      <article class="ai-coach-says"><div class="ai-coach-head"><span class="coach-avatar">✦</span><div><span>YOUR AI WEALTH COACH SAYS</span><h3>Here’s the honest, simple version</h3></div></div><div id="coachInsights" class="coach-insights"></div><p class="coach-disclaimer">Educational planning guidance only. This does not promise returns or replace advice from a certified financial professional.</p></article>
+
+      <article class="dash-card milestone-card"><div class="card-title"><div><span>MILESTONE TRACKER</span><h3>Turn ambitions into monthly actions</h3></div><span class="badge gradient">Inflation aware</span></div><div id="goalResults" class="goal-results"></div></article>
+
+      <div class="dashboard-grid lower">
+        <article class="dash-card projection-card"><div class="card-title"><div><span>WEALTH FORECAST</span><h3>Consistency can become freedom</h3></div></div><div id="projectionChart" class="projection-chart"></div><div id="projectionLegend" class="projection-legend"><span><i class="conservative"></i>Conservative</span><span><i class="expected"></i>Expected</span></div></article>
+        <article class="dash-card breakdown-card"><div class="card-title"><div><span>YOUR FINANCIAL MIX</span><h3>Assets, spending & debt</h3></div></div><div class="breakdown-tabs"><button class="active" data-breakdown="assets">Assets</button><button data-breakdown="expenses">Expenses</button><button data-breakdown="debts">Debts</button></div><div id="breakdownList" class="breakdown-list"></div></article>
+      </div>
+
+      <div class="assumptions"><div><b>Transparent by design</b><p id="assumptionText"></p></div><span>Educational planning estimate—not financial advice.</span></div>
+      <div class="result-actions"><button id="editPlan" class="outline-button">← Adjust my details</button><button id="printPlan" class="next-button">Save roadmap as PDF</button></div>
     </section>
   </main>
 
-  <footer><span>unloan moneyview</span><p>Clarity before complexity. Built for better money decisions.</p></footer>
+  <footer><a class="brand" href="#top"><span class="brand-gem">U</span><span>unloan <b>moneyview</b></span></a><p>Build wealth with clarity, one confident step at a time.</p><span>Private · Educational · Built for real life</span></footer>
   <script src="/static/js/app.js"></script>
 </body>
 </html>

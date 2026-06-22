@@ -10,8 +10,11 @@ A privacy-first money planner that turns an individual's age, location, income, 
 - Inflation-adjusted milestone costs, required monthly investments and funding-gap guidance.
 - Age- and risk-aware 5, 10, 20 and retirement-horizon wealth projections.
 - A printable plan that does not require signup or persist personal inputs on the server.
+- Six-step progressive onboarding with selectable expense, investment, debt and goal cards.
+- Contextual estimated benchmarks from an editable `data/benchmarks.json` configuration.
+- A score explanation, five-phase roadmap, monthly action plan, milestone dates and AI-style coach insights.
 
-All figures are educational estimates, not regulated financial advice. Returns are illustrative and are not guaranteed.
+All figures are educational estimates, not regulated financial advice. Returns are illustrative and are not guaranteed. Benchmark ranges are clearly labelled heuristic planning guideposts—not verified population averages.
 
 ## Run locally
 
