@@ -4,17 +4,17 @@ import hashlib
 import time
 from flask import Flask, render_template, request, redirect, jsonify
 
-def verify_token(token, secret):
+def verify_token(token, secret, max_age_seconds=300):
     try:
         parts = token.split(":")
         if len(parts) != 3:
             return False
         username, timestamp_str, signature = parts
         
-        # Verify timestamp is within 5 minutes (300 seconds)
+        # Verify timestamp is within max_age_seconds
         timestamp = int(timestamp_str) / 1000.0
         current_time = time.time()
-        if abs(current_time - timestamp) > 300:
+        if abs(current_time - timestamp) > max_age_seconds:
             return False
             
         # Re-sign
@@ -56,7 +56,7 @@ def create_app():
         # 1. Check for token in query parameters
         token = request.args.get("token")
         if token:
-            if verify_token(token, secret):
+            if verify_token(token, secret, 300):
                 # Valid token! Redirect to clean URL and set session cookie
                 resp = redirect(request.path)
                 resp.set_cookie(
@@ -64,7 +64,7 @@ def create_app():
                     token,
                     max_age=86400, # 1 day
                     httponly=True,
-                    secure=request.is_secure,
+                    secure=request.is_secure or request.headers.get("X-Forwarded-Proto", "http") == "https",
                     samesite="Lax"
                 )
                 return resp
@@ -74,7 +74,7 @@ def create_app():
         # 2. Check for existing session cookie
         session_cookie = request.cookies.get("unloan_money_session")
         if session_cookie:
-            if verify_token(session_cookie, secret):
+            if verify_token(session_cookie, secret, 86400):
                 return None
 
         # 3. Unauthorized fallback
