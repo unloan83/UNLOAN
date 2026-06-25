@@ -27,7 +27,7 @@ const definitions = {
   ],
 };
 
-const state = { step: 1, stability: "stable", riskProfile: "balanced", selected: { expenses: {}, investments: {}, debts: {}, goals: {} }, record: null, breakdown: "assets" };
+const state = { mode: "short", step: 1, stability: "stable", riskProfile: "balanced", selected: { expenses: {}, investments: {}, debts: {}, goals: {} }, record: null, breakdown: "assets" };
 const stepTitles = ["About you", "Income", "Expenses", "Savings", "Debts", "Goals"];
 const form = document.getElementById("plannerForm");
 
@@ -41,6 +41,17 @@ const money = (value) => {
 };
 const safe = (text) => String(text).replace(/[&<>'"]/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[char]));
 const getNumber = (id) => Number(document.getElementById(id)?.value || 0);
+const goalDefinition = (key) => definitions.goals.find((item) => item[0] === key) || definitions.goals.at(-1);
+
+function setMode(mode) {
+  state.mode = mode;
+  document.querySelectorAll("[data-mode]").forEach((button) => button.classList.toggle("selected", button.dataset.mode === mode));
+  document.getElementById("shortPlanForm").classList.toggle("hidden", mode !== "short");
+  document.getElementById("detailedPlanForm").classList.toggle("hidden", mode !== "detailed");
+  document.querySelector(".step-sidebar").classList.toggle("hidden", mode !== "detailed");
+  document.querySelector(".mobile-progress").classList.toggle("hidden", mode !== "detailed");
+  if (mode === "detailed") showStep(state.step);
+}
 
 function renderOptionGrids() {
   Object.entries(definitions).forEach(([type, items]) => {
@@ -168,16 +179,50 @@ function validateCurrentStep() {
   return true;
 }
 
+function validateShortPlan() {
+  const invalid = [...document.querySelectorAll("#shortPlanForm input[required],#shortPlanForm select[required]")].find((field) => !field.checkValidity());
+  if (invalid) { invalid.reportValidity(); invalid.focus(); return false; }
+  if (getNumber("shortMonthlyIncome") <= 0) { document.getElementById("shortMonthlyIncome").setCustomValidity("Add your monthly income."); document.getElementById("shortMonthlyIncome").reportValidity(); document.getElementById("shortMonthlyIncome").setCustomValidity(""); return false; }
+  return true;
+}
+
 document.getElementById("backButton").addEventListener("click", () => showStep(state.step - 1));
 document.getElementById("skipButton").addEventListener("click", () => showStep(state.step + 1));
 document.getElementById("nextButton").addEventListener("click", () => { if (!validateCurrentStep()) return; if (state.step < 6) showStep(state.step + 1); else submitPlan(); });
+document.getElementById("shortSubmitButton").addEventListener("click", () => { if (validateShortPlan()) submitPlan(); });
+document.querySelectorAll("[data-mode]").forEach((button) => button.addEventListener("click", () => setMode(button.dataset.mode)));
 document.querySelectorAll("#stepNav button").forEach((button) => button.addEventListener("click", () => { const target = Number(button.dataset.go); if (target <= state.step) showStep(target); }));
 
 function collectSimple(type) {
   return Object.values(state.selected[type]).map((item) => ({ key: item.key, name: item.name, amount: getNumber(`${type}-${item.key}-amount`) })).filter((item) => item.amount > 0);
 }
-function buildPayload() {
+function buildShortPayload() {
+  const goal = goalDefinition(document.getElementById("shortMainGoal").value);
+  const timeline = Math.max(getNumber("shortGoalTimeline"), 1);
+  const income = getNumber("shortMonthlyIncome");
+  const expenses = getNumber("shortEssentialExpenses");
+  const emi = getNumber("shortEmi");
+  const surplus = Math.max(income - expenses - emi, 0);
+  const targetAmount = goal[3] || Math.max(surplus * 12 * timeline, income * 6);
+  const debts = emi > 0 ? [{ key: "other_loan", name: "Loan / EMI", outstanding: emi * 24, emi, interestRate: 10, tenureMonths: 24 }] : [];
+  const investments = [
+    { key: "bank_savings", name: "Current savings", amount: getNumber("shortSavings") },
+    { key: "mutual_funds", name: "Current investments", amount: getNumber("shortInvestments") },
+  ].filter((item) => item.amount > 0);
   return {
+    planMode: "short",
+    profile: { name: "Friend", age: getNumber("shortAge"), city: document.getElementById("shortCity").value, region: "urban", employmentStatus: "salaried", maritalStatus: "single", dependents: 0, financialGoalCategory: goal[0], riskProfile: "balanced" },
+    income: { monthlyIncome: income, otherIncome: 0, stability: "stable", annualGrowth: 5 },
+    expenses: expenses > 0 ? [{ key: "essentials", name: "Essential expenses", amount: expenses }] : [],
+    investments,
+    debts,
+    goals: [{ key: goal[0], name: goal[2], targetAmount, targetYears: timeline, priority: "high" }],
+  };
+}
+function buildPayload() {
+  if (state.mode === "short") return buildShortPayload();
+  return {
+    planMode: "detailed",
     profile: { name: document.getElementById("name").value, age: getNumber("age"), city: document.getElementById("city").value, region: document.getElementById("region").value, employmentStatus: document.getElementById("employmentStatus").value, maritalStatus: document.getElementById("maritalStatus").value, dependents: getNumber("dependents"), financialGoalCategory: document.getElementById("financialGoalCategory").value, riskProfile: state.riskProfile },
     income: { monthlyIncome: getNumber("monthlyIncome"), otherIncome: getNumber("otherIncome"), stability: state.stability, annualGrowth: getNumber("annualGrowth") },
     expenses: collectSimple("expenses"), investments: collectSimple("investments"),
@@ -187,7 +232,9 @@ function buildPayload() {
 }
 
 async function submitPlan() {
-  const button = document.getElementById("nextButton"); const error = document.getElementById("formError");
+  const button = state.mode === "short" ? document.getElementById("shortSubmitButton") : document.getElementById("nextButton");
+  const error = state.mode === "short" ? document.getElementById("shortFormError") : document.getElementById("formError");
+  const resetLabel = state.mode === "short" ? `Create short plan <span>→</span>` : `Reveal my wealth roadmap <span>✦</span>`;
   button.disabled = true; button.innerHTML = `Building your roadmap… <span class="spinner"></span>`; error.textContent = "";
   try {
     const response = await fetch("/api/plan/generate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(buildPayload()) });
@@ -195,13 +242,15 @@ async function submitPlan() {
     if (!response.ok || !data.ok) throw new Error(data.error || "We couldn’t build your plan yet.");
     state.record = data.record; renderResults(data.record);
   } catch (issue) { error.textContent = issue.message; }
-  finally { button.disabled = false; button.innerHTML = `Reveal my wealth roadmap <span>✦</span>`; }
+  finally { button.disabled = false; button.innerHTML = resetLabel; }
 }
 
 function renderResults(record) {
   const s = record.summary;
+  const isShort = record.plan_mode === "short" || state.mode === "short";
+  document.getElementById("results").classList.toggle("short-results", isShort);
   document.getElementById("resultTitle").textContent = `${record.profile.name}, your path is ready.`;
-  document.getElementById("coachMessage").textContent = s.coach_message;
+  document.getElementById("coachMessage").textContent = isShort ? "Here is what you can build from today, using the numbers you shared." : s.coach_message;
   document.getElementById("wealthStage").textContent = s.wealth_stage;
   document.getElementById("healthScore").textContent = s.health_score;
   document.getElementById("healthLabel").textContent = s.health_label;
@@ -222,14 +271,17 @@ function renderResults(record) {
   document.getElementById("donutIncome").textContent = money(s.monthly_income);
   document.getElementById("cashflowLegend").innerHTML = [["Living expenses", s.monthly_expenses, expensePct, "coral"], ["Loan EMIs", s.monthly_debt_emi, debtPct, "gold"], ["Free cash flow", s.monthly_surplus, surplusPct, "green"]].map(([label, value, pct, color]) => `<div><i class="${color}"></i><span>${label}<small>${Math.round(pct)}% of income</small></span><b>${money(value)}</b></div>`).join("");
 
-  const allocations = [["Safety fund", s.allocation.safety, "🛡", "purple"], ["Debt freedom", s.allocation.debt_freedom, "↘", "coral"], ["Life goals", s.allocation.goals, "★", "blue"], ["Long-term wealth", s.allocation.wealth, "↗", "green"]];
+  const allocations = [["Necessities", s.allocation.safety, "◉", "purple"], ["Debt freedom", s.allocation.debt_freedom, "↘", "coral"], ["Life goals", s.allocation.goals, "★", "blue"], ["Long-term wealth", s.allocation.wealth, "↗", "green"]];
   const allocationMax = Math.max(...allocations.map((item) => item[1]), 1);
   document.getElementById("allocationPlan").innerHTML = allocations.map(([label, value, icon, color]) => `<div class="allocation-item"><span class="allocation-icon ${color}">${icon}</span><div><p><b>${label}</b><strong>${money(value)}<small>/mo</small></strong></p><i><em class="${color}" style="width:${value / allocationMax * 100}%"></em></i></div></div>`).join("");
 
-  document.getElementById("recommendations").innerHTML = s.recommendations.map((item, index) => `<article><div><span>${index + 1}</span><i>${["🛡", "↘", "◉", "✦", "↗"][index]}</i></div><small>${safe(item.category)}</small><h4>${safe(item.title)}</h4><p>${safe(item.detail)}</p><b>${safe(item.impact)} →</b></article>`).join("");
-  document.getElementById("actionPlan").innerHTML = s.action_plan.map((item, index) => `<div><span>${index + 1}</span><p><b>${safe(item.action)}</b><small>${safe(item.reason)}</small></p><strong>${money(item.monthly_amount)}<small>/month</small></strong></div>`).join("");
+  const recommendationRows = isShort ? s.recommendations.slice(0, 3) : s.recommendations;
+  const actionRows = isShort ? s.action_plan.slice(0, 3) : s.action_plan;
+  document.getElementById("recommendations").innerHTML = recommendationRows.map((item, index) => `<article><div><span>${index + 1}</span><i>${["◉", "★", "↗", "✦", "✓"][index]}</i></div><small>${safe(item.category)}</small><h4>${safe(item.title)}</h4><p>${safe(item.detail)}</p><b>${safe(item.impact)} →</b></article>`).join("");
+  document.getElementById("actionPlan").innerHTML = actionRows.map((item, index) => `<div><span>${index + 1}</span><p><b>${safe(item.action)}</b><small>${safe(item.reason)}</small></p><strong>${money(item.monthly_amount)}<small>/month</small></strong></div>`).join("");
   document.getElementById("milestoneProjections").innerHTML = s.milestone_projections.map((item) => `<div><p><b>${safe(item.name)}</b><small>${safe(item.note)}</small></p><span><strong>${safe(item.projected_date)}</strong><i><em style="width:${item.progress}%"></em></i></span></div>`).join("");
-  document.getElementById("coachInsights").innerHTML = s.coach_insights.map((item, index) => `<article><span>${["✓", "!", "1", "30", "↗"][index]}</span><div><small>${safe(item.label)}</small><b>${safe(item.title)}</b><p>${safe(item.message)}</p></div></article>`).join("");
+  const coachRows = isShort ? s.coach_insights.slice(0, 1) : s.coach_insights;
+  document.getElementById("coachInsights").innerHTML = coachRows.map((item, index) => `<article><span>${["✓", "1", "30", "↗", "★"][index]}</span><div><small>${safe(item.label)}</small><b>${safe(item.title)}</b><p>${safe(item.message)}</p></div></article>`).join("");
   document.getElementById("goalResults").innerHTML = s.goals.length ? s.goals.map((goal) => `<div class="goal-result"><div class="goal-main"><span class="goal-symbol">${definitions.goals.find((item) => item[0] === goal.key)?.[1] || "✦"}</span><div><b>${safe(goal.name)}</b><small>${goal.priority} priority · ${goal.target_years} years</small></div></div><div class="goal-progress"><p><span>Plan coverage</span><b>${goal.funding_ratio}%</b></p><i><em style="width:${goal.funding_ratio}%"></em></i><small>${safe(goal.advice)}</small></div><div class="goal-amount"><strong>${money(goal.monthly_required)}</strong><span>needed / month</span><small>${money(goal.future_cost)} future cost</small></div><span class="goal-status ${goal.status.toLowerCase().replaceAll(" ", "-")}">${goal.status}</span></div>`).join("") : `<div class="empty-state"><span>🌱</span><b>No milestones selected yet</b><p>Your surplus is focused on financial safety and long-term wealth.</p></div>`;
 
   const projectionMax = Math.max(...s.projections.map((item) => item.expected), 1);
@@ -251,7 +303,7 @@ function renderBreakdown() {
 }
 
 document.querySelectorAll("[data-breakdown]").forEach((button) => button.addEventListener("click", () => { document.querySelectorAll("[data-breakdown]").forEach((item) => item.classList.remove("active")); button.classList.add("active"); state.breakdown = button.dataset.breakdown; renderBreakdown(); }));
-document.getElementById("editPlan").addEventListener("click", () => { document.getElementById("results").classList.add("hidden"); document.getElementById("planner").classList.remove("hidden"); showStep(1); });
+document.getElementById("editPlan").addEventListener("click", () => { document.getElementById("results").classList.add("hidden"); document.getElementById("planner").classList.remove("hidden"); setMode(state.mode); if (state.mode === "detailed") showStep(1); });
 document.getElementById("printPlan").addEventListener("click", () => window.print());
 
-renderOptionGrids(); showStep(1); queueBenchmark();
+renderOptionGrids(); setMode("short"); showStep(1); queueBenchmark();

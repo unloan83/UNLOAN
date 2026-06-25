@@ -28,7 +28,7 @@
       </div>
       <div class="coach-preview" aria-hidden="true">
         <div class="preview-top"><span class="avatar">✦</span><div><b>Your wealth pulse</b><small>Personalized for your life</small></div><span class="live-dot">LIVE</span></div>
-        <div class="preview-score"><div class="preview-ring"><strong>74</strong><small>Good</small></div><div><span>Next best move</span><b>Complete your safety fund</b><p>You’re closer than you think.</p></div></div>
+        <div class="preview-score"><div class="preview-ring"><strong>74</strong><small>Good</small></div><div><span>Next best move</span><b>Automate your next step</b><p>You’re closer than you think.</p></div></div>
         <div class="preview-bars"><span><i style="width:68%"></i></span><span><i style="width:46%"></i></span><span><i style="width:82%"></i></span></div>
         <div class="preview-labels"><span>Safety</span><span>Goals</span><span>Growth</span></div>
       </div>
@@ -37,6 +37,10 @@
     <section class="trust-strip"><span>✦ Personalized roadmap</span><span>◉ Beginner friendly</span><span>⌁ Inflation-aware goals</span><span>▣ Private, no storage</span></section>
 
     <section id="planner" class="planner-shell">
+      <div class="mode-switcher" aria-label="Choose plan mode">
+        <button type="button" class="selected" data-mode="short"><b>Short Plan</b><span>Quick snapshot with only the essentials.</span></button>
+        <button type="button" data-mode="detailed"><b>Detailed Plan</b><span>Deeper roadmap with selectable sections.</span></button>
+      </div>
       <aside class="step-sidebar">
         <div class="sidebar-head"><span>YOUR JOURNEY</span><b id="sidebarProgress">1 of 6</b></div>
         <nav id="stepNav">
@@ -53,6 +57,24 @@
       <div class="planner-main">
         <div class="mobile-progress"><div><span id="mobileStep">STEP 1 OF 6</span><b id="mobileTitle">About you</b></div><strong id="progressPercent">17%</strong><i><em id="progressBar"></em></i></div>
         <form id="plannerForm" novalidate>
+          <section id="shortPlanForm" class="short-plan-form">
+            <div class="step-heading"><span class="step-icon purple">✦</span><div><p>SHORT PLAN</p><h2>Here is what you can build from today</h2><span>Add the essentials and get a focused wealth roadmap in one screen.</span></div></div>
+            <div class="field-grid two">
+              <label>Age<input id="shortAge" type="number" min="18" max="80" inputmode="numeric" placeholder="e.g. 32" required /></label>
+              <label>City / region<input id="shortCity" placeholder="e.g. Pune" required /></label>
+              <label>Monthly income<div class="money-field"><span>₹</span><input id="shortMonthlyIncome" type="number" min="0" inputmode="decimal" placeholder="80,000" required /></div></label>
+              <label>Monthly essential expenses<div class="money-field"><span>₹</span><input id="shortEssentialExpenses" type="number" min="0" inputmode="decimal" placeholder="45,000" required /></div></label>
+              <label>Current savings<div class="money-field"><span>₹</span><input id="shortSavings" type="number" min="0" inputmode="decimal" placeholder="1,50,000" required /></div></label>
+              <label>Current investments <small>optional</small><div class="money-field"><span>₹</span><input id="shortInvestments" type="number" min="0" inputmode="decimal" placeholder="2,00,000" /></div></label>
+              <label>Loan / EMI <small>optional</small><div class="money-field"><span>₹</span><input id="shortEmi" type="number" min="0" inputmode="decimal" placeholder="12,000" /></div></label>
+              <label>Main goal<select id="shortMainGoal"><option value="wealth_milestone">Build wealth</option><option value="buy_house">Buy a house</option><option value="buy_vehicle">Buy a vehicle</option><option value="child_education">Education</option><option value="business">Start a business</option><option value="retirement">Retirement</option><option value="travel">Travel or leisure</option><option value="emergency_goal">Build emergency fund</option></select></label>
+              <label>Goal timeline<input id="shortGoalTimeline" type="number" min="1" max="50" inputmode="numeric" placeholder="Years from now" required /></label>
+            </div>
+            <p id="shortFormError" class="form-error" role="alert"></p>
+            <div class="short-submit"><button id="shortSubmitButton" class="next-button" type="button">Create short plan <span>→</span></button></div>
+          </section>
+
+          <div id="detailedPlanForm" class="hidden">
           <section class="form-step" data-step="1">
             <div class="step-heading"><span class="step-icon purple">👋</span><div><p>LET’S GET ACQUAINTED</p><h2>Tell us a little about you</h2><span>Your life stage shapes the right financial priorities.</span></div></div>
             <div class="field-grid two">
@@ -114,6 +136,7 @@
           </section>
 
           <div class="form-navigation"><button id="backButton" class="back-button hidden" type="button">← Back</button><button id="skipButton" class="skip-button hidden" type="button">Skip for now</button><button id="nextButton" class="next-button" type="button">Continue <span>→</span></button></div>
+          </div>
         </form>
       </div>
     </section>
@@ -127,7 +150,7 @@
       <div class="snapshot-grid">
         <article class="snapshot purple-card"><span>NET WORTH</span><strong id="netWorth">₹0</strong><small id="assetDebtText">Assets minus debts</small><i>◆</i></article>
         <article class="snapshot green-card"><span>MONTHLY SURPLUS</span><strong id="monthlySurplus">₹0</strong><small id="savingsText">Available to direct</small><i>↗</i></article>
-        <article class="snapshot blue-card"><span>SAFETY FUND</span><strong id="emergencyProgress">0%</strong><small id="emergencyText">of target ready</small><i>🛡</i></article>
+        <article class="snapshot blue-card"><span>CALM MONEY</span><strong id="emergencyProgress">0%</strong><small id="emergencyText">liquid savings guide</small><i>◉</i></article>
         <article class="snapshot gold-card"><span>DEBT LOAD</span><strong id="debtRatio">0%</strong><small>of monthly income</small><i>↘</i></article>
       </div>
 

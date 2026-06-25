@@ -16,6 +16,8 @@ A privacy-first money planner that turns an individual's age, location, income, 
 
 All figures are educational estimates, not regulated financial advice. Returns are illustrative and are not guaranteed. Benchmark ranges are clearly labelled heuristic planning guideposts—not verified population averages.
 
+The Money Planner must not create fear by overemphasizing risks, shortfalls, or emergency gaps. It should give users a positive, practical roadmap based on what they have today and help them build a better financial future step by step.
+
 ## Run locally
 
 ```bash

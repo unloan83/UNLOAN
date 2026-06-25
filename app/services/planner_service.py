@@ -79,6 +79,9 @@ class PlannerService:
         return rows
 
     def generate(self, payload: Dict[str, Any]) -> PlannerRecord:
+        plan_mode = str(payload.get("planMode", "detailed"))
+        if plan_mode not in {"short", "detailed"}:
+            plan_mode = "detailed"
         profile_data = payload.get("profile", {})
         income_data = payload.get("income", {})
         if not isinstance(profile_data, dict) or not isinstance(income_data, dict):
@@ -201,10 +204,11 @@ class PlannerService:
             assumptions=[
                 f"Expected scenario uses {expected_return * 100:.0f}% annual return; conservative scenario uses 6%.",
                 f"Contributions rise {annual_growth * 100:.1f}% yearly with expected income growth.",
-                "Goal costs use 6% inflation. Taxes, fees and product-specific risks are excluded.",
+                "Goal costs use 6% inflation. Taxes, fees and product details are excluded.",
             ],
         )
         return PlannerRecord(
+            plan_mode=plan_mode,
             profile=profile, income=income, expenses=expenses, investments=investments,
             debts=debts, selected_goals=goals, summary=summary,
             created_at=datetime.now(timezone.utc).isoformat(),
@@ -291,13 +295,13 @@ class PlannerService:
     @staticmethod
     def _score_reasons(savings_ratio, debt_ratio, emergency_progress, investments, assets, liabilities):
         reasons = []
-        reasons.append(f"Savings capacity contributes {'strongly' if savings_ratio >= .25 else 'moderately' if savings_ratio >= .15 else 'less than ideal'} at {savings_ratio * 100:.1f}% of income.")
+        reasons.append(f"Savings capacity is {'strong' if savings_ratio >= .25 else 'building' if savings_ratio >= .15 else 'a good next focus'} at {savings_ratio * 100:.1f}% of income.")
         reasons.append(f"EMIs use {debt_ratio * 100:.1f}% of income, which is {'comfortable' if debt_ratio <= .20 else 'manageable' if debt_ratio <= .30 else 'a pressure point'}.")
-        reasons.append(f"Emergency readiness is {emergency_progress}% of the calculated target.")
+        reasons.append(f"Your liquid savings cover {emergency_progress}% of the suggested calm-money target.")
         if investments:
             reasons.append(f"Your assets span {len({item.key for item in investments})} selected savings or investment categories.")
         if liabilities > assets:
-            reasons.append("Current liabilities are higher than recorded assets, reducing the solvency component.")
+            reasons.append("Growing assets ahead of liabilities can lift your score over time.")
         return reasons[:4]
 
     @staticmethod
@@ -313,28 +317,38 @@ class PlannerService:
         if score >= 80:
             return f"{name}, your foundation is strong. Your next advantage is consistency—not complexity."
         if emergency_progress < 50:
-            return f"{name}, you have room to grow. A stronger safety cushion will make every future investment feel calmer."
+            return f"{name}, you have room to grow. Start with one practical monthly transfer and build from there."
         if savings_ratio < 0.15:
             return f"{name}, the fastest win is creating breathing room in monthly cash flow before chasing returns."
         return f"{name}, you are building real momentum. A few focused moves can make your goals much more achievable."
 
     def _recommendations(self, profile, income, savings_ratio, debt_ratio, emergency_gap, emergency_progress, high_cost_debt, expenses, investments, goals):
         items = []
-        if emergency_gap:
-            items.append(Recommendation("Safety", "Build your financial calm fund", f"Your emergency reserve is {emergency_progress}% ready. Direct the safety allocation here before taking more market risk.", "Reduces financial stress"))
+        has_insurance = any(item.key in {"insurance", "healthcare"} for item in expenses) or any(item.key == "insurance_savings" for item in investments)
+        selected_emergency = any(goal.key == "emergency_goal" for goal in goals)
+        if savings_ratio < 0.20:
+            items.append(Recommendation("Savings habit", "Start with a practical payday transfer", "Move a fixed amount soon after income arrives, then increase it gradually every quarter.", "Builds consistency"))
+        if not has_insurance:
+            items.append(Recommendation("Protection", "Review health and life cover", "A simple insurance review can protect the roadmap you are building for yourself and your family.", "Protects progress"))
         if high_cost_debt:
-            items.append(Recommendation("Debt", "Attack expensive debt first", "Pay minimums on every loan, then send extra money to the highest-interest balance.", "Guaranteed interest saved"))
+            items.append(Recommendation("EMI planning", "Pay down the costliest loan first", "Keep regular EMIs going, then send extra money to the highest-interest balance.", "Saves interest"))
         if debt_ratio > 0.30:
-            items.append(Recommendation("Cash flow", "Bring EMI pressure below 30%", "Avoid new borrowing and use bonuses or windfalls to reduce principal.", "More monthly flexibility"))
+            items.append(Recommendation("Cash flow", "Bring EMIs toward a comfortable range", "Pause new borrowing and use bonuses or windfalls to reduce principal faster.", "More monthly flexibility"))
+        if goals:
+            lead_goal = goals[0]
+            items.append(Recommendation("Milestone", f"Make {lead_goal.name} the lead goal", "Fund the most important milestone first, then add lower-priority goals as income grows.", "Improves achievability"))
         lifestyle = sum(item.amount for item in expenses if item.key in {"lifestyle", "subscriptions", "miscellaneous"})
         if lifestyle > income.total_income * 0.15:
             items.append(Recommendation("Spending", "Create a guilt-free lifestyle cap", "Your flexible spending is above 15% of income. Trim it gently and automate the difference.", "Instant savings lift"))
-        if savings_ratio < 0.20:
-            items.append(Recommendation("Discipline", "Start with a 20% savings target", "Move savings on payday, not at month-end. Increase the transfer by 1% every quarter.", "Builds a durable habit"))
-        if not any(item.key in self.VOLATILE_ASSET_KEYS for item in investments) and emergency_progress >= 75:
-            items.append(Recommendation("Investing", "Begin diversified long-term investing", "Once safety is funded, consider broad diversified funds aligned with your risk profile and timeline.", "Supports compounding"))
+        good_to_have = [goal for goal in goals if goal.key in {"travel", "marriage", "buy_vehicle"}]
+        if good_to_have:
+            items.append(Recommendation("Good-to-have", "Keep flexible goals in a separate bucket", "Travel, celebrations and upgrades work best after essentials and lead milestones are automated.", "Keeps joy planned"))
+        if not any(item.key in self.VOLATILE_ASSET_KEYS for item in investments) and savings_ratio >= 0.15:
+            items.append(Recommendation("Investing", "Begin diversified long-term investing", "Consider broad diversified funds aligned with your comfort level and timeline.", "Supports compounding"))
         if goals and any(goal.funding_ratio < 55 for goal in goals):
             items.append(Recommendation("Goals", "Choose a lead milestone", "Fully fund one high-priority goal before splitting contributions across every ambition.", "Improves achievability"))
+        if emergency_gap and (selected_emergency or len(items) < 4):
+            items.append(Recommendation("Calm money", "Build a simple backup reserve gradually", f"Your liquid savings are {emergency_progress}% of the suggested guide. Add to it after essentials and selected goals are moving.", "Adds flexibility"))
         if income.annual_growth < 5:
             items.append(Recommendation("Income", "Invest in earning power", "A course, credential, negotiation plan, or side income can improve every goal at once.", "Raises future capacity"))
         if not items:
@@ -345,9 +359,9 @@ class PlannerService:
     def _roadmap(emergency_gap, high_cost_debt, goals, wealth_alloc, profile):
         priority_goal = goals[0].name if goals else "your first wealth milestone"
         return [
-            RoadmapPhase("Month 1–3", "Stabilization", "Track real spending, automate bills and create a separate safety account.", f"Create the first layer of cash buffer for {profile.employment_status.replace('_', ' ')} income."),
-            RoadmapPhase("Month 4–6", "Emergency fund building", "Direct the safety allocation to liquid, low-volatility savings.", f"Close {money_text(emergency_gap)} of safety gap." if emergency_gap else "Maintain the fully funded reserve."),
-            RoadmapPhase("Month 7–12", "Debt & investing discipline", "Pay expensive debt faster while starting or increasing automatic investments.", f"Prioritize {money_text(high_cost_debt)} of high-cost debt." if high_cost_debt else "Build a reliable monthly investing rhythm."),
+            RoadmapPhase("Month 1–3", "Cash-flow clarity", "Track real spending, automate bills and start one payday transfer.", f"Create a steady rhythm from {profile.employment_status.replace('_', ' ')} income."),
+            RoadmapPhase("Month 4–6", "Necessities first", "Review essentials, insurance and EMI comfort before adding extra goals.", "Make your monthly plan easy to repeat."),
+            RoadmapPhase("Month 7–12", "Goal momentum", "Pay costly debt faster while starting or increasing automatic investments.", f"Move {priority_goal} from idea to monthly action." if not high_cost_debt else f"Free cash flow by reducing {money_text(high_cost_debt)} of costlier debt."),
             RoadmapPhase("Year 2–3", "Wealth acceleration", "Increase contributions with every income rise and review goal funding annually.", f"Push {priority_goal} toward full monthly funding."),
             RoadmapPhase("Year 5+", "Long-term wealth creation", "Keep a diversified allocation aligned to capacity, age and goal timelines.", f"Grow the current long-term allocation of {money_text(wealth_alloc)} per month."),
         ]
@@ -360,12 +374,12 @@ class PlannerService:
         actions = []
         if reduction:
             actions.append(ActionItem("Reduce flexible spending", round(reduction, 2), "Redirect roughly 15% of discretionary spending without cutting essentials."))
-        if safety_alloc:
-            actions.append(ActionItem("Build emergency savings", round(safety_alloc, 2), "Keep this liquid until the calculated safety target is complete."))
         if debt_alloc:
             actions.append(ActionItem("Make an extra debt payment", round(debt_alloc, 2), "Apply this above minimum EMIs to the highest-interest balance first."))
         if investment_alloc:
             actions.append(ActionItem("Automate goal and wealth investing", round(investment_alloc, 2), "Transfer it soon after payday and step it up with income."))
+        if safety_alloc:
+            actions.append(ActionItem("Build calm-money savings", round(safety_alloc, 2), "Keep this liquid and grow it gradually alongside your main roadmap."))
         if not actions:
             actions.append(ActionItem("Protect your monthly savings habit", round(healthy_saving, 2), "Automation is the simplest way to preserve momentum."))
         return actions[:5]
@@ -399,9 +413,9 @@ class PlannerService:
         liquid_base = max(net_worth, 0)
         targets = [("First ₹1 lakh savings", 100000), ("First ₹5 lakh net worth", 500000), ("First ₹10 lakh net worth", 1000000)]
         rows = [MilestoneProjection(
-            "Emergency fund completion", self._date_after_months(emergency_months),
+            "Calm-money reserve", self._date_after_months(emergency_months),
             int(self._clamp(round(emergency_fund / emergency_target * 100), 0, 100)) if emergency_target else 100,
-            f"Target: {money_text(emergency_target)} in liquid reserves.",
+            f"Suggested guide: {money_text(emergency_target)} in liquid reserves.",
         )]
         for name, target in targets:
             months = self._months_to_value(liquid_base, monthly_investment, target, annual_return)
@@ -415,8 +429,8 @@ class PlannerService:
     @staticmethod
     def _coach_insights(profile, income, savings_ratio, debt_ratio, emergency_progress, high_cost_debt, investments, expenses, goals, actions):
         doing_well = "You have positive monthly breathing room to direct intentionally." if savings_ratio >= .15 else "You completed the hardest first step: seeing the full picture clearly."
-        risky = "Expensive debt can quietly outrun investment growth." if high_cost_debt else "Your safety reserve is the main vulnerability." if emergency_progress < 75 else "No single major red flag stands out; consistency is the key risk."
-        fix_first = "Finish the emergency buffer before increasing aggressive investments." if emergency_progress < 75 else "Clear the highest-interest balance before adding lower-priority goals." if high_cost_debt else "Automate the recommended monthly split."
+        opportunity = "Paying down costlier debt can free up more future investing capacity." if high_cost_debt else "Your next layer is a steady reserve plus regular goal investing." if emergency_progress < 75 else "Consistency is your biggest advantage from here."
+        fix_first = "Automate the first affordable monthly transfer and build from there." if emergency_progress < 75 else "Clear the highest-interest balance before adding lower-priority goals." if high_cost_debt else "Automate the recommended monthly split."
         next_action = actions[0].action + f" by {money_text(actions[0].monthly_amount)} this month." if actions else "Set one automatic payday transfer."
         habit = "Increase automatic savings by half of every future pay raise." if income.annual_growth else "Review cash flow for ten minutes on the same date each month."
         if profile.age <= 35 and income.stability == "stable" and debt_ratio < .20 and emergency_progress >= 75:
@@ -424,11 +438,11 @@ class PlannerService:
         if profile.age >= 50 and not any(item.key == "retirement_funds" for item in investments):
             fix_first = "Make retirement accumulation a top-priority goal and review the required corpus with a certified adviser."
         if profile.dependents:
-            risky += " With dependents, adequate health and term protection should also be reviewed."
+            opportunity += " With dependents, a health and term-cover review can strengthen the plan."
         return [
             CoachInsight("What’s working", "You already have something to build on", doing_well),
-            CoachInsight("Watch out", "Your biggest financial risk", risky),
-            CoachInsight("Fix first", "The priority before everything else", fix_first),
+            CoachInsight("Next opportunity", "You can improve this gradually", opportunity),
+            CoachInsight("Practical step", "Your next practical step", fix_first),
             CoachInsight("Next 30 days", "One concrete move", next_action),
             CoachInsight("Best habit", "The move with lasting impact", habit),
         ]

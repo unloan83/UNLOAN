@@ -153,6 +153,7 @@ class PlanSummary:
 
 @dataclass
 class PlannerRecord:
+    plan_mode: str
     profile: Profile
     income: IncomeProfile
     expenses: List[CategoryAmount]

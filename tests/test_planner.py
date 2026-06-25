@@ -35,6 +35,7 @@ class PlannerServiceTests(unittest.TestCase):
 
     def test_builds_dynamic_personalized_plan(self):
         record = self.service.generate(valid_payload())
+        self.assertEqual(record.plan_mode, "detailed")
         self.assertEqual(record.summary.monthly_surplus, 60000)
         self.assertEqual(record.summary.savings_ratio, 46.2)
         self.assertEqual(len(record.summary.goals), 1)
@@ -43,6 +44,10 @@ class PlannerServiceTests(unittest.TestCase):
         self.assertGreaterEqual(len(record.summary.action_plan), 2)
         self.assertEqual(len(record.summary.coach_insights), 5)
         self.assertTrue(record.summary.score_reasons)
+
+    def test_short_plan_mode_is_returned(self):
+        record = self.service.generate(valid_payload(planMode="short"))
+        self.assertEqual(record.plan_mode, "short")
 
     def test_only_selected_categories_are_counted(self):
         record = self.service.generate(valid_payload(expenses=[{"key": "food", "name": "Food", "amount": 20000}], debts=[]))
