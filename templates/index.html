@@ -58,20 +58,159 @@
         <div class="mobile-progress"><div><span id="mobileStep">STEP 1 OF 6</span><b id="mobileTitle">About you</b></div><strong id="progressPercent">17%</strong><i><em id="progressBar"></em></i></div>
         <form id="plannerForm" novalidate>
           <section id="shortPlanForm" class="short-plan-form">
-            <div class="step-heading"><span class="step-icon purple">✦</span><div><p>SHORT PLAN</p><h2>Here is what you can build from today</h2><span>Add the essentials and get a focused wealth roadmap in one screen.</span></div></div>
-            <div class="field-grid two">
-              <label>Age<input id="shortAge" type="number" min="18" max="80" inputmode="numeric" placeholder="e.g. 32" required /></label>
-              <label>City / region<input id="shortCity" placeholder="e.g. Pune" required /></label>
-              <label>Monthly income<div class="money-field"><span>₹</span><input id="shortMonthlyIncome" type="number" min="0" inputmode="decimal" placeholder="80,000" required /></div></label>
-              <label>Monthly essential expenses<div class="money-field"><span>₹</span><input id="shortEssentialExpenses" type="number" min="0" inputmode="decimal" placeholder="45,000" required /></div></label>
-              <label>Current savings<div class="money-field"><span>₹</span><input id="shortSavings" type="number" min="0" inputmode="decimal" placeholder="1,50,000" required /></div></label>
-              <label>Current investments <small>optional</small><div class="money-field"><span>₹</span><input id="shortInvestments" type="number" min="0" inputmode="decimal" placeholder="2,00,000" /></div></label>
-              <label>Loan / EMI <small>optional</small><div class="money-field"><span>₹</span><input id="shortEmi" type="number" min="0" inputmode="decimal" placeholder="12,000" /></div></label>
-              <label>Main goal<select id="shortMainGoal"><option value="wealth_milestone">Build wealth</option><option value="buy_house">Buy a house</option><option value="buy_vehicle">Buy a vehicle</option><option value="child_education">Education</option><option value="business">Start a business</option><option value="retirement">Retirement</option><option value="travel">Travel or leisure</option><option value="emergency_goal">Build emergency fund</option></select></label>
-              <label>Goal timeline<input id="shortGoalTimeline" type="number" min="1" max="50" inputmode="numeric" placeholder="Years from now" required /></label>
+            <div class="sp-shell">
+
+              <!-- Page Header -->
+              <div class="sp-header">
+                <span class="sp-header-pill">✦ Short Plan · 2–3 minutes</span>
+                <h2 class="sp-title">Create Your Short Wealth Plan</h2>
+                <p class="sp-subtitle">Share the essentials and get a focused wealth roadmap — no jargon, just clarity.</p>
+              </div>
+
+              <!-- Card 1: About You -->
+              <div class="sp-card">
+                <div class="sp-card-label-row">
+                  <span class="sp-card-icon" style="background:#eeeaff;color:#6757f5">👤</span>
+                  <h3 class="sp-card-title">About you</h3>
+                </div>
+                <div class="sp-grid-two">
+                  <div class="sp-field">
+                    <label class="sp-label" for="shortAge">Age</label>
+                    <p class="sp-hint">Used to calibrate your plan timeline</p>
+                    <input id="shortAge" type="number" min="18" max="80" inputmode="numeric" placeholder="e.g. 32" required />
+                  </div>
+                  <div class="sp-field">
+                    <label class="sp-label" for="shortCity">City / Region</label>
+                    <p class="sp-hint">Helps estimate local cost of living</p>
+                    <input id="shortCity" placeholder="e.g. Pune, Mumbai" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2: Monthly Income -->
+              <div class="sp-card">
+                <div class="sp-card-label-row">
+                  <span class="sp-card-icon" style="background:#e6f2ff;color:#4596ed">₹</span>
+                  <h3 class="sp-card-title">Monthly income</h3>
+                </div>
+                <div class="sp-field">
+                  <label class="sp-label" for="shortMonthlyIncome">Total take-home income per month</label>
+                  <p class="sp-hint">Your salary or any regular monthly income after tax</p>
+                  <div class="money-field">
+                    <span>₹</span>
+                    <input id="shortMonthlyIncome" type="number" min="0" inputmode="decimal" placeholder="e.g. 80,000" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3: Essential Expenses -->
+              <div class="sp-card">
+                <div class="sp-card-label-row">
+                  <span class="sp-card-icon" style="background:#fff0ec;color:#ff856f">🧾</span>
+                  <h3 class="sp-card-title">Essential monthly expenses</h3>
+                </div>
+                <div class="sp-field">
+                  <label class="sp-label" for="shortEssentialExpenses">Rent, food, transport, utilities combined</label>
+                  <p class="sp-hint">Approximate is fine — include all recurring necessities</p>
+                  <div class="money-field">
+                    <span>₹</span>
+                    <input id="shortEssentialExpenses" type="number" min="0" inputmode="decimal" placeholder="e.g. 45,000" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 4: Current Savings -->
+              <div class="sp-card">
+                <div class="sp-card-label-row">
+                  <span class="sp-card-icon" style="background:#e7faf4;color:#34bf91">🏦</span>
+                  <h3 class="sp-card-title">Current savings</h3>
+                </div>
+                <div class="sp-field">
+                  <label class="sp-label" for="shortSavings">Total saved in bank / FD / liquid funds</label>
+                  <p class="sp-hint">Money you can access within a few days</p>
+                  <div class="money-field">
+                    <span>₹</span>
+                    <input id="shortSavings" type="number" min="0" inputmode="decimal" placeholder="e.g. 1,50,000" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 5: Investments (optional) -->
+              <div class="sp-card">
+                <div class="sp-card-label-row">
+                  <span class="sp-card-icon" style="background:#fff6e2;color:#efb449">📈</span>
+                  <h3 class="sp-card-title">Current investments <span class="sp-optional-badge">Optional</span></h3>
+                </div>
+                <div class="sp-field">
+                  <label class="sp-label" for="shortInvestments">Mutual funds, stocks, PPF, gold, etc.</label>
+                  <p class="sp-hint">Total current market value across all investments</p>
+                  <div class="money-field">
+                    <span>₹</span>
+                    <input id="shortInvestments" type="number" min="0" inputmode="decimal" placeholder="e.g. 2,00,000" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 6: Loan / EMI (optional) -->
+              <div class="sp-card">
+                <div class="sp-card-label-row">
+                  <span class="sp-card-icon" style="background:#ffeaf4;color:#e85d9e">↘</span>
+                  <h3 class="sp-card-title">Monthly loan / EMI <span class="sp-optional-badge">Optional</span></h3>
+                </div>
+                <div class="sp-field">
+                  <label class="sp-label" for="shortEmi">Total EMI payments per month</label>
+                  <p class="sp-hint">Home loan, personal loan, vehicle EMI — combined total</p>
+                  <div class="money-field">
+                    <span>₹</span>
+                    <input id="shortEmi" type="number" min="0" inputmode="decimal" placeholder="e.g. 12,000" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 7: Main Goal -->
+              <div class="sp-card">
+                <div class="sp-card-label-row">
+                  <span class="sp-card-icon" style="background:#eeeaff;color:#6757f5">★</span>
+                  <h3 class="sp-card-title">Your main goal</h3>
+                </div>
+                <div class="sp-field">
+                  <label class="sp-label" for="shortMainGoal">What are you building toward?</label>
+                  <p class="sp-hint">Your plan will be tailored around this goal</p>
+                  <select id="shortMainGoal">
+                    <option value="wealth_milestone">📈 Build wealth</option>
+                    <option value="buy_house">🏡 Buy a house</option>
+                    <option value="buy_vehicle">🚗 Buy a vehicle</option>
+                    <option value="child_education">🎓 Child's education</option>
+                    <option value="business">🚀 Start a business</option>
+                    <option value="retirement">🌴 Retirement</option>
+                    <option value="travel">✈️ Travel or leisure</option>
+                    <option value="emergency_goal">☂️ Build emergency fund</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Card 8: Goal Timeline -->
+              <div class="sp-card">
+                <div class="sp-card-label-row">
+                  <span class="sp-card-icon" style="background:#f0f8ff;color:#4596ed">⏱</span>
+                  <h3 class="sp-card-title">Goal timeline</h3>
+                </div>
+                <div class="sp-field">
+                  <label class="sp-label" for="shortGoalTimeline">How many years from now?</label>
+                  <p class="sp-hint">This sets the horizon for your wealth roadmap</p>
+                  <input id="shortGoalTimeline" type="number" min="1" max="50" inputmode="numeric" placeholder="e.g. 5" required />
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="sp-footer">
+                <p id="shortFormError" class="form-error sp-form-error" role="alert"></p>
+                <button id="shortSubmitButton" class="next-button sp-submit-btn" type="button">
+                  Create my wealth plan <span>→</span>
+                </button>
+              </div>
+
             </div>
-            <p id="shortFormError" class="form-error" role="alert"></p>
-            <div class="short-submit"><button id="shortSubmitButton" class="next-button" type="button">Create short plan <span>→</span></button></div>
           </section>
 
           <div id="detailedPlanForm" class="hidden">
