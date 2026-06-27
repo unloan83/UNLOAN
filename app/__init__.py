@@ -1,10 +1,42 @@
 import os
+import base64
 import hmac
 import hashlib
+import json
 import time
 from flask import Flask, render_template, request, redirect, jsonify
 
 def verify_token(token, secret, max_age_seconds=300):
+    if token.startswith("v1."):
+        return verify_portal_token(token, secret, max_age_seconds)
+
+    return verify_legacy_token(token, secret, max_age_seconds)
+
+def verify_portal_token(token, secret, max_age_seconds):
+    try:
+        version, encoded_payload, signature = token.split(".")
+        if version != "v1":
+            return False
+
+        expected_signature = hmac.new(
+            secret.encode("utf-8"),
+            encoded_payload.encode("utf-8"),
+            hashlib.sha256,
+        ).hexdigest()
+        if not hmac.compare_digest(signature, expected_signature):
+            return False
+
+        padding = "=" * (-len(encoded_payload) % 4)
+        payload = json.loads(base64.urlsafe_b64decode(encoded_payload + padding))
+        issued_at = int(payload["issuedAt"]) / 1000.0
+        return (
+            payload.get("appId") == "money-planner"
+            and 0 <= time.time() - issued_at <= max_age_seconds
+        )
+    except (ValueError, TypeError, KeyError, json.JSONDecodeError):
+        return False
+
+def verify_legacy_token(token, secret, max_age_seconds):
     try:
         parts = token.split(":")
         if len(parts) != 3:
@@ -33,7 +65,8 @@ def redirect_to_login():
     host = request.headers.get("Host", "")
     if "localhost" in host or "127.0.0.1" in host:
         return redirect("http://localhost:5173/?error=unauthorized")
-    return redirect("https://liveunloan.vercel.app/?error=unauthorized")
+    portal_url = os.environ.get("LIVEUNLOAN_URL", "https://liveunloan.vercel.app").rstrip("/")
+    return redirect(f"{portal_url}/?error=unauthorized")
 
 def create_app():
     from app.config import Config

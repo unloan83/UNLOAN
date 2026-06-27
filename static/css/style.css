@@ -13,6 +13,10 @@ main{width:100%}.hero{position:relative;min-height:610px;display:flex;flex-direc
 @media(min-width:920px){.planner-shell>.mode-switcher{grid-column:1/-1;padding:18px 22px}}
 @media print{.topbar,.hero,.trust-strip,.planner-shell,.result-actions,footer{display:none!important}body{background:white}.results{display:block!important;margin:0}.result-hero,.coach-card{print-color-adjust:exact}.dash-card,.coach-card,.ai-coach-says{break-inside:avoid;box-shadow:none}.snapshot-grid,.dashboard-grid{display:grid;grid-template-columns:1fr 1fr}}
 
+/* Portal navigation */
+.home-link{display:inline-flex;align-items:center;min-height:44px;padding:9px 13px;border:1px solid var(--line);border-radius:10px;color:var(--ink);font-size:13px;font-weight:700;text-decoration:none}
+@media(max-width:599px){.private-badge{display:none}.top-actions{gap:8px}}
+
 /* ============================================================
    SHORT PLAN — Design System
    All classes prefixed with .sp- to avoid collision
