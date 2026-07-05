@@ -79,9 +79,10 @@ def create_app():
 
     @app.before_request
     def check_auth():
-        # Exclude static assets, health checks, and testing mode
+        # Exclude static assets, health checks, testing mode, and local dev preview
         import sys
-        if app.config.get("TESTING") or app.testing or "unittest" in sys.modules or request.path.startswith("/static") or request.path == "/api/health":
+        local_preview = os.environ.get("LOCAL_PREVIEW", "").lower() in ("1", "true", "yes")
+        if local_preview or app.config.get("TESTING") or app.testing or "unittest" in sys.modules or request.path.startswith("/static") or request.path == "/api/health":
             return None
 
         secret = os.environ.get("SHARED_SESSION_SECRET", "fallback_secret_for_local_dev")
