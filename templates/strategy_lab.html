@@ -404,8 +404,8 @@
 
           const inWr = c.in_sample ? `${c.in_sample.win_rate}%` : `${c.win_rate}%`;
           const outWr = c.out_of_sample ? `${c.out_of_sample.win_rate}%` : `${c.win_rate}%`;
-          const trendWr = (c.regime_breakdown && c.regime_breakdown.TRENDING) ? `${c.regime_breakdown.TRENDING.win_rate}%` : `${c.win_rate}%`;
-          const rangeWr = (c.regime_breakdown && c.regime_breakdown['RANGE-BOUND']) ? `${c.regime_breakdown['RANGE-BOUND'].win_rate}%` : `${c.win_rate}%`;
+          const trendWr = (c.regime_breakdown && (c.regime_breakdown.TRENDING || c.regime_breakdown['TRENDING'])) ? `${(c.regime_breakdown.TRENDING || c.regime_breakdown['TRENDING']).win_rate}%` : `${c.win_rate}%`;
+          const rangeWr = (c.regime_breakdown && (c.regime_breakdown.RANGE_BOUND || c.regime_breakdown['RANGE-BOUND'])) ? `${(c.regime_breakdown.RANGE_BOUND || c.regime_breakdown['RANGE-BOUND']).win_rate}%` : `${c.win_rate}%`;
 
           tr.innerHTML = `
             <td><span class="badge-rank">#${c.rank}</span></td>
