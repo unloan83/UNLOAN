@@ -35,10 +35,13 @@ def health():
 
 @api_bp.get("/strategy-lab/data")
 def strategy_lab_data():
-    from app.services.strategy_lab_service import StrategyLabService
-    service = StrategyLabService()
-    data = service.get_strategy_lab_data()
-    return jsonify({"ok": True, "data": data})
+    try:
+        from app.services.strategy_lab_service import StrategyLabService
+        service = StrategyLabService()
+        data = service.get_strategy_lab_data()
+        return jsonify({"ok": True, "data": data})
+    except Exception as exc:
+        return jsonify({"ok": False, "error": str(exc), "type": type(exc).__name__}), 500
 
 
 @api_bp.post("/strategy-lab/approve")
