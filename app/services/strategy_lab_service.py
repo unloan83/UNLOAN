@@ -37,6 +37,24 @@ except ImportError:
     generate_candidate_parameter_sets = None
     MarketStore = None
 
+def _load_dotenv():
+    root = Path(__file__).resolve().parents[3]
+    for env_file in [root / "UNLOAN" / ".env.local", root / "UNLOAN" / ".env", root / "Multibagger" / ".env.local", root / "Multibagger" / ".env"]:
+        if env_file.exists():
+            try:
+                for line in env_file.read_text().splitlines():
+                    line = line.strip()
+                    if line and not line.startswith("#") and "=" in line:
+                        k, v = line.split("=", 1)
+                        k = k.strip()
+                        v = v.strip().strip("\"'")
+                        if k and k not in os.environ:
+                            os.environ[k] = v
+            except Exception:
+                pass
+
+_load_dotenv()
+
 MULTIBAGGER_DB = os.getenv("MARKET_DATA_DB", str(PROJECTS_DIR / "Multibagger" / "data" / "multibagger.db"))
 INTERNAL_TOKEN = os.getenv("INTERNAL_ENGINE_TOKEN", "oci_mb_secret_token_9921")
 OCI_TUNNEL_URL = os.getenv("OCI_TUNNEL_URL", "https://vol-fleet-clouds-broken.trycloudflare.com")
