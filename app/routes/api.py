@@ -7,7 +7,7 @@ from app.services.planner_service import PlannerService
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
-INTERNAL_TOKEN = os.getenv("INTERNAL_ENGINE_TOKEN", "oci_mb_secret_token_9921")
+INTERNAL_TOKEN = os.getenv("INTERNAL_ENGINE_TOKEN", "3IiyWTTNW8jsRnDQrRcurSz9k1g_4aYmRMbpZ3XEUDipLQLJh")
 
 
 def _check_internal_auth():
