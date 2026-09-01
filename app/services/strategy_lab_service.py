@@ -389,31 +389,32 @@ class StrategyLabService:
         ]
 
     def _get_trade_audit_log(self) -> List[Dict[str, Any]]:
-        store = MarketStore(self.db_path)
-        try:
-            with store.connect() as con:
-                rows = con.execute("""
-                  SELECT trade_id, symbol, side, signal_entry, entry_fill, exit_fill,
-                         gross_pnl, net_pnl, exit_reason, opened_at, closed_at
-                  FROM paper_trades ORDER BY opened_at DESC LIMIT 10
-                """).fetchall()
-                if rows:
-                    return [
-                        {
-                            "trade_id": r[0],
-                            "symbol": r[1],
-                            "side": r[2],
-                            "entry_price": r[4],
-                            "exit_price": r[5],
-                            "net_pnl": r[7],
-                            "entry_reason": "VWAP pullback ADX>22, RVOL>1.5",
-                            "exit_reason": r[8] or "TARGET_REACHED",
-                            "opened_at": str(r[9]),
-                        }
-                        for r in rows
-                    ]
-        except Exception:
-            pass
+        if HAS_ENGINE and MarketStore:
+            try:
+                store = MarketStore(self.db_path)
+                with store.connect() as con:
+                    rows = con.execute("""
+                      SELECT trade_id, symbol, side, signal_entry, entry_fill, exit_fill,
+                             gross_pnl, net_pnl, exit_reason, opened_at, closed_at
+                      FROM paper_trades ORDER BY opened_at DESC LIMIT 10
+                    """).fetchall()
+                    if rows:
+                        return [
+                            {
+                                "trade_id": r[0],
+                                "symbol": r[1],
+                                "side": r[2],
+                                "entry_price": r[4],
+                                "exit_price": r[5],
+                                "net_pnl": r[7],
+                                "entry_reason": "VWAP pullback ADX>22, RVOL>1.5",
+                                "exit_reason": r[8] or "TARGET_REACHED",
+                                "opened_at": str(r[9]),
+                            }
+                            for r in rows
+                        ]
+            except Exception:
+                pass
 
         return [
             {
