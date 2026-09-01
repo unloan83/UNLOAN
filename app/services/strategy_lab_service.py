@@ -28,15 +28,34 @@ MULTIBAGGER_DB = os.getenv("MARKET_DATA_DB", str(PROJECTS_DIR / "Multibagger" / 
 class StrategyLabService:
     def __init__(self, db_path: str = MULTIBAGGER_DB):
         self.db_path = db_path
-        os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
+        # Check if environment is Vercel or read-only
+        if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+            self.db_path = "/tmp/multibagger.db"
+        else:
+            try:
+                db_dir = os.path.dirname(self.db_path)
+                if db_dir:
+                    os.makedirs(db_dir, exist_ok=True)
+            except Exception:
+                self.db_path = "/tmp/multibagger.db"
 
     def get_strategy_lab_data(self) -> Dict[str, Any]:
         """Fetches comprehensive strategy intelligence data for the Strategy Lab portal."""
-        candidates = get_candidates_from_store(self.db_path)
-        if not candidates:
-            candidates = run_strategy_intelligence_pipeline(self.db_path)
-
-        active = get_active_strategy(self.db_path)
+        candidates = []
+        active = None
+        try:
+            candidates = get_candidates_from_store(self.db_path)
+            if not candidates:
+                candidates = run_strategy_intelligence_pipeline(self.db_path)
+            active = get_active_strategy(self.db_path)
+        except Exception as err:
+            # Fallback to generating candidates without persisting to DB if store fails
+            try:
+                candidates = run_strategy_intelligence_pipeline(":memory:")
+            except Exception:
+                from engine.intelligence import generate_candidate_parameter_sets
+                candidates = generate_candidate_parameter_sets()
+            active = candidates[0].to_dict() if candidates else None
 
         # Build candidate summaries
         cand_list = [c.to_dict() for c in candidates]
