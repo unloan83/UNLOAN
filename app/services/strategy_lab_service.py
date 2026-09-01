@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-import sys
 import os
-from pathlib import Path
+import sys
 from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List, Optional
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+import requests
 
 PROJECTS_DIR = Path(__file__).resolve().parents[3]
 MULTIBAGGER_DIR = PROJECTS_DIR / "Multibagger"
@@ -13,13 +15,13 @@ if str(MULTIBAGGER_DIR) not in sys.path and MULTIBAGGER_DIR.exists():
 
 try:
     from engine.intelligence import (
+        deactivate_active_strategy,
+        generate_candidate_parameter_sets,
         get_active_strategy,
         get_candidates_from_store,
+        import_algoverse_backtest_result,
         run_strategy_intelligence_pipeline,
         set_active_strategy,
-        deactivate_active_strategy,
-        import_algoverse_backtest_result,
-        generate_candidate_parameter_sets,
     )
     from engine.store import MarketStore
     HAS_ENGINE = True
@@ -34,30 +36,55 @@ except ImportError:
     generate_candidate_parameter_sets = None
     MarketStore = None
 
-PROJECTS_DIR = Path(__file__).resolve().parents[3]
 MULTIBAGGER_DB = os.getenv("MARKET_DATA_DB", str(PROJECTS_DIR / "Multibagger" / "data" / "multibagger.db"))
+INTERNAL_TOKEN = os.getenv("INTERNAL_ENGINE_TOKEN", "oci_mb_secret_token_9921")
+OCI_TUNNEL_URL = os.getenv("OCI_TUNNEL_URL", "https://investigated-acting-connected-insurance.trycloudflare.com")
 
 
 class StrategyLabService:
     def __init__(self, db_path: str = MULTIBAGGER_DB):
         self.db_path = db_path
-        # Check if environment is Vercel or read-only
-        if os.getenv("VERCEL") or os.getenv("AWS_LAMBDA_FUNCTION_NAME"):
+        if not HAS_ENGINE:
+            return
+        try:
+            db_dir = os.path.dirname(self.db_path)
+            if db_dir:
+                os.makedirs(db_dir, exist_ok=True)
+        except Exception:
             self.db_path = "/tmp/multibagger.db"
-        else:
-            try:
-                db_dir = os.path.dirname(self.db_path)
-                if db_dir:
-                    os.makedirs(db_dir, exist_ok=True)
-            except Exception:
-                self.db_path = "/tmp/multibagger.db"
+
+    def _proxy_to_oci(self, endpoint: str, method: str = "GET", payload: Optional[Dict[str, Any]] = None) -> Tuple[Dict[str, Any], int]:
+        tunnel_url = OCI_TUNNEL_URL.rstrip("/")
+        url = f"{tunnel_url}/api/internal/strategy-lab/{endpoint.lstrip('/')}"
+        headers = {"Authorization": f"Bearer {INTERNAL_TOKEN}"}
+        try:
+            if method.upper() == "POST":
+                resp = requests.post(url, json=payload or {}, headers=headers, timeout=8.0)
+            else:
+                resp = requests.get(url, headers=headers, timeout=8.0)
+            return resp.json(), resp.status_code
+        except Exception as exc:
+            return {
+                "ok": False,
+                "error": f"OCI engine unreachable via Cloudflare tunnel ({tunnel_url}): {exc}",
+            }, 503
 
     def get_strategy_lab_data(self) -> Dict[str, Any]:
-        """Fetches comprehensive strategy intelligence data for the Strategy Lab portal."""
+        """Stateless gateway fetcher. If engine not present locally (Vercel), proxies directly to OCI over tunnel."""
+        if not HAS_ENGINE:
+            res, code = self._proxy_to_oci("data", method="GET")
+            if code == 200 and res.get("ok"):
+                return res["data"]
+            raise RuntimeError(res.get("error", "OCI engine unreachable"))
+
+        return self.get_local_strategy_lab_data()
+
+    def get_local_strategy_lab_data(self) -> Dict[str, Any]:
+        """Fetches strategy intelligence directly from local OCI DuckDB storage."""
         candidates = []
         cand_list = []
         active = None
-        if HAS_ENGINE and get_candidates_from_store:
+        if get_candidates_from_store:
             try:
                 candidates = get_candidates_from_store(self.db_path)
                 if not candidates:
@@ -71,54 +98,13 @@ class StrategyLabService:
                         candidates = generate_candidate_parameter_sets()
                 active = candidates[0].to_dict() if candidates else None
 
-        if not candidates:
-            # Standalone fallback candidate data when engine module is not present (e.g. Vercel deployment)
-            cand_dict = {
-                "candidate_id": "cand-long-22-on-sl1.0-tp1.5-e0920",
-                "name": "Alpha (Balanced VWAP Pullback)",
-                "params": {
-                    "adx_threshold": 22.0,
-                    "vwap_mode": "ON",
-                    "stop_loss_pct": 1.0,
-                    "target_pct": 1.5,
-                    "entry_time": "09:20",
-                    "direction": "LONG",
-                },
-                "backtest_source": "IN_HOUSE_ENGINE",
-                "backtest_pnl": 5840.0,
-                "win_rate": 66.7,
-                "avg_win": 420.0,
-                "avg_loss": 210.0,
-                "avg_win_loss_ratio": 2.0,
-                "max_drawdown": 420.0,
-                "trade_count": 36,
-                "traded_value": 50000.0,
-                "rank": 1,
-                "status": "ACCEPTED",
-                "rejection_reasons": [],
-                "in_sample": {"trade_count": 25, "win_rate": 72.0, "pnl": 4200.0, "max_drawdown": 310.0},
-                "out_of_sample": {"trade_count": 11, "win_rate": 54.5, "pnl": 1640.0, "max_drawdown": 420.0},
-                "regime_breakdown": {
-                    "TRENDING": {"trade_count": 24, "win_rate": 75.0, "pnl": 4800.0},
-                    "RANGE_BOUND": {"trade_count": 12, "win_rate": 50.0, "pnl": 1040.0},
-                },
-            }
-            cand_list = [cand_dict]
-            active = {
-                "candidate_id": cand_dict["candidate_id"],
-                "name": cand_dict["name"],
-                "direction": "LONG",
-                "backtest_source": "IN_HOUSE_ENGINE",
-                "approved_at": datetime.now(timezone.utc).isoformat(),
-            }
-        if not cand_list and candidates:
+        if candidates:
             cand_list = [c.to_dict() if hasattr(c, "to_dict") else c for c in candidates]
 
-        # Build live strategy indicators and position state
         live_status = {
             "symbol": "RELIANCE",
             "direction": active.get("direction", "LONG") if active else "NONE",
-            "backtest_source": active.get("backtest_source", "LOCAL_FALLBACK") if active else "LOCAL_FALLBACK",
+            "backtest_source": active.get("backtest_source", "IN_HOUSE_ENGINE") if active else "NONE",
             "indicators": {
                 "vwap": 2452.40,
                 "adx14": 26.2,
@@ -132,22 +118,14 @@ class StrategyLabService:
             "exit_reason": "+1.5R Target Gate Active",
         }
 
-        # Generate sample equity curve for backtest visualizer
         equity_curve = self._build_equity_curve(cand_list)
-
-        # Generate sample price & VWAP chart with trade entry/exit markers
         price_vwap_chart = self._build_price_vwap_chart()
-
-        # Build model pipeline working status
         pipeline_working = self._build_pipeline_working_state(active)
-
-        # Fetch recent trade audit logs
         trade_audit_log = self._get_trade_audit_log()
 
-        # Summary performance metrics
         active_id = active.get("candidate_id") if active else ""
         active_cand = next((c for c in cand_list if (c.get("candidate_id") if isinstance(c, dict) else getattr(c, "candidate_id", "")) == active_id), None)
-        
+
         def _prop(obj, k, d):
             if not obj:
                 return d
@@ -174,23 +152,41 @@ class StrategyLabService:
             "hard_loss_limit_inr": 1000.0,
         }
 
-    def approve_strategy(self, candidate_id: str, source: str = "WEB_PORTAL") -> Dict[str, Any]:
-        """Approve and activate a strategy candidate."""
+    def approve_strategy(self, candidate_id: str, source: str = "WEB_PORTAL") -> Tuple[Dict[str, Any], int]:
+        """Stateless gateway candidate approval."""
+        if not HAS_ENGINE:
+            return self._proxy_to_oci("approve", method="POST", payload={"candidate_id": candidate_id, "source": source})
+
+        res = self.local_approve_strategy(candidate_id, source=source)
+        status_code = 200 if res.get("ok") else 400
+        return res, status_code
+
+    def local_approve_strategy(self, candidate_id: str, source: str = "WEB_PORTAL") -> Dict[str, Any]:
+        """Approve and activate a strategy candidate directly in DuckDB."""
         if candidate_id == "NOTRADE":
-            if HAS_ENGINE and deactivate_active_strategy:
+            if deactivate_active_strategy:
                 deactivate_active_strategy(self.db_path)
             return {"ok": True, "status": "NO_TRADE", "message": "Trading set to NO_TRADE."}
 
-        if HAS_ENGINE and set_active_strategy:
+        if set_active_strategy:
             activated = set_active_strategy(candidate_id, self.db_path, approved_by=source)
             if activated:
                 return {"ok": True, "status": "ACTIVE", "strategy": activated.to_dict()}
             return {"ok": False, "error": f"Candidate strategy {candidate_id} not found."}
 
-        return {"ok": True, "status": "ACTIVE", "candidate_id": candidate_id}
+        return {"ok": False, "error": "Strategy execution engine unavailable."}
 
-    def import_algoverse_result(self, payload: Dict[str, Any]) -> Dict[str, Any]:
-        """Imports official Upstox Algoverse backtest results for candidate strategy ranking."""
+    def import_algoverse_result(self, payload: Dict[str, Any]) -> Tuple[Dict[str, Any], int]:
+        """Stateless gateway Algoverse backtest import."""
+        if not HAS_ENGINE:
+            return self._proxy_to_oci("import-algoverse", method="POST", payload=payload)
+
+        res = self.local_import_algoverse_result(payload)
+        status_code = 200 if res.get("ok") else 400
+        return res, status_code
+
+    def local_import_algoverse_result(self, payload: Dict[str, Any]) -> Dict[str, Any]:
+        """Imports official Upstox Algoverse backtest results directly into DuckDB."""
         try:
             name = str(payload.get("name", "Algoverse Strategy"))
             direction = str(payload.get("direction", "LONG")).upper()
@@ -208,7 +204,7 @@ class StrategyLabService:
             traded_val_raw = payload.get("traded_value", payload.get("position_capital", None))
             traded_value = float(traded_val_raw) if traded_val_raw is not None else None
 
-            if HAS_ENGINE and import_algoverse_backtest_result:
+            if import_algoverse_backtest_result:
                 cand = import_algoverse_backtest_result(
                     name=name,
                     direction=direction,
@@ -227,20 +223,22 @@ class StrategyLabService:
                     traded_value=traded_value,
                 )
                 return {"ok": True, "candidate": cand.to_dict()}
-            
-            return {
-                "ok": True,
-                "candidate": {
-                    "candidate_id": f"algoverse-imp-{direction.lower()}",
-                    "name": name,
-                    "backtest_source": "ALGOVERSE_SECONDARY",
-                    "status": "SECONDARY_REFERENCE",
-                    "win_rate": win_rate,
-                    "backtest_pnl": backtest_pnl,
-                }
-            }
+            return {"ok": False, "error": "Algoverse import engine unavailable."}
         except Exception as exc:
             return {"ok": False, "error": str(exc)}
+
+    def handle_telegram_webhook(self, payload: Dict[str, Any]) -> Tuple[Dict[str, Any], int]:
+        """Stateless gateway Telegram webhook callback."""
+        if not HAS_ENGINE:
+            return self._proxy_to_oci("telegram-webhook", method="POST", payload=payload)
+
+        callback_query = payload.get("callback_query", {})
+        callback_data = callback_query.get("data", "")
+        if callback_data:
+            from engine.notifier import handle_telegram_callback
+            msg = handle_telegram_callback(callback_data, self.db_path)
+            return {"ok": True, "result": msg}, 200
+        return {"ok": True, "result": "No callback data."}, 200
 
     def _build_equity_curve(self, candidates: List[Any]) -> List[Dict[str, Any]]:
         points = []
@@ -389,7 +387,7 @@ class StrategyLabService:
         ]
 
     def _get_trade_audit_log(self) -> List[Dict[str, Any]]:
-        if HAS_ENGINE and MarketStore:
+        if MarketStore:
             try:
                 store = MarketStore(self.db_path)
                 with store.connect() as con:
@@ -416,38 +414,4 @@ class StrategyLabService:
             except Exception:
                 pass
 
-        return [
-            {
-                "trade_id": "tr-20260901-001",
-                "symbol": "RELIANCE",
-                "side": "LONG",
-                "entry_price": 2458.00,
-                "exit_price": 2494.80,
-                "net_pnl": 1433.60,
-                "entry_reason": "VWAP Pullback, ADX=26.2 > 22 threshold, RVOL 2.1x",
-                "exit_reason": "+1.5R Target Hit",
-                "opened_at": "09:24 IST",
-            },
-            {
-                "trade_id": "tr-20260901-002",
-                "symbol": "TATAMOTORS",
-                "side": "LONG",
-                "entry_price": 982.50,
-                "exit_price": 972.50,
-                "net_pnl": -410.00,
-                "entry_reason": "15m Breakout, ADX=25.0, RVOL 1.8x",
-                "exit_reason": "Stop Loss Hit (-1.0%)",
-                "opened_at": "09:45 IST",
-            },
-            {
-                "trade_id": "tr-20260901-003",
-                "symbol": "INFY",
-                "side": "LONG",
-                "entry_price": 1840.00,
-                "exit_price": 1867.60,
-                "net_pnl": 828.00,
-                "entry_reason": "VWAP Slope positive +3.1, Sector Top 3 rank",
-                "exit_reason": "Trailing EMA9 Close Exit",
-                "opened_at": "10:12 IST",
-            },
-        ]
+        return []
