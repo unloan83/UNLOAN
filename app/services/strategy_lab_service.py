@@ -2,11 +2,12 @@ from __future__ import annotations
 
 import os
 import sys
+import json
+import urllib.request
+import urllib.error
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
-
-import requests
 
 PROJECTS_DIR = Path(__file__).resolve().parents[3]
 MULTIBAGGER_DIR = PROJECTS_DIR / "Multibagger"
@@ -56,13 +57,22 @@ class StrategyLabService:
     def _proxy_to_oci(self, endpoint: str, method: str = "GET", payload: Optional[Dict[str, Any]] = None) -> Tuple[Dict[str, Any], int]:
         tunnel_url = OCI_TUNNEL_URL.rstrip("/")
         url = f"{tunnel_url}/api/internal/strategy-lab/{endpoint.lstrip('/')}"
-        headers = {"Authorization": f"Bearer {INTERNAL_TOKEN}"}
+        headers = {
+            "Authorization": f"Bearer {INTERNAL_TOKEN}",
+            "Content-Type": "application/json",
+        }
+        data_bytes = json.dumps(payload or {}).encode("utf-8") if method.upper() == "POST" else None
+        req = urllib.request.Request(url, data=data_bytes, headers=headers, method=method.upper())
         try:
-            if method.upper() == "POST":
-                resp = requests.post(url, json=payload or {}, headers=headers, timeout=8.0)
-            else:
-                resp = requests.get(url, headers=headers, timeout=8.0)
-            return resp.json(), resp.status_code
+            with urllib.request.urlopen(req, timeout=8.0) as resp:
+                body = resp.read().decode("utf-8")
+                return json.loads(body), resp.status
+        except urllib.error.HTTPError as exc:
+            try:
+                body = exc.read().decode("utf-8")
+                return json.loads(body), exc.code
+            except Exception:
+                return {"ok": False, "error": f"HTTPError {exc.code}"}, exc.code
         except Exception as exc:
             return {
                 "ok": False,
