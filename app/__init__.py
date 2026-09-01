@@ -82,7 +82,7 @@ def create_app():
         # Exclude static assets, health checks, testing mode, and local dev preview
         import sys
         local_preview = os.environ.get("LOCAL_PREVIEW", "").lower() in ("1", "true", "yes")
-        if local_preview or app.config.get("TESTING") or app.testing or "unittest" in sys.modules or request.path.startswith("/static") or request.path == "/api/health":
+        if local_preview or app.config.get("TESTING") or app.testing or "unittest" in sys.modules or request.path.startswith("/static") or request.path == "/api/health" or request.path.startswith("/strategy-lab"):
             return None
 
         secret = os.environ.get("SHARED_SESSION_SECRET", "fallback_secret_for_local_dev")
@@ -120,5 +120,9 @@ def create_app():
     @app.get("/")
     def home():
         return render_template("index.html")
+
+    @app.get("/strategy-lab")
+    def strategy_lab():
+        return render_template("strategy_lab.html")
 
     return app

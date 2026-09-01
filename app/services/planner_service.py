@@ -331,7 +331,7 @@ class PlannerService:
         if not has_insurance:
             items.append(Recommendation("Protection", "Review health and life cover", "A simple insurance review can protect the roadmap you are building for yourself and your family.", "Protects progress"))
         if high_cost_debt:
-            items.append(Recommendation("EMI planning", "Pay down the costliest loan first", "Keep regular EMIs going, then send extra money to the highest-interest balance.", "Saves interest"))
+            items.append(Recommendation("EMI planning", "Pay down expensive debt first", "Keep regular EMIs going, then send extra money to the highest-interest balance.", "Saves interest"))
         if debt_ratio > 0.30:
             items.append(Recommendation("Cash flow", "Bring EMIs toward a comfortable range", "Pause new borrowing and use bonuses or windfalls to reduce principal faster.", "More monthly flexibility"))
         if goals:

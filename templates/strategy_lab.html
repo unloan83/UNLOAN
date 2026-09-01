@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Strategy Lab — Upstox Algoverse Strategy Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=JetBrains+Mono:wght@400;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #060d17;
+      --card-bg: #091322;
+      --card-border: #15243b;
+      --panel-bg: #0d1b2e;
+      --primary: #6757f5;
+      --primary-hover: #5443ed;
+      --accent-cyan: #06b6d4;
+      --emerald: #10b981;
+      --rose: #f43f5e;
+      --amber: #f59e0b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-main: 'DM Sans', sans-serif;
+      --font-head: 'Manrope', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      line-height: 1.5;
+      padding: 20px;
+    }
+    .container { max-width: 1440px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 20px 28px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text); }
+    .brand-tag {
+      background: rgba(103, 87, 245, 0.15); border: 1px solid rgba(103, 87, 245, 0.3);
+      color: var(--primary); padding: 4px 10px; border-radius: 99px; font-size: 11px; font-weight: 700;
+    }
+    .top-badges { display: flex; align-items: center; gap: 12px; }
+    .badge-limit {
+      background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.25);
+      color: var(--emerald); padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; font-family: var(--font-mono);
+    }
+    .nav-btn {
+      background: var(--panel-bg); border: 1px solid var(--card-border); color: var(--text);
+      padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 13px; font-weight: 600; transition: all 0.2s;
+    }
+    .nav-btn:hover { background: var(--card-border); }
+    
+    .grid-two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 1024px) { .grid-two { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 16px;
+    }
+    .card-head { display: flex; justify-content: space-between; align-items: center; }
+    .card-title { font-family: var(--font-head); font-size: 18px; font-weight: 700; color: var(--text); }
+    
+    /* Pipeline working flow */
+    .flow-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; }
+    .flow-step {
+      flex: 1; min-width: 140px; background: var(--panel-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; position: relative;
+    }
+    .flow-step.active { border-color: var(--accent-cyan); background: rgba(6, 182, 212, 0.05); }
+    .flow-num { font-size: 10px; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.5px; }
+    .flow-name { font-size: 13px; font-weight: 700; font-family: var(--font-head); }
+    .flow-desc { font-size: 11px; color: var(--text-muted); }
+    .flow-status { font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; width: fit-content; }
+    .status-ok { background: rgba(16, 185, 129, 0.15); color: var(--emerald); }
+    .status-warn { background: rgba(245, 158, 11, 0.15); color: var(--amber); }
+
+    /* Live Indicators Panel */
+    .indicators-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .ind-card { background: var(--panel-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px; text-align: center; }
+    .ind-val { font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--accent-cyan); }
+    .ind-lbl { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-top: 2px; }
+
+    /* Parameter Matrix Table */
+    .table-shell { overflow-x: auto; border: 1px solid var(--card-border); border-radius: 12px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { background: var(--panel-bg); color: var(--text-muted); font-weight: 600; padding: 12px 16px; border-bottom: 1px solid var(--card-border); }
+    td { padding: 14px 16px; border-bottom: 1px solid rgba(21, 36, 59, 0.5); }
+    tr:hover { background: rgba(13, 27, 46, 0.5); }
+    
+    .badge-rank { background: rgba(103, 87, 245, 0.2); color: var(--primary); font-weight: 800; padding: 2px 8px; border-radius: 6px; }
+    .badge-source { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; }
+    .source-ALGOVERSE { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); border: 1px solid rgba(6, 182, 212, 0.4); }
+    .source-LOCAL_FALLBACK { background: rgba(148, 163, 184, 0.1); color: var(--text-muted); }
+
+    .badge-status { padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 11px; }
+    .status-ACCEPTED { background: rgba(16, 185, 129, 0.2); color: var(--emerald); }
+    .status-PROPOSED { background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); }
+    .status-CANDIDATE { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); }
+    .status-REJECTED { background: rgba(244, 63, 94, 0.2); color: var(--rose); }
+
+    .action-btn {
+      background: var(--primary); color: white; border: none; padding: 6px 14px;
+      border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .action-btn:hover { background: var(--primary-hover); }
+    .action-btn.secondary { background: var(--panel-bg); border: 1px solid var(--card-border); color: var(--text-muted); }
+    .action-btn.secondary:hover { background: var(--card-border); color: var(--text); }
+
+    /* Algoverse Import Form */
+    .import-form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; background: var(--panel-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 11px; font-weight: 600; color: var(--text-muted); }
+    .form-group input, .form-group select { background: var(--bg); border: 1px solid var(--card-border); color: var(--text); padding: 8px 12px; border-radius: 6px; font-size: 12px; font-family: var(--font-mono); }
+    .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent-cyan); }
+
+    /* Canvas Charts */
+    .chart-container { position: relative; width: 100%; height: 260px; }
+    canvas { width: 100% !important; height: 100% !important; }
+
+    /* Trade audit log */
+    .audit-reason { font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); }
+    .pnl-pos { color: var(--emerald); font-weight: 700; font-family: var(--font-mono); }
+    .pnl-neg { color: var(--rose); font-weight: 700; font-family: var(--font-mono); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a href="/" class="brand">
+        <h1 style="font-family:var(--font-head); font-size:22px; font-weight:800;">UNLOAN <span style="color:var(--primary)">Strategy Lab</span></h1>
+        <span class="brand-tag">UPSTOX ALGOVERSE INTELLIGENCE</span>
+      </a>
+      <div class="top-badges">
+        <div class="badge-limit">🛡️ Daily Loss Limit: ₹1,000 | Paper Mode</div>
+        <a href="/" class="nav-btn">← Back to Planner</a>
+      </div>
+    </header>
+
+    <!-- Active Strategy Banner & Live Indicators -->
+    <div class="card" style="background: linear-gradient(135deg, rgba(103, 87, 245, 0.1) 0%, rgba(6, 182, 212, 0.05) 100%);">
+      <div class="card-head">
+        <div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:11px; font-weight:700; color:var(--accent-cyan); text-transform:uppercase;">Current Active Strategy</span>
+            <span id="activeSourceBadge" class="badge-source source-ALGOVERSE">ALGOVERSE</span>
+          </div>
+          <h2 id="activeStrategyTitle" style="font-family:var(--font-head); font-size:20px; font-weight:800; margin-top:2px;">Loading active strategy...</h2>
+          <p id="activeStrategyParams" style="font-size:13px; color:var(--text-muted); font-family:var(--font-mono); margin-top:4px;"></p>
+        </div>
+        <button id="deactivateBtn" onclick="deactivateStrategy()" class="action-btn secondary">Force NO_TRADE</button>
+      </div>
+
+      <!-- Live Indicators & Position State -->
+      <div class="indicators-grid" style="margin-top:12px;">
+        <div class="ind-card"><div id="indVwap" class="ind-val">₹2,452.40</div><div class="ind-lbl">VWAP</div></div>
+        <div class="ind-card"><div id="indAdx" class="ind-val">26.2</div><div class="ind-lbl">ADX (14)</div></div>
+        <div class="ind-card"><div id="indAtr" class="ind-val">₹28.50</div><div class="ind-lbl">ATR (14)</div></div>
+        <div class="ind-card"><div id="indRvol" class="ind-val">2.1x</div><div class="ind-lbl">RVOL</div></div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--panel-bg); padding:12px 16px; border-radius:10px; font-size:12px; font-family:var(--font-mono);">
+        <div><span>Position State: </span><b id="posState" style="color:var(--emerald);">OPEN (LONG 40 RELIANCE)</b></div>
+        <div><span>Stop: </span><b id="posSl" style="color:var(--rose);">₹2,433.50</b> | <span>Target: </span><b id="posTgt" style="color:var(--emerald);">₹2,494.80</b></div>
+        <div><span>Exit Gate: </span><span id="posExitReason" style="color:var(--text-muted);">+1.5R Target Gate Active</span></div>
+      </div>
+    </div>
+
+    <!-- Algoverse Backtest Import Form -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Import Algoverse Official Backtest Results</span>
+        <span style="font-size:12px; color:var(--text-muted);">Algoverse results take top ranking priority over local fallback</span>
+      </div>
+      <form id="algoverseForm" onsubmit="submitAlgoverseImport(event)" class="import-form">
+        <div class="form-group">
+          <label>Strategy Name</label>
+          <input type="text" id="impName" placeholder="e.g. Algoverse Alpha VWAP" required />
+        </div>
+        <div class="form-group">
+          <label>Direction</label>
+          <select id="impDirection">
+            <option value="LONG">LONG Only</option>
+            <option value="SHORT">SHORT Only</option>
+            <option value="BOTH">BOTH (Long & Short)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>ADX Threshold</label>
+          <input type="number" id="impAdx" value="22" required />
+        </div>
+        <div class="form-group">
+          <label>VWAP Mode</label>
+          <select id="impVwap">
+            <option value="ON">ON</option>
+            <option value="STRICT">STRICT</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Stop Loss %</label>
+          <input type="number" step="0.1" id="impSl" value="1.0" required />
+        </div>
+        <div class="form-group">
+          <label>Target %</label>
+          <input type="number" step="0.1" id="impTgt" value="1.5" required />
+        </div>
+        <div class="form-group">
+          <label>Entry Time</label>
+          <input type="text" id="impEntry" value="09:20" required />
+        </div>
+        <div class="form-group">
+          <label>Net P&L (₹)</label>
+          <input type="number" id="impPnl" value="4500" required />
+        </div>
+        <div class="form-group">
+          <label>Win Rate (%)</label>
+          <input type="number" step="0.1" id="impWin" value="65.0" required />
+        </div>
+        <div class="form-group">
+          <label>Avg Win (₹)</label>
+          <input type="number" id="impAvgWin" value="350" required />
+        </div>
+        <div class="form-group">
+          <label>Avg Loss (₹)</label>
+          <input type="number" id="impAvgLoss" value="200" required />
+        </div>
+        <div class="form-group">
+          <label>Max Drawdown (₹)</label>
+          <input type="number" id="impMaxDd" value="450" required />
+        </div>
+        <div class="form-group">
+          <label>Trade Count</label>
+          <input type="number" id="impTrades" value="24" required />
+        </div>
+        <div class="form-group" style="grid-column: span 3; justify-content: flex-end; display: flex;">
+          <button type="submit" class="action-btn" style="height: 38px; margin-top: 18px;">📥 Import & Rank Candidate</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Pipeline Model Working Flow -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Model Working Flow (Live Pipeline)</span>
+        <span style="font-size:12px; color:var(--text-muted);">Market → Indicators → Candidate → Entry → Position → Exit → P&L</span>
+      </div>
+      <div id="flowContainer" class="flow-container">
+        <!-- Dynamic pipeline steps inserted here -->
+      </div>
+    </div>
+
+    <!-- Main Grid: Candidate Matrix & Equity Curve -->
+    <div class="grid-two">
+      <!-- Candidate Parameter Matrix -->
+      <div class="card" style="grid-column: span 2;">
+        <div class="card-head">
+          <span class="card-title">Candidate Strategy Intelligence & Parameter Matrix</span>
+          <span style="font-size:12px; color:var(--text-muted);">Algoverse results prioritized | Independent SHORT validation enforced</span>
+        </div>
+        <div class="table-shell">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Source</th>
+                <th>Candidate Name</th>
+                <th>Dir</th>
+                <th>ADX</th>
+                <th>VWAP</th>
+                <th>SL %</th>
+                <th>Target %</th>
+                <th>Backtest P&L</th>
+                <th>Win Rate</th>
+                <th>Avg Win/Loss</th>
+                <th>Max DD</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="candidateTableBody">
+              <!-- Inserted dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Equity / Backtest Curve -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Backtest Equity Curves</span>
+          <span style="font-size:12px; color:var(--text-muted);">20-session cumulative P&L</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="equityChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Price & VWAP Chart with Trade Markers -->
+      <div class="card">
+        <div class="card-head">
+          <span class="card-title">Price / VWAP Chart & Trade Walkthrough</span>
+          <span style="font-size:12px; color:var(--text-muted);">RELIANCE 5m | Green ▲ Entry, Red ▼ Exit</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="priceChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trade Audit Log -->
+    <div class="card">
+      <div class="card-head">
+        <span class="card-title">Trade Audit & Decision Log</span>
+        <span style="font-size:12px; color:var(--text-muted);">Why each trade entered and exited</span>
+      </div>
+      <div class="table-shell">
+        <table>
+          <thead>
+            <tr>
+              <th>Opened At</th>
+              <th>Symbol</th>
+              <th>Side</th>
+              <th>Entry Price</th>
+              <th>Exit Price</th>
+              <th>Net P&L</th>
+              <th>Entry Reason</th>
+              <th>Exit Reason</th>
+            </tr>
+          </thead>
+          <tbody id="auditTableBody">
+            <!-- Inserted dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadData() {
+      try {
+        const resp = await fetch('/api/strategy-lab/data');
+        const json = await resp.json();
+        if (!json.ok) return;
+        const d = json.data;
+
+        // Render Active Strategy Banner
+        const active = d.active_strategy;
+        const titleEl = document.getElementById('activeStrategyTitle');
+        const paramsEl = document.getElementById('activeStrategyParams');
+        const sourceBadge = document.getElementById('activeSourceBadge');
+
+        if (active && active.status === 'ACTIVE') {
+          titleEl.innerText = active.name + ' (ACTIVE)';
+          sourceBadge.innerText = active.backtest_source || 'LOCAL_FALLBACK';
+          sourceBadge.className = `badge-source source-${active.backtest_source || 'LOCAL_FALLBACK'}`;
+          paramsEl.innerText = `Direction=${active.direction} | ADX=${active.adx_threshold} | VWAP=${active.vwap_mode} | SL=${active.stop_loss_pct}% | Target=${active.target_pct}% | Entry=${active.entry_time} | Approved by ${active.approved_by}`;
+        } else {
+          titleEl.innerText = 'NO_TRADE (Waiting for Telegram or UI Approval)';
+          sourceBadge.innerText = 'NO_TRADE';
+          sourceBadge.className = 'badge-source source-LOCAL_FALLBACK';
+          paramsEl.innerText = 'No strategy currently approved for execution. Paper fills disabled.';
+        }
+
+        // Render Live Status Indicators
+        const ls = d.live_status || {};
+        const ind = ls.indicators || {};
+        document.getElementById('indVwap').innerText = `₹${(ind.vwap || 0).toFixed(2)}`;
+        document.getElementById('indAdx').innerText = (ind.adx14 || 0).toFixed(1);
+        document.getElementById('indAtr').innerText = `₹${(ind.atr14 || 0).toFixed(2)}`;
+        document.getElementById('indRvol').innerText = `${(ind.rvol || 0).toFixed(1)}x`;
+
+        document.getElementById('posState').innerText = `${ls.position_state || 'NONE'} (${ls.direction} ${ls.symbol || ''})`;
+        document.getElementById('posSl').innerText = `₹${(ls.stop_loss_price || 0).toFixed(2)}`;
+        document.getElementById('posTgt').innerText = `₹${(ls.target_price || 0).toFixed(2)}`;
+        document.getElementById('posExitReason').innerText = ls.exit_reason || 'Gate Active';
+
+        // Render Pipeline Working Flow
+        const flowBox = document.getElementById('flowContainer');
+        flowBox.innerHTML = '';
+        (d.pipeline_working || []).forEach(step => {
+          const div = document.createElement('div');
+          div.className = `flow-step ${step.status === 'QUALIFIED' || step.status === 'APPROVED' || step.status === 'EXECUTED' ? 'active' : ''}`;
+          div.innerHTML = `
+            <span class="flow-num">Step ${step.step}: ${step.stage}</span>
+            <div class="flow-name">${step.title}</div>
+            <div class="flow-desc">${step.details}</div>
+            <span class="flow-status ${step.status === 'REJECTED' || step.status === 'INACTIVE' ? 'status-warn' : 'status-ok'}">${step.status}</span>
+          `;
+          flowBox.appendChild(div);
+        });
+
+        // Render Candidates Matrix Table
+        const tbody = document.getElementById('candidateTableBody');
+        tbody.innerHTML = '';
+        (d.candidates || []).forEach(c => {
+          const tr = document.createElement('tr');
+          const p = c.params;
+          const isAccepted = active && active.candidate_id === c.candidate_id;
+          const statusStr = isAccepted ? 'ACCEPTED' : c.status;
+
+          const inWr = c.in_sample ? `${c.in_sample.win_rate}%` : `${c.win_rate}%`;
+          const outWr = c.out_of_sample ? `${c.out_of_sample.win_rate}%` : `${c.win_rate}%`;
+          const trendWr = (c.regime_breakdown && c.regime_breakdown.TRENDING) ? `${c.regime_breakdown.TRENDING.win_rate}%` : `${c.win_rate}%`;
+          const rangeWr = (c.regime_breakdown && c.regime_breakdown['RANGE-BOUND']) ? `${c.regime_breakdown['RANGE-BOUND'].win_rate}%` : `${c.win_rate}%`;
+
+          tr.innerHTML = `
+            <td><span class="badge-rank">#${c.rank}</span></td>
+            <td><span class="badge-source source-${c.backtest_source}">${c.backtest_source}</span></td>
+            <td><b>${c.name}</b></td>
+            <td><b>${p.direction}</b></td>
+            <td>${p.adx_threshold}</td>
+            <td>${p.vwap_mode}</td>
+            <td>${p.stop_loss_pct}%</td>
+            <td>${p.target_pct}%</td>
+            <td class="${c.backtest_pnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">₹${c.backtest_pnl.toLocaleString()}</td>
+            <td>
+              <div style="font-size:12px; font-weight:700;">Blended: ${c.win_rate}%</div>
+              <div style="font-size:10px; color:var(--text-muted);">IS: ${inWr} | OOS: ${outWr}</div>
+              <div style="font-size:10px; color:var(--accent-cyan);">Trend: ${trendWr} | Range: ${rangeWr}</div>
+            </td>
+            <td>${c.avg_win_loss_ratio}</td>
+            <td class="pnl-neg">₹${c.max_drawdown.toLocaleString()}</td>
+            <td><span class="badge-status status-${statusStr}">${statusStr}</span></td>
+            <td>
+              ${statusStr === 'REJECTED' 
+                ? `<span style="font-size:11px; color:var(--rose); font-family:var(--font-mono);">${(c.rejection_reasons || []).join(', ')}</span>`
+                : `<button onclick="approveCandidate('${c.candidate_id}')" class="action-btn">${isAccepted ? 'Active' : 'Accept'}</button>`
+              }
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Render Trade Audit Log Table
+        const auditBody = document.getElementById('auditTableBody');
+        auditBody.innerHTML = '';
+        (d.trade_audit_log || []).forEach(t => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="font-family:var(--font-mono); font-size:12px;">${t.opened_at}</td>
+            <td><b>${t.symbol}</b></td>
+            <td><span style="color:${t.side === 'LONG' ? 'var(--emerald)' : 'var(--rose)'}; font-weight:700;">${t.side}</span></td>
+            <td style="font-family:var(--font-mono)">₹${t.entry_price.toFixed(2)}</td>
+            <td style="font-family:var(--font-mono)">₹${t.exit_price.toFixed(2)}</td>
+            <td class="${t.net_pnl >= 0 ? 'pnl-pos' : 'pnl-neg'}">₹${t.net_pnl >= 0 ? '+' : ''}${t.net_pnl.toFixed(2)}</td>
+            <td class="audit-reason">${t.entry_reason}</td>
+            <td class="audit-reason">${t.exit_reason}</td>
+          `;
+          auditBody.appendChild(tr);
+        });
+
+        // Draw Canvas Charts
+        drawEquityChart(d.equity_curve || []);
+        drawPriceChart(d.price_vwap_chart || {});
+      } catch (err) {
+        console.error('Failed to load Strategy Lab data', err);
+      }
+    }
+
+    async function submitAlgoverseImport(e) {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('impName').value,
+        direction: document.getElementById('impDirection').value,
+        adx_threshold: parseFloat(document.getElementById('impAdx').value),
+        vwap_mode: document.getElementById('impVwap').value,
+        stop_loss_pct: parseFloat(document.getElementById('impSl').value),
+        target_pct: parseFloat(document.getElementById('impTgt').value),
+        entry_time: document.getElementById('impEntry').value,
+        backtest_pnl: parseFloat(document.getElementById('impPnl').value),
+        win_rate: parseFloat(document.getElementById('impWin').value),
+        avg_win: parseFloat(document.getElementById('impAvgWin').value),
+        avg_loss: parseFloat(document.getElementById('impAvgLoss').value),
+        max_drawdown: parseFloat(document.getElementById('impMaxDd').value),
+        trade_count: parseInt(document.getElementById('impTrades').value),
+      };
+
+      const resp = await fetch('/api/strategy-lab/import-algoverse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const res = await resp.json();
+      if (res.ok) {
+        alert('Algoverse backtest result imported successfully!');
+        loadData();
+      } else {
+        alert(res.error || 'Failed to import Algoverse backtest');
+      }
+    }
+
+    async function approveCandidate(candidateId) {
+      const resp = await fetch('/api/strategy-lab/approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ candidate_id: candidateId })
+      });
+      const res = await resp.json();
+      if (res.ok) {
+        loadData();
+      } else {
+        alert(res.error || 'Failed to approve strategy');
+      }
+    }
+
+    async function deactivateStrategy() {
+      approveCandidate('NOTRADE');
+    }
+
+    function drawEquityChart(curveData) {
+      const canvas = document.getElementById('equityChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (!curveData.length) return;
+
+      const keys = Object.keys(curveData[0]).filter(k => k !== 'date');
+      let minVal = 0, maxVal = 1000;
+      curveData.forEach(d => {
+        keys.forEach(k => {
+          minVal = Math.min(minVal, d[k]);
+          maxVal = Math.max(maxVal, d[k]);
+        });
+      });
+
+      const colors = ['#10b981', '#06b6d4', '#6757f5', '#f59e0b', '#f43f5e'];
+      const padding = 30;
+      const w = canvas.width - padding * 2;
+      const h = canvas.height - padding * 2;
+
+      // Draw grid lines
+      ctx.strokeStyle = '#15243b';
+      ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const y = padding + (h / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(canvas.width - padding, y);
+        ctx.stroke();
+      }
+
+      // Draw series lines
+      keys.forEach((key, idx) => {
+        ctx.strokeStyle = colors[idx % colors.length];
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+
+        curveData.forEach((pt, i) => {
+          const x = padding + (w / (curveData.length - 1)) * i;
+          const val = pt[key];
+          const y = padding + h - ((val - minVal) / (maxVal - minVal || 1)) * h;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+      });
+    }
+
+    function drawPriceChart(chartData) {
+      const canvas = document.getElementById('priceChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const candles = chartData.candles || [];
+      if (!candles.length) return;
+
+      let minP = Infinity, maxP = -Infinity;
+      candles.forEach(c => {
+        minP = Math.min(minP, c.price, c.vwap);
+        maxP = Math.max(maxP, c.price, c.vwap);
+      });
+
+      const padding = 30;
+      const w = canvas.width - padding * 2;
+      const h = canvas.height - padding * 2;
+
+      // Draw price line
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      candles.forEach((c, i) => {
+        const x = padding + (w / (candles.length - 1)) * i;
+        const y = padding + h - ((c.price - minP) / (maxP - minP || 1)) * h;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      // Draw VWAP line (dashed amber)
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      candles.forEach((c, i) => {
+        const x = padding + (w / (candles.length - 1)) * i;
+        const y = padding + h - ((c.vwap - minP) / (maxP - minP || 1)) * h;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Draw Entry (green ▲) & Exit (red ▼) Markers
+      (chartData.markers || []).forEach(m => {
+        const candleIdx = candles.findIndex(c => c.time === m.time);
+        if (candleIdx >= 0) {
+          const x = padding + (w / (candles.length - 1)) * candleIdx;
+          const y = padding + h - ((m.price - minP) / (maxP - minP || 1)) * h;
+
+          ctx.fillStyle = m.type === 'ENTRY' ? '#10b981' : '#f43f5e';
+          ctx.beginPath();
+          if (m.type === 'ENTRY') {
+            ctx.moveTo(x, y - 10);
+            ctx.lineTo(x - 6, y + 2);
+            ctx.lineTo(x + 6, y + 2);
+          } else {
+            ctx.moveTo(x, y + 10);
+            ctx.lineTo(x - 6, y - 2);
+            ctx.lineTo(x + 6, y - 2);
+          }
+          ctx.fill();
+
+          ctx.font = '10px DM Sans';
+          ctx.fillStyle = '#f1f5f9';
+          ctx.fillText(m.label, x - 20, m.type === 'ENTRY' ? y - 14 : y + 22);
+        }
+      });
+    }
+
+    loadData();
+    setInterval(loadData, 10000);
+  </script>
+</body>
+</html>
