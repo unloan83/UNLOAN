@@ -55,6 +55,7 @@ class StrategyLabService:
     def get_strategy_lab_data(self) -> Dict[str, Any]:
         """Fetches comprehensive strategy intelligence data for the Strategy Lab portal."""
         candidates = []
+        cand_list = []
         active = None
         if HAS_ENGINE and get_candidates_from_store:
             try:
@@ -110,7 +111,7 @@ class StrategyLabService:
                 "backtest_source": "IN_HOUSE_ENGINE",
                 "approved_at": datetime.now(timezone.utc).isoformat(),
             }
-        else:
+        if not cand_list and candidates:
             cand_list = [c.to_dict() if hasattr(c, "to_dict") else c for c in candidates]
 
         # Build live strategy indicators and position state
@@ -132,7 +133,7 @@ class StrategyLabService:
         }
 
         # Generate sample equity curve for backtest visualizer
-        equity_curve = self._build_equity_curve(candidates)
+        equity_curve = self._build_equity_curve(cand_list)
 
         # Generate sample price & VWAP chart with trade entry/exit markers
         price_vwap_chart = self._build_price_vwap_chart()
@@ -144,11 +145,18 @@ class StrategyLabService:
         trade_audit_log = self._get_trade_audit_log()
 
         # Summary performance metrics
-        active_cand = next((c for c in candidates if c.candidate_id == (active.get("candidate_id") if active else "")), None)
+        active_id = active.get("candidate_id") if active else ""
+        active_cand = next((c for c in cand_list if (c.get("candidate_id") if isinstance(c, dict) else getattr(c, "candidate_id", "")) == active_id), None)
+        
+        def _prop(obj, k, d):
+            if not obj:
+                return d
+            return obj.get(k, d) if isinstance(obj, dict) else getattr(obj, k, d)
+
         metrics = {
-            "win_loss_ratio": active_cand.win_rate if active_cand else 62.5,
-            "avg_profit_loss": active_cand.avg_win_loss_ratio if active_cand else 1.85,
-            "max_drawdown": active_cand.max_drawdown if active_cand else 450.0,
+            "win_loss_ratio": _prop(active_cand, "win_rate", 62.5),
+            "avg_profit_loss": _prop(active_cand, "avg_win_loss_ratio", 1.85),
+            "max_drawdown": _prop(active_cand, "max_drawdown", 450.0),
             "daily_pnl": 340.0,
             "daily_loss_limit": 1000.0,
             "mode": "PAPER_MODE",
@@ -237,19 +245,35 @@ class StrategyLabService:
     def _build_equity_curve(self, candidates: List[Any]) -> List[Dict[str, Any]]:
         points = []
         start_date = datetime.now(timezone.utc) - timedelta(days=20)
-        base_pnls = {c.candidate_id: 0.0 for c in candidates}
+
+        def _get(c, k, d=None):
+            return c.get(k, d) if isinstance(c, dict) else getattr(c, k, d)
+
+        def _get_target_pct(c):
+            if isinstance(c, dict):
+                p = c.get("params", {})
+                return p.get("target_pct", 1.5) if isinstance(p, dict) else 1.5
+            p = getattr(c, "params", None)
+            return getattr(p, "target_pct", 1.5) if p else 1.5
+
+        base_pnls = {_get(c, "candidate_id", f"cand-{idx}"): 0.0 for idx, c in enumerate(candidates)}
 
         for day_idx in range(20):
             d = (start_date + timedelta(days=day_idx)).strftime("%b %d")
             point: Dict[str, Any] = {"date": d}
-            for c in candidates:
-                if c.status == "REJECTED":
-                    base_pnls[c.candidate_id] -= (day_idx % 3) * 120.0
+            for idx, c in enumerate(candidates):
+                cid = _get(c, "candidate_id", f"cand-{idx}")
+                status = _get(c, "status", "ACCEPTED")
+                source = _get(c, "backtest_source", "IN_HOUSE_ENGINE")
+                target_pct = _get_target_pct(c)
+
+                if status == "REJECTED":
+                    base_pnls[cid] -= (day_idx % 3) * 120.0
                 else:
-                    mult = 2.0 if c.backtest_source == "ALGOVERSE" else 1.0
-                    daily_delta = (150.0 if (day_idx % 3 != 0) else -90.0) * (c.params.target_pct / 1.5) * mult
-                    base_pnls[c.candidate_id] += round(daily_delta, 2)
-                point[c.candidate_id] = round(base_pnls[c.candidate_id], 2)
+                    mult = 2.0 if source == "ALGOVERSE" else 1.0
+                    daily_delta = (150.0 if (day_idx % 3 != 0) else -90.0) * (target_pct / 1.5) * mult
+                    base_pnls[cid] += round(daily_delta, 2)
+                point[cid] = round(base_pnls[cid], 2)
             points.append(point)
         return points
 
