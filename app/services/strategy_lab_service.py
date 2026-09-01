@@ -39,7 +39,7 @@ except ImportError:
 
 MULTIBAGGER_DB = os.getenv("MARKET_DATA_DB", str(PROJECTS_DIR / "Multibagger" / "data" / "multibagger.db"))
 INTERNAL_TOKEN = os.getenv("INTERNAL_ENGINE_TOKEN", "oci_mb_secret_token_9921")
-OCI_TUNNEL_URL = os.getenv("OCI_TUNNEL_URL", "https://investigated-acting-connected-insurance.trycloudflare.com")
+OCI_TUNNEL_URL = os.getenv("OCI_TUNNEL_URL", "https://vol-fleet-clouds-broken.trycloudflare.com")
 
 
 class StrategyLabService:
