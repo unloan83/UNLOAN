@@ -317,11 +317,24 @@ class StrategyLabService:
         }
 
     def _build_pipeline_working_state(self, active: Optional[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        active_name = active["name"] if active else "NO_TRADE (Waiting for Telegram/UI approval)"
-        sl = active["stop_loss_pct"] if active else 1.0
-        tp = active["target_pct"] if active else 1.5
-        direction = active["direction"] if active else "LONG"
-        source = active["backtest_source"] if active else "LOCAL_FALLBACK"
+        def _get_p(a, key, default):
+            if not a:
+                return default
+            if isinstance(a, dict):
+                if key in a:
+                    return a[key]
+                p = a.get("params", {})
+                return p.get(key, default) if isinstance(p, dict) else getattr(p, key, default)
+            if hasattr(a, key):
+                return getattr(a, key)
+            p = getattr(a, "params", None)
+            return getattr(p, key, default) if p else default
+
+        active_name = _get_p(active, "name", "NO_TRADE (Waiting for Telegram/UI approval)")
+        sl = _get_p(active, "stop_loss_pct", 1.0)
+        tp = _get_p(active, "target_pct", 1.5)
+        direction = _get_p(active, "direction", "LONG")
+        source = _get_p(active, "backtest_source", "IN_HOUSE_ENGINE")
 
         return [
             {
