@@ -1,9 +1,15 @@
 from __future__ import annotations
 
+import sys
 import os
 from pathlib import Path
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
+
+PROJECTS_DIR = Path(__file__).resolve().parents[3]
+MULTIBAGGER_DIR = PROJECTS_DIR / "Multibagger"
+if str(MULTIBAGGER_DIR) not in sys.path and MULTIBAGGER_DIR.exists():
+    sys.path.insert(0, str(MULTIBAGGER_DIR))
 
 from engine.intelligence import (
     get_active_strategy,
